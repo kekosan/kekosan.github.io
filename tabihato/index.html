@@ -37,6 +37,30 @@ img{max-width:100%}
   --cerulean:#6fb3e3;--gold:#d9b45a;--gold-soft:#3a3220;--violet:#b3a3d6;--rose:#e88a99;--leaf:#7cc79b;--band:#1e3a50;--strip:#162033;--tabink:#dbe4f0;--env:#4a4134;--pigeon:#6fa8d8;--pigeon-d:#cfe3f5;color-scheme:dark}
 
 body{background:var(--sky);color:var(--ink);font-family:var(--body);line-height:1.8;padding-bottom:64px}
+/* 図鑑とトロフィー */
+.zsum{display:flex;flex-wrap:wrap;gap:8px}
+.zsum span{background:var(--paper);border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-weight:700}
+.zsum b{color:var(--cerulean);font-size:16px}
+.trogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.tro{background:var(--paper);border:2px dashed var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.tro .tc{font-size:11px;letter-spacing:.08em;color:var(--ink-soft)}
+.tro .tn{font-family:var(--display);font-weight:700;font-size:15px;color:var(--ink-soft)}
+.tro .td{font-size:13px;color:var(--ink-soft)}
+.tro.got{border-style:solid;border-color:var(--cerulean)}
+.tro.got .tn{color:var(--ink)}
+.tro.got .td{color:var(--ink)}
+.tro.gold.got{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold) inset}
+.tro .tday{font-size:12px;color:var(--cerulean);font-weight:700}
+.zbook{display:flex;flex-direction:column;gap:8px}
+.zbook details{background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:8px 12px}
+.zbook summary{cursor:pointer;font-family:var(--display);font-weight:700;font-size:15px}
+.zbook summary small{font-family:var(--body);font-weight:500;color:var(--ink-soft);margin-left:8px}
+.zbook ul{list-style:none;margin:8px 0 2px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px 14px}
+.zbook li{display:flex;gap:6px;align-items:baseline;min-width:0;font-size:14px}
+.zbook li.no{color:var(--ink-soft);letter-spacing:.1em}
+.zbook .zat{font-size:11px;color:var(--cerulean);white-space:nowrap}
+.zbook .zk{margin-left:auto;font-size:12px;color:var(--ink-soft);white-space:nowrap}
+.lbody .trophy{background:var(--paper2,transparent);border:2px solid var(--gold);border-radius:8px;padding:4px 10px}
 /* はじめに（入口） */
 .gate{position:fixed;inset:0;z-index:50;overflow-y:auto;background:var(--band);padding:max(24px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(32px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .gatecard{max-width:640px;margin:0 auto;background:var(--paper);color:var(--ink);border:3px solid var(--tabink);border-radius:18px;padding:28px clamp(18px,5vw,40px);display:flex;flex-direction:column;gap:16px}
@@ -63,21 +87,21 @@ body{background:var(--sky);color:var(--ink);font-family:var(--body);line-height:
 .strip.haspic .stripin{text-shadow:0 0 2px var(--strip),0 0 4px var(--strip),1px 1px 0 var(--strip),-1px -1px 0 var(--strip),1px -1px 0 var(--strip),-1px 1px 0 var(--strip)}
 .strip.haspic .where{text-shadow:0 0 3px var(--strip),0 0 6px var(--strip),0 0 12px var(--strip),2px 2px 0 var(--strip),-2px -2px 0 var(--strip),2px -2px 0 var(--strip),-2px 2px 0 var(--strip)}
 .where{margin:0 0 10px;font-family:var(--hand);font-size:clamp(24px,5.5vw,40px);line-height:1.2;color:var(--tabink)}
-.tabs{display:flex;align-items:flex-end;gap:10px;margin-bottom:-3px}
-.tab{white-space:nowrap;font-family:var(--hand);font-weight:400;font-size:clamp(15px,3.2vw,22px);color:var(--tabink);background:var(--strip);
-  border:3px solid var(--tabink);border-bottom:none;border-radius:10px 12px 0 0;padding:10px clamp(10px,2.4vw,22px) 8px;line-height:1.2;
+.tabs{display:flex;align-items:flex-end;gap:8px;margin-bottom:-3px}
+.tab{white-space:nowrap;font-family:var(--hand);font-weight:400;font-size:clamp(15px,2.5vw,20px);color:var(--tabink);background:var(--strip);
+  border:3px solid var(--tabink);border-bottom:none;border-radius:10px 12px 0 0;padding:10px clamp(8px,1.5vw,16px) 8px;line-height:1.2;
   transform:rotate(-1.2deg);transform-origin:bottom center;transition:transform .15s,background .15s}
-.tab:nth-child(2){transform:rotate(.8deg)} .tab:nth-child(3){transform:rotate(-.6deg)} .tab:nth-child(4){transform:rotate(1deg)}
+.tab:nth-child(2){transform:rotate(.8deg)} .tab:nth-child(3){transform:rotate(-.6deg)} .tab:nth-child(4){transform:rotate(1deg)} .tab:nth-child(5){transform:rotate(-.8deg)}
 .tab:hover{transform:translateY(-3px) rotate(0)}
 .tab[aria-current="page"]{background:var(--sky);transform:translateY(-4px) rotate(0);padding-bottom:12px}
-.tab.env{position:relative;background:var(--env);border-radius:4px 4px 0 0;padding:44px clamp(16px,3vw,30px) 10px;font-size:clamp(17px,3.6vw,26px);transform:rotate(0);white-space:nowrap}
+.tab.env{position:relative;background:var(--env);border-radius:4px 4px 0 0;padding:44px clamp(14px,2.4vw,26px) 10px;font-size:clamp(17px,3vw,24px);transform:rotate(0);white-space:nowrap}
 .tab.env[aria-current="page"]{background:var(--env);transform:translateY(-4px);padding-bottom:14px;box-shadow:0 0 0 3px var(--sky) inset}
 .flap{position:absolute;inset:0 0 auto 0;width:100%;height:42px;fill:none;stroke:var(--tabink);stroke-width:3;vector-effect:non-scaling-stroke}
 .pseal{position:absolute;left:50%;top:14px;width:30px;height:30px;transform:translateX(-50%)}
 .ps-bg{fill:var(--pigeon);stroke:var(--tabink);stroke-width:2.5}
 .ps-bird{fill:var(--pigeon-d)} .ps-beak{fill:var(--gold)} .ps-eye{fill:var(--pigeon)}
 .envlabel{position:relative}
-.hud{margin-left:auto;align-self:center;display:flex;flex-direction:column;gap:3px;min-width:170px;padding:0 4px 10px;font-size:12px;color:var(--tabink);font-variant-numeric:tabular-nums}
+.hud{margin-left:auto;align-self:center;display:flex;flex-direction:column;gap:3px;min-width:150px;padding:0 4px 10px;font-size:12px;color:var(--tabink);font-variant-numeric:tabular-nums}
 .hb{display:grid;grid-template-columns:6.2em 1fr;align-items:center;gap:8px;white-space:nowrap}
 .hl b{font-weight:700}
 .mini{display:block;height:8px;border-radius:999px;background:var(--line);overflow:hidden;border:1.5px solid var(--tabink)}
@@ -90,12 +114,12 @@ body{background:var(--sky);color:var(--ink);font-family:var(--body);line-height:
 .diffchip.d-1,.diffchip.d0{background:color-mix(in srgb,var(--leaf) 22%,transparent)}
 .diffchip.d1,.diffchip.d2{background:var(--gold-soft)}
 .diffchip.d3,.diffchip.d4,.diffchip.d5{background:color-mix(in srgb,var(--rose) 25%,transparent)}
-@media (max-width:560px){
+@media (max-width:840px){
   .tabs{flex-wrap:wrap;gap:8px 6px}
   .tab.env{order:-2;flex:1 0 100%;margin-left:0;text-align:center}
   .hud{order:-1;flex:1 0 100%;margin:0;flex-direction:row;flex-wrap:wrap;gap:4px 14px;padding:2px 2px 6px}
   .hb{flex:1 1 140px}
-  .tab:not(.env){flex:1 1 0;padding-inline:2px;font-size:14px;white-space:nowrap;min-width:0}
+  .tab:not(.env){flex:1 1 auto;padding-inline:2px;font-size:clamp(11px,3.2vw,15px);letter-spacing:-.02em;white-space:nowrap;min-width:0}
 }
 main.wrap{padding-top:28px}
 .pane{display:flex;flex-direction:column;gap:28px}
@@ -403,6 +427,7 @@ input,select{font:inherit;color:var(--ink);background:var(--paper);border:1px so
       <button class="tab" id="t-status" data-tab="status">ステータス</button>
       <button class="tab" id="t-move" data-tab="move">移動</button>
       <button class="tab" id="t-shop" data-tab="shop">買う</button>
+      <button class="tab" id="t-zukan" data-tab="zukan">図鑑</button>
       <button class="tab" id="t-system" data-tab="system">システム</button>
       <div class="hud" aria-label="いまの状態">
         <div class="hb"><span class="hl">HP <b id="hudhp"></b></span><span class="mini"><i id="hudhpbar"></i></span></div>
@@ -538,6 +563,23 @@ input,select{font:inherit;color:var(--ink);background:var(--paper);border:1px so
   </section>
 
   <!-- ===== システム ===== -->
+  <!-- ===== 図鑑 ===== -->
+  <section class="pane" id="tab-zukan" aria-labelledby="t-zukan" hidden>
+    <section class="sec-head"><h2>図鑑とトロフィー</h2><p>旅で出会った魔物、手に入れた品、訪れた場所が図鑑に載っていきます。まだのものは「？？？」。トロフィーは手紙にも載ります。おかしなトロフィーほど、取るまで条件がわかりません。</p></section>
+    <div class="zsum" id="zsum"></div>
+    <nav class="subnav" aria-label="図鑑の項目">
+      <button class="sublink" data-jump="z-tro">トロフィー</button><button class="sublink" data-jump="z-mon">魔物図鑑</button><button class="sublink" data-jump="z-item">アイテム図鑑</button><button class="sublink" data-jump="z-place">地名図鑑</button>
+    </nav>
+    <section class="sec-head" id="z-tro"><h2>トロフィー</h2></section>
+    <div class="trogrid" id="trogrid"></div>
+    <section class="sec-head" id="z-mon"><h2>魔物図鑑</h2><p>数字は倒した回数。属性は出会うとわかります。</p></section>
+    <div class="zbook" id="zmon"></div>
+    <section class="sec-head" id="z-item"><h2>アイテム図鑑</h2></section>
+    <div class="zbook" id="zitem"></div>
+    <section class="sec-head" id="z-place"><h2>地名図鑑</h2></section>
+    <div class="zbook" id="zplace"></div>
+  </section>
+
   <section class="pane" id="tab-system" aria-labelledby="t-system" hidden>
     <nav class="subnav" aria-label="システムの項目">
       <button class="sublink" id="opengate">はじめに（注意事項）</button><button class="sublink" data-jump="sys-about">このゲームについて</button><button class="sublink" data-jump="sys-aff">好感度</button><button class="sublink" data-jump="sys-rules">判定のしくみ</button><button class="sublink" data-jump="sys-tables">ランダム表</button>
@@ -851,6 +893,99 @@ const BIRD_TALK=[
   "高い木のてっぺんまで、{name}と{pigeon}で競争した。勝ったのは{pigeon}だったが、{name}は「こっちは荷物を持ってたから」と言い訳した。",
   "{pigeon}が羽を一枚落とした。{name}はそれを拾って、大事そうに自分の羽のあいだに挟んだ。おそろいのお守りだ。",
   "夜、{name}と{pigeon}は寄りそって眠った。夢の中でも、たぶん一緒に空を飛んでいる。"];
+// ================= 図鑑とトロフィー =================
+const tf=t=>(t.tf=t.tf||{});
+function trk(s){
+  s.dex=s.dex||{mon:{},kill:{},item:{},place:{}};
+  ["mon","kill","item","place"].forEach(k=>s.dex[k]=s.dex[k]||{});
+  s.trophies=s.trophies||{};s.bossKills=s.bossKills||{};
+  s.cnt=Object.assign({sarmas:0,bird:0,fish:0,dungeonDays:0},s.cnt||{});
+  return s;
+}
+const ALL_PLACES=()=>COUNTRIES.flatMap(c=>c.places);
+const DUNGEONS=()=>ALL_PLACES().filter(pl=>pl.type==="dungeon"||pl.type==="last");
+// 図鑑に載るものの一覧（ゲームのデータから集める）
+function monUniverse(){
+  return COUNTRIES.map(c=>({c,list:[...new Set([...c.mons,...c.dmons,...c.places.filter(pl=>pl.type==="dungeon"||pl.type==="last").map(pl=>bossOf(pl).n)])]}));
+}
+function itemUniverse(){
+  const cats=[];
+  cats.push({n:"装備",list:[...new Set(GEAR_ORDER.flatMap(sl=>EQUIP[sl].items.filter(x=>x.id!=="none").map(x=>x.n)))]});
+  cats.push({n:"ごはんの材料",list:[...FOODS]});
+  const loc=new Set();COUNTRIES.forEach(c=>{[c.find,c.rare,...(c.goods||[])].forEach(x=>x&&loc.add(x));c.places.forEach(pl=>{[pl.find,...(pl.goods||[])].forEach(x=>x&&loc.add(x))})});
+  cats.push({n:"各地の名産と拾い物",list:[...loc].filter(x=>!FOODS.includes(x))});
+  const boss=new Set();DUNGEONS().forEach(pl=>{const B=bossOf(pl);boss.add(B.gear?findGear(B.gear).n:B.item)});boss.add(MIRROR_KEY);
+  cats.push({n:"大ボスの秘宝",list:[...boss]});
+  const misc=new Set(["傷薬","鳩がくれた小枝"]);NAMED_IDS.forEach(id=>{misc.add(NAMED[id].ring);NAMED[id].likes.forEach(x=>misc.add(x))});
+  const known=new Set(cats.flatMap(c=>c.list));
+  cats.push({n:"そのほか",list:[...misc].filter(x=>!known.has(x))});
+  return cats;
+}
+const KING="ペンタ・ノワの魔鏡の迷宮";
+const anyAff=(s,v)=>NAMED_IDS.some(id=>s.aff[id]>=v);
+const inParty=(s,...ids)=>ids.every(id=>s.party.includes(id));
+const visitedCountries=s=>new Set(Object.keys(s.dex.place).map(n=>PLACES[n]&&PLACES[n].country.id).filter(Boolean));
+// トロフィー：cat＝分類、hide＝取るまで条件をふせる、gold＝特別
+const TROPHIES=[
+  {id:"join",cat:"仲間",n:"はじめての仲間",d:"同行冒険者を仲間に加えた",test:s=>s.party.length>0||Object.keys(s.joined).length>0},
+  {id:"aff50",cat:"仲間",n:"打ち解けた",d:"ネームド冒険者の好感度を50まで上げた",test:s=>anyAff(s,50)},
+  {id:"aff100",cat:"仲間",n:"かけがえのない人",d:"ネームド冒険者の好感度を100まで上げた",test:s=>anyAff(s,100)},
+  {id:"marry",cat:"仲間",n:"誓いの日",d:"ネームド冒険者と結婚した",test:s=>!!s.spouse},
+  {id:"firstlove",cat:"仲間",n:"初恋？",d:"アルヴァンとセレスを一緒にパーティに入れた",hide:true,test:s=>inParty(s,"alvan","seres")},
+  {id:"reunion",cat:"仲間",n:"聖騎士の再会",d:"セヴェインとイセリアを一緒にパーティに入れた",hide:true,test:s=>inParty(s,"sevein","iselia")},
+  {id:"fame10",cat:"名声",n:"ちょっと知られた冒険者",d:"名声を10まで上げた",test:s=>s.fame>=10},
+  {id:"fame30",cat:"名声",n:"街の噂の冒険者",d:"名声を30まで上げた",test:s=>s.fame>=30},
+  {id:"fame50",cat:"名声",n:"吟遊詩人に歌われる",d:"名声を50まで上げた",test:s=>s.fame>=50},
+  {id:"fame100",cat:"名声",n:"大陸に名を轟かせる",d:"名声を100まで上げた",test:s=>s.fame>=100},
+  {id:"key",cat:"大ボス",n:"鏡の向こうへ",d:"魔鏡の鍵を手に入れた",test:s=>!!s.mirrorKey},
+  {id:"king",cat:"大ボス",n:"黒衣の魔王討伐",d:"黒衣の魔王を倒した",gold:true,test:s=>!!s.bossKills[KING]},
+  {id:"countries",cat:"旅",n:"大陸を股にかけて",d:"7つの国をすべて訪れた",test:s=>visitedCountries(s).size>=7},
+  {id:"alldungeons",cat:"旅",n:"迷宮踏破",d:"すべてのダンジョンを訪れた",test:s=>DUNGEONS().every(pl=>s.dex.place[pl.n])},
+  {id:"day100",cat:"旅",n:"百日の旅",d:"100日目を迎えた",test:s=>s.day>=100},
+  {id:"day365",cat:"旅",n:"一年の旅",d:"365日目を迎えた",test:s=>s.day>=365},
+  {id:"hp1",cat:"ギリギリ",n:"九死に一生",d:"HP1で一日を終えた",hide:true,test:(s,t)=>!s.dead&&s.hp===1},
+  {id:"crawl",cat:"ギリギリ",n:"這ってでも帰る",d:"HPが2割を切ったところで、作戦どおり引き返した",hide:true,test:(s,t)=>!!tf(t).crawl},
+  {id:"rescued",cat:"ギリギリ",n:"仲間がいなかったら死んでいた",d:"冒険者仲間の救援で、倒れる寸前に踏みとどまった",hide:true,test:(s,t)=>!!tf(t).rescued},
+  {id:"overwork",cat:"ギリギリ",n:"過労",d:"休息度−15で倒れて運ばれた",hide:true,test:(s,t)=>!!tf(t).overwork},
+  {id:"sarmas1",cat:"ネームド",n:"ギャアアアッ",d:"サーマスがアンデッドを見て取り乱した",hide:true,test:s=>s.cnt.sarmas>=1},
+  {id:"sarmas100",cat:"ネームド",n:"ギャアアアアアアッ",d:"サーマスが100回取り乱した",hide:true,test:s=>s.cnt.sarmas>=100},
+  {id:"disguise",cat:"ネームド",n:"ど、どうも、ただの通りすがりの鎧です",d:"兜で変装したセヴェインとオキサジンを歩いた",hide:true,test:(s,t)=>!!tf(t).disguise},
+  {id:"insult",cat:"ネームド",n:"文学的な罵倒",d:"初対面のヴルカヌに罵倒された",hide:true,test:(s,t)=>!!tf(t).vulkanu},
+  {id:"shy",cat:"ネームド",n:"会話が続かない",d:"女性PCで、アルヴァンとの会話が続かなかった",hide:true,test:(s,t)=>!!tf(t).alvan},
+  {id:"powder",cat:"ネームド",n:"火薬の匂いがします",d:"フェリオスに爆弾の罠から救われた",hide:true,test:(s,t)=>!!tf(t).ferios},
+  {id:"pigeon",cat:"鳩",n:"ただいまクルッ",d:"道に迷った鳩が帰ってきた",hide:true,test:(s,t)=>!!tf(t).pigeonLost},
+  {id:"bird100",cat:"鳩",n:"鳥同士の友情",d:"鳥類で、鳩と100回キャッキャウフフした",hide:true,test:s=>s.cnt.bird>=100},
+  {id:"cookfail",cat:"失敗",n:"おいしくない",d:"料理で大失敗した",hide:true,test:(s,t)=>!!tf(t).cookFail},
+  {id:"warp",cat:"失敗",n:"ふりだし",d:"転移の罠で入口に戻された",hide:true,test:(s,t)=>!!tf(t).warp},
+  {id:"bomb",cat:"失敗",n:"直撃",d:"爆弾の罠で大失敗して、HP−15を食らった",hide:true,test:(s,t)=>!!tf(t).bombDirect},
+  {id:"broke",cat:"失敗",n:"一文無し",d:"お金が0になった",hide:true,test:s=>s.gold===0&&s.silver===0},
+  {id:"tsuke",cat:"失敗",n:"ツケ",d:"治療院代を払いきれなかった",hide:true,test:(s,t)=>!!tf(t).tsuke},
+  {id:"fish",cat:"やりこみ",n:"おさかな天国",d:"アズリア王国のフィールドで、釣った魚を100回手に入れた",hide:true,test:s=>s.cnt.fish>=100},
+  {id:"netspeak",cat:"やりこみ",n:"キタコレ！",d:"ネット民口調で、ほかの冒険者と出会った",hide:true,test:(s,t)=>!!tf(t).netspeak},
+  {id:"dango",cat:"やりこみ",n:"花より団子",d:"100日目まで、一度もダンジョンに入らなかった",hide:true,test:s=>s.day>=100&&s.cnt.dungeonDays===0},
+  {id:"homebody",cat:"やりこみ",n:"引きこもり",d:"100日目まで、最初の国から出なかった",hide:true,test:s=>s.day>=100&&visitedCountries(s).size<=1},
+  {id:"ryofu",cat:"やりこみ",n:"人中に呂布あり",d:"種族・呂布で黒衣の魔王を倒した",hide:true,test:(s,t,p)=>!!s.bossKills[KING]&&p.race==="呂布"},
+  {id:"jobless",cat:"やりこみ",n:"無職の星",d:"無職のまま黒衣の魔王を倒した",hide:true,test:(s,t,p)=>!!s.bossKills[KING]&&p.job==="jobless"},
+  {id:"cheat",cat:"やりこみ",n:"俺、またなんかやっちゃいましたか？",d:"チート転生民で黒衣の魔王を倒した",hide:true,test:(s,t,p)=>!!s.bossKills[KING]&&p.race==="チート転生民"},
+  {id:"hardking",cat:"やりこみ",n:"修羅の道を越えて",d:"ハードコアで黒衣の魔王を倒した",gold:true,hide:true,test:(s,t,p)=>!!s.bossKills[KING]&&p.diff==="hard"}
+];
+// 各ダンジョンの大ボス討伐（ダンジョンの数だけ）
+function bossTrophies(){return DUNGEONS().filter(pl=>pl.n!==KING).map(pl=>({id:"boss:"+pl.n,cat:"大ボス",n:`${bossOf(pl).n}討伐`,d:`${pl.n}の大ボスを倒した`,place:pl.n,test:s=>!!s.bossKills[pl.n]}))}
+const allTrophies=()=>[...TROPHIES.slice(0,11),...bossTrophies(),...TROPHIES.slice(11)];
+// 一日の終わりに、図鑑とトロフィーを更新する
+function dayTrack(s,t,p){
+  trk(s);const d=s.dex,f=tf(t);
+  (t.seen||[]).forEach(n=>{d.mon[n]=d.mon[n]||s.day});
+  (t.kills||[]).forEach(n=>{d.mon[n]=d.mon[n]||s.day;d.kill[n]=(d.kill[n]||0)+1});
+  s.items.forEach(n=>{d.item[n]=d.item[n]||s.day});
+  s.owned.forEach(id=>{const g=findGear(id);if(g&&id!=="none")d.item[g.n]=d.item[g.n]||s.day});
+  if(!s.travel&&PLACES[s.loc])d.place[s.loc]=d.place[s.loc]||s.day;
+  if(t.kind==="dungeon")s.cnt.dungeonDays++;
+  s.cnt.sarmas+=t.panic||0;s.cnt.bird+=f.bird||0;
+  const got=[];
+  allTrophies().forEach(T=>{if(s.trophies[T.id])return;let ok=false;try{ok=T.test(s,t,p)}catch(e){}if(ok){s.trophies[T.id]=s.day;got.push(T)}});
+  got.forEach(T=>{t.out.push({c:"grow trophy",t:`〔${T.gold?"★":""}トロフィー獲得：「${T.n}」――${T.d}〕`});t.hl.push(`トロフィー「${T.n}」`)});
+}
 const NAMED={
  alvan:{n:"アルヴァン",race:"人間",job:"騎士",sex:"男性",age:26,home:"az",origin:"アズリア王国",
   bio:"アズリア王国の騎士の家の四男。自由騎士として修業の身。",
@@ -1016,7 +1151,7 @@ const NAMED={
   join:"サーマスが旅の仲間に加わった。「よろしくね。あ、途中で寄り道したくなったら言うね。たぶん毎日」",
   battle:(s,t)=>{
    const ud=hasAttr(t.foe,"アンデッド");
-   if(ud){const P=["サーマス「ギャアアアッ！ アンデッドだぁぁぁ！！！」 麗しいエルフが、泣き叫びながら{name}の背中にしがみついた。それでもヤドリギの杖から、支援の光はちゃんと飛んできた。",
+   if(ud){t.panic=(t.panic||0)+1;const P=["サーマス「ギャアアアッ！ アンデッドだぁぁぁ！！！」 麗しいエルフが、泣き叫びながら{name}の背中にしがみついた。それでもヤドリギの杖から、支援の光はちゃんと飛んできた。",
      "サーマス「無理無理無理無理！ 骨！ 骨が動いてる！！」 涙と鼻水でぐしゃぐしゃになりながら、緑の光を闇雲に撒き散らしている。",
      "サーマスは"+t.foe+"を見た瞬間に白目をむいて叫んだ。「ギャアアアッ！ アンデッドダァァァ！！！」……でも杖は離さなかった。えらい。",
      "サーマス「やだやだやだ、こっち見てる！ {name}、僕を置いてかないでね！？ 絶対だよ！？」 半泣きのまま、支援の光だけは律儀に飛ばしてくる。"];
@@ -1150,7 +1285,7 @@ HIRES.forEach(hh=>{for(const k in hh.mods)hh.mods[k]*=5});
 const COMP=id=>COMPANIONS.find(c=>c.id===id);
 const partyMembers=s=>[...new Set(s.party)].map(COMP).filter(Boolean);
 function activeComps(s,t){const a=partyMembers(s);if(t&&t.guest&&!a.some(c=>c.id===t.guest))a.push(COMP(t.guest));return a}
-const foe=(t,list)=>(t.foe=pick(list,t.rnd));
+const foe=(t,list)=>{t.foe=pick(list,t.rnd);(t.seen=t.seen||[]).push(t.foe);return t.foe};
 const isActive=(t,id)=>activeComps(t.s,t).some(c=>c.id===id);
 function compMods(s,p,k,t){return [...gearMods(s,k),...activeComps(s,t).map(c=>({who:c.n,v:c.mods[k]||0})).filter(b=>b.v)]}
 const eff=(s,p,k,t)=>s.stats[k]+compMods(s,p,k,t).reduce((a,b)=>a+b.v,0);
@@ -1230,12 +1365,12 @@ const TABLES={
    ok:()=>"慎重に渡りきった。",ng:(s,t)=>{hurt(s,t,2);return "足を滑らせ、擦り傷だらけになった。"}},
   {label:"旅人を助ける",fx:"徳＋1・干し果実",text:"荷車の車輪が溝にはまって困っている旅人を手伝った。お礼に干し果実をもらった。",effect:s=>{s.virtue++;s.items.push("干し果実")}},
   {label:"食材集め",check:{kind:"int",dc:7},fx:"その国の食材",text:"今夜のごはんになりそうなものを探した。",
-   ok:(s,t)=>{s.items.push(t.C.ingr);return `${t.C.ingr}を手に入れた。今夜のごはんにしよう。`},ng:()=>"食べられそうなものは見つからなかった。"},
+   ok:(s,t)=>{s.items.push(t.C.ingr);if(t.C.id==="az"&&t.kind==="field")trk(s).cnt.fish++;return `${t.C.ingr}を手に入れた。今夜のごはんにしよう。`},ng:()=>"食べられそうなものは見つからなかった。"},
   {label:"小さな発見",text:"草むらで小鳥の巣を見つけた。そっとしておいた。"}]},
  ev_dungeon:{label:"出来事（ダンジョン）",die:"d8",note:"一日最大5回。成功で探索度＋2（大成功＋3）、判定なしは＋1、失敗は＋0。",rows:[
   {label:"罠",check:{kind:"dex",dc:9},fx:"罠の表を振る（爆弾は難易度2以上のダンジョンだけ）。フェリオスがいると75%で見抜く（爆弾は必ず）",
    text:(s,t)=>{const ok=TRAPS.filter(x=>!x.minDiff||diffOf(t.here)>=x.minDiff);t.trap=pick(ok,t.rnd);return t.trap.text},
-   pre:(s,t)=>{if(isActive(t,"ferios")&&(t.trap.id==="bomb"||t.rnd()<.75)){t.out.push({c:"p",t:t.trap.id==="bomb"?"フェリオスが無言で{name}の襟首をつかんで引き戻した。「……火薬の匂いがします。そこから先は、私の後ろを」 下調べのおかげで爆弾の罠を避けられた。":"フェリオスが「そこは踏まないように」と腕を引いた。下調べのおかげで罠を避けられた。"});return true}},
+   pre:(s,t)=>{if(isActive(t,"ferios")&&(t.trap.id==="bomb"||t.rnd()<.75)){if(t.trap.id==="bomb")tf(t).ferios=true;t.out.push({c:"p",t:t.trap.id==="bomb"?"フェリオスが無言で{name}の襟首をつかんで引き戻した。「……火薬の匂いがします。そこから先は、私の後ろを」 下調べのおかげで爆弾の罠を避けられた。":"フェリオスが「そこは踏まないように」と腕を引いた。下調べのおかげで罠を避けられた。"});return true}},
    ok:(s,t)=>t.trap.ok,ng:(s,t)=>t.trap.ng(s,t)},
   {label:"魔物",check:{kind:"combat",dc:10},fx:"成功で銀貨4・名声＋1",text:(s,t)=>`奥から${foe(t,t.C.dmons)}が現れた。`,
    ok:s=>{s.fame++;earn(s,4);return "打ち倒して、落ちていた銀貨4枚を拾った。"},ng:(s,t)=>{hurt(s,t,4);return "深手を負い、這うように逃げた。"}},
@@ -1325,9 +1460,9 @@ const TRAPS=[
   {id:"gas",n:"毒ガスの罠",text:"壁の穴から、しゅうっと音がした。",ok:"息を止めて走り抜け、毒ガスから逃れた。",
    ng:(s,t)=>{hurt(s,t,2);s.rest-=3;return "紫色のガスを吸ってしまった。頭がずきずきして、体が重い。（HP−2・休息度−3）"}},
   {id:"bomb",n:"爆弾の罠",minDiff:2,text:"足もとで、かちり。続いて、じりじりと何かが燃える音がした。",ok:"「伏せろ！」 間一髪で物陰に飛びこんだ。背後で轟音が響き、天井から砂が降ってきた。",
-   ng:(s,t)=>{const n=t.lastFumble?15:10;hurt(s,t,n);return `爆風に吹き飛ばされ、壁に叩きつけられた。（HP−${n}${t.lastFumble?"・大失敗で直撃":""}）`}},
+   ng:(s,t)=>{const n=t.lastFumble?15:10;if(t.lastFumble)tf(t).bombDirect=true;hurt(s,t,n);return `爆風に吹き飛ばされ、壁に叩きつけられた。（HP−${n}${t.lastFumble?"・大失敗で直撃":""}）`}},
   {id:"warp",n:"転移の罠",text:"床に描かれた古い魔法陣が、足もとで青く光り始めた。",ok:"光が強まる前に、魔法陣の外へ転がり出た。",
-   ng:(s,t)=>{if(s.dg)s.dg.prog=0;t.stopNow=true;return "視界が真っ白になり、気がつくとダンジョンの入口に立っていた。今日の探索は振り出しだ。（探索度0・今日の探索はここまで）"}}];
+   ng:(s,t)=>{tf(t).warp=true;if(s.dg)s.dg.prog=0;t.stopNow=true;return "視界が真っ白になり、気がつくとダンジョンの入口に立っていた。今日の探索は振り出しだ。（探索度0・今日の探索はここまで）"}}];
 const TABLE_ORDER=["weather","encounter","people_city","people_field","people_dungeon","ev_city","ev_field","ev_dungeon","find","pigeon_moment","pigeon"];
 // 国のつながり（作者の地図より）。数字は街道を進む日数。2は山道
 const ADJ={ma:{az:1,sh:1},az:{ma:1,sh:1,ga:2},sh:{ma:1,az:1,ox:1},ox:{sh:1,vi:2,nb:2},vi:{ox:2,ga:1},ga:{az:2,vi:1},nb:{ox:2}};
@@ -1452,6 +1587,7 @@ function runEvent(row,s,t){
   if(row.pre&&row.pre(s,t))return {checked:true,ok:true,crit:false,kind:row.check.kind};
   const hp0=s.hp,ck=row.check.kind;
   const r=check(s,t,row.check);t.lastFumble=r.fumble;
+  if(r.ok&&row.check.kind==="combat"&&t.foe)(t.kills=t.kills||[]).push(t.foe);
   let res=r.ok?row.ok(s,t):row.ng(s,t);
   if(r.crit){s.fame++;res+="会心の出来だった。"}
   let cost=0;
@@ -1483,7 +1619,7 @@ function meet(s,id,t){
 }
 function encounterLine(s,t,id){
   const N=NAMED[id];
-  if(!s.met[id])return L(N.first,s,t.p);
+  if(!s.met[id]){if(id==="vulkanu")tf(t).vulkanu=true;return L(N.first,s,t.p)}
   let line=L(pick(N.again[speechTier(s,id)-1],t.rnd),s,t.p);
   if(t.rnd()<.6)line+=pick(N.look.slice(0,lookTier(s.aff[id])),t.rnd);
   return line;
@@ -1499,7 +1635,7 @@ function talk(s,t,id){
   const shy=id==="alvan"&&p.gender==="f"&&tier===1;
   if(shy)extra.push({who:"気まずさ",v:-20});
   const r=check(s,t,{kind:"talk",dc,extra,label:`${N.n}と${kl}`});
-  if(!r.ok){t.out.push({c:"p",t:shy?"アルヴァンに話しかけたが、彼は赤くなって黙りこみ、会話は続かなかった。":mood.v<0?`${N.n}は機嫌が悪いらしく、話はそれきりだった。`:`${N.n}と少し話したが、${kl}にはならなかった。`});return}
+  if(!r.ok){if(shy)tf(t).alvan=true;t.out.push({c:"p",t:shy?"アルヴァンに話しかけたが、彼は赤くなって黙りこみ、会話は続かなかった。":mood.v<0?`${N.n}は機嫌が悪いらしく、話はそれきりだった。`:`${N.n}と少し話したが、${kl}にはならなかった。`});return}
   let line;
   if(kind==="rumor"){const R=pick(N.rumor,rnd);line=R[0];addRumor(s,R[1],t);learn(s,t,R[0])}
   else if(kind==="past")line=pick(N.past,rnd);
@@ -1578,7 +1714,7 @@ function tryRescue(s,t,n){
   if(ok){
     t.out.push({c:"p",t:`倒れかけたそのとき、${b.n}が飛び込んできて敵の一撃を受け止めた。${say(SHOUT,b,"{name}")}……命拾いした。（絆＋2）`});
     mlog(t,b,`{name}が倒れかけていたので、飛び込んで敵の一撃を受け止めた。${say(THANKS,pc,b.n)}と言われた。間に合ってよかった。`);
-    bondUp(s,b,2);(t.hl||[]).push(`${b.n}に救われる`);return Math.max(0,s.hp-1);
+    tf(t).rescued=true;bondUp(s,b,2);(t.hl||[]).push(`${b.n}に救われる`);return Math.max(0,s.hp-1);
   }
   t.out.push({c:"p",t:`${b.n}が駆けつけてくれたが、あと一歩間に合わなかった。`});
   mlog(t,b,`{name}が危ないと気づいて駆けつけたが、間に合わなかった。悔しい。`);
@@ -1592,11 +1728,12 @@ const MATE_DISH=["野草のスープ","干し肉のあぶり焼き","木の実�
 
 // ================= 一日 =================
 function playDay(s,seed){
+  trk(s);
   const rnd=mulberry32(seed),p=player(),out=[],rolls={};gRnd=rnd;
   const t={s,bonus:{},out,rnd,p,guest:null,mates:[],mlog:{},hl:[],add(kind,who,v){(this.bonus[kind]=this.bonus[kind]||[]).push({who,v})}};
   const roll=key=>{const T=TABLES[key],i=Math.floor(rnd()*T.rows.length);(rolls[key]=rolls[key]||[]).push(i);return T.rows[i]};
   const pigeon=()=>{const n=TABLES.pigeon.rows.length;let pi=Math.floor(rnd()*n);if(t.windy&&rnd()<.5)pi=3;if(pi===3&&p.cls==="keeper")pi=Math.floor(rnd()*n)===3?3:0;
-    (rolls.pigeon=rolls.pigeon||[]).push(pi);const pg=TABLES.pigeon.rows[pi];if(pg.effect)pg.effect(s,t);out.push({c:"p",t:pg.text});if(p.race==="鳥類")out.push({c:"p",t:pick(BIRD_TALK,rnd)})};
+    (rolls.pigeon=rolls.pigeon||[]).push(pi);if(pi===3)tf(t).pigeonLost=true;const pg=TABLES.pigeon.rows[pi];if(pg.effect)pg.effect(s,t);out.push({c:"p",t:pg.text});if(p.race==="鳥類"){out.push({c:"p",t:pick(BIRD_TALK,rnd)});tf(t).bird=(tf(t).bird||0)+1}};
   const ps=s.ferios;s.ferios=false;
   const rest0=s.rest,money0=s.gold*10+s.silver,items0=[...s.items];
   const pm=partyMembers(s);
@@ -1667,6 +1804,7 @@ function playDay(s,seed){
   pm.forEach(c=>{if(c.daily)c.daily(s,t)});
   const namedParty=pm.filter(c=>c.named).map(c=>c.id);
   namedParty.forEach(id=>{if(!s.joined[id]){s.joined[id]=true;out.push({c:"p",t:NAMED[id].join})}meet(s,id,t)});
+  if(namedParty.includes("sevein")&&t.C&&t.C.id==="ox")tf(t).disguise=true;
   if(namedParty.includes("sevein")&&t.C&&t.C.id==="ox")out.push({c:"p",t:pick([
     "セヴェインは顔がすっぽり隠れる鉄の兜をかぶっていた。「大丈夫大丈夫、これで誰にもバレねえって！」……声が大きすぎる。",
     "すれ違った神殿騎士に呼び止められかけたが、兜姿のセヴェインは「ど、どうも、ただの通りすがりの鎧です」と言い張って切り抜けた。",
@@ -1675,6 +1813,7 @@ function playDay(s,seed){
     "セヴェインは兜の上から外套のフードまでかぶっていた。「完璧な変装だろ？」 道ゆく巡礼者が二度見していった。"],rnd)});
 
   // 同じ場所の冒険者仲間
+  if(t.mates.length&&pc.speech==="ネット民口調")tf(t).netspeak=true;
   t.mates.forEach(b=>{
     const mine=`{name}は${PERSONA_ACT[pc.persona]}、${say(GREET,pc,b.n)}と言った。`;
     if(s.bond[b.id]===undefined){s.bond[b.id]=0;out.push({c:"p",t:`同じ${here.type==="road"?"道":"場所"}で、${b.n}という${b.race}の${jobName(b.cls)}と知り合った。${b.n}は${PERSONA_ACT[b.persona]}、${say(GREET,b,"{name}")}と言った。相棒の鳩は${b.pigeon}（${b.pigeonSex}）というらしい。`});mlog(t,b,`${here.n}で、{name}という${pc.race}の${jobName(pc.job)}と知り合った。${mine}`)}
@@ -1705,7 +1844,7 @@ function playDay(s,seed){
 
   // 撤退（倒れた・極度の疲労・大ボスに敗北）：同じ国のどこかの都市へ
   let fell=false;
-  const toCity=(msg,safe)=>{
+  const toCity=(msg,safe)=>{if(s.rest<=-15)tf(t).overwork=true;
     const cities=t.C.places.filter(x=>x.type==="city"),c=pick(cities,rnd);
     fell=true;
     if(p.diff==="hard"&&s.hp<=0){s.dead=true;s.travel=null;s.dg=null;
@@ -1725,6 +1864,7 @@ function playDay(s,seed){
     }
     for(let i=0;i<nEv;i++){
       if(kind!=="city"&&tooHurt(s,p)){
+        if(s.hp<=hpMax(s)*.2)tf(t).crawl=true;
         out.push({c:"p",t:kind==="dungeon"?`傷が深い。${p.name}は無理をせず、今日の探索を切り上げて安全な場所まで引き返した。（作戦：${tacticOf(p).n}）`:`傷が深い。${p.name}は無理をせず、今日はもう危ないところには近づかないことにした。（作戦：${tacticOf(p).n}）`});
         t.hl.push("無理せず引き返した");break}
       if(kind==="dungeon"&&s.depth[here.n]<=0){bossFight(s,t,here,toCity);break}
@@ -1753,7 +1893,7 @@ function playDay(s,seed){
     }
   }
   if(!fell&&t.mates.length&&kind!=="city"&&s.hp>0&&s.rest>-15&&rnd()<.35){
-    const b=pick(t.mates,rnd),mon=pick(kind==="dungeon"?t.C.dmons:t.C.mons,rnd);t.foe=mon;
+    const b=pick(t.mates,rnd),mon=pick(kind==="dungeon"?t.C.dmons:t.C.mons,rnd);t.foe=mon;(t.seen=t.seen||[]).push(mon);
     out.push({c:"p",t:`${b.n}が${mon}に囲まれて追いつめられていた！`});
     t.assistSkip=b.id;const r=check(s,t,{kind:"combat",dc:9,label:`${b.n}を助ける戦闘`});t.assistSkip=null;
     s.rest-=r.ok?2:3;
@@ -1802,6 +1942,7 @@ function playDay(s,seed){
   if(s.rest<=-5&&s.hp>0){s.hp=Math.max(1,s.hp-5);out.push({c:"p",t:"重い疲れが抜けず、体が言うことをきかない。（重度の疲労・HP−5）"})}
   s.rest=Math.min(REST_MAX,s.rest);
   s.town=townToday(s,rnd);
+  dayTrack(s,t,p);
   if(s.dead){
     out.push({c:"p",t:`${p.pigeon}は長いあいだ、動かなくなった${p.name}のそばを離れなかった。やがて、最後の手紙を脚に結んで、いつもの空へ飛び立った。`});
     out.push({c:"grow",t:`〔${p.name}の旅は、第${s.day}号で終わった。ハードコアの旅に、二度目はない。……キャラメイクから、新しい冒険者で旅を始められます〕`});
@@ -1818,7 +1959,7 @@ function cook(s,t){
   const food=s.items.splice(i,1)[0];
   const dish=pick(["香草焼き","煮込み","スープ","包み焼き","甘煮"],t.rnd);
   t.out.push({c:"p",t:`夜、手持ちの${food}で${dish}を作ってみた。`});
-  const r=check(s,t,{kind:"cook",dc:8,label:"料理判定"});
+  const r=check(s,t,{kind:"cook",dc:8,label:"料理判定"});if(r.fumble)tf(t).cookFail=true;
   const g=r.crit?3:r.ok?2:1;s.rest+=g;heal(s,1);
   t.out.push({c:"p",t:(r.crit?"ほっぺたが落ちるほどおいしくできた！":r.ok?"おいしくできた。":"少し焦げたが、温かいごはんはありがたい。")+`（休息度＋${g}・HP＋1）`});
   const gg=[];if(r.ok)gainExp(s,r.k,gg);gg.forEach(x=>t.out.push(x));
@@ -1849,7 +1990,7 @@ function deathPenalty(s,t,p,money0,items0){
     if(gone.length)lost.push("装備の"+gone.join("・"));
   }
   if(lost.length)t.out.push({c:"p",t:`気がつくと、${lost.join("と、")}がなくなっていた。（${diffName(d)}：倒れた日の損）`});
-  const fee=Math.max(5,Math.floor((s.gold*10+s.silver)/2)),paid=pay(s,fee);
+  const fee=Math.max(5,Math.floor((s.gold*10+s.silver)/2)),paid=pay(s,fee);if(paid<fee)tf(t).tsuke=true;
   t.out.push({c:"p",t:paid?`治療院代として銀貨${paid}枚を払った。${paid<fee?"（足りない分はツケにしてもらった）":""}`:"治療院代を払えず、しばらく雑用を手伝うことで許してもらった。"});
 }
 function bossFight(s,t,here,toCity){
@@ -1857,7 +1998,7 @@ function bossFight(s,t,here,toCity){
   let bhp=3+diffOf(here)+(last?2:0);const dmg=2+Math.floor(diffOf(here)/2)+(nbOf(here)?1:0);
   t.out.push({c:"p",t:`${here.n}の最奥で、${B.n}が姿を現した！（${B.n}の体力 ${bhp}）`});
   const HIT=["渾身の一撃が入った。","隙を突いて斬りこんだ。","仲間と息を合わせて押しこんだ。","相手の動きを読んで、確かな手応えを得た。"];
-  t.foe=B.n;
+  t.foe=B.n;(t.seen=t.seen||[]).push(B.n);
   let round=0,win=false,fled=false;
   while(round<40){
     round++;
@@ -1874,9 +2015,10 @@ function bossFight(s,t,here,toCity){
     }
     if(s.hp>0&&s.hp<hpMax(s)&&isActive(t,"iselia")&&t.rnd()<.5){heal(s,2);t.out.push({c:"p",t:"イセリアの祈りが光となって降りそそいだ。（巫女の祈り・HP＋2）"})}
     if(s.hp<=0||s.rest<=-15)break;
-    if(tooHurt(s,pc)){fled=true;break}
+    if(tooHurt(s,pc)){fled=true;if(s.hp<=hpMax(s)*.2)tf(t).crawl=true;break}
   }
   if(win){
+    trk(s).bossKills[here.n]=(s.bossKills[here.n]||0)+1;(t.kills=t.kills||[]).push(B.n);
     s.fame+=last?20:5;earn(s,0,3);
     let prize=B.item;
     if(B.gear){const g=findGear(B.gear);if(!s.owned.includes(B.gear))s.owned.push(B.gear);prize=g.n}else s.items.push(prize);
@@ -2004,6 +2146,7 @@ function renderSheet(){
   renderGear();renderParty();renderLoc();renderTactic();renderTown();renderAff();
   const rr=document.getElementById("reroll");rr.disabled=acted||pc.diff==="hard";rr.title=pc.diff==="hard"?"ハードコアでは振り直せません":acted?"今日はもう買い物や雇用をしたので、振り直せません":"";
   ["next","next2","next3"].forEach(id=>{const b=document.getElementById(id);if(b){b.disabled=!!s.dead;b.title=s.dead?"この冒険者の旅は終わりました":""}});
+  renderZukan();
   saveGame();
 }
 function buildSheet(){
@@ -2307,7 +2450,7 @@ document.getElementById("giftbtn").addEventListener("click",()=>{
   document.getElementById("giftnote").textContent=`${NAMED[npc].n}に${item}を渡す予定です。次に会ったとき（同行中なら翌日）に渡します。`;
 });
 // ================= タブ =================
-const TABS=["letter","status","move","shop","system"];
+const TABS=["letter","status","move","shop","zukan","system"];
 function showTab(name,focus){
   if(!TABS.includes(name))name="letter";
   TABS.forEach(n=>{const on=n===name;document.getElementById("tab-"+n).hidden=!on;const b=document.getElementById("t-"+n);if(on)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
@@ -2319,6 +2462,31 @@ document.querySelectorAll(".tab").forEach(b=>{
 });
 document.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>document.getElementById(b.dataset.jump).scrollIntoView({behavior:"smooth",block:"start"})));
 window.addEventListener("hashchange",()=>showTab(location.hash.slice(1)));
+// ================= 図鑑タブ =================
+function renderZukan(){
+  const s=trk(state),d=s.dex;
+  const T=allTrophies(),got=T.filter(x=>s.trophies[x.id]).length;
+  const mons=monUniverse(),mN=mons.reduce((a,c)=>a+c.list.length,0),mG=mons.reduce((a,c)=>a+c.list.filter(n=>d.mon[n]).length,0);
+  const items=itemUniverse(),known=new Set(items.flatMap(c=>c.list)),extra=Object.keys(d.item).filter(n=>!known.has(n));
+  if(extra.length)items[items.length-1].list.push(...extra);
+  const iN=items.reduce((a,c)=>a+c.list.length,0),iG=items.reduce((a,c)=>a+c.list.filter(n=>d.item[n]).length,0);
+  const pls=ALL_PLACES(),pG=pls.filter(pl=>d.place[pl.n]).length;
+  document.getElementById("zsum").innerHTML=`<span>トロフィー <b>${got}</b>／${T.length}</span><span>魔物 <b>${mG}</b>／${mN}</span><span>アイテム <b>${iG}</b>／${iN}</span><span>地名 <b>${pG}</b>／${pls.length}</span>`;
+  document.getElementById("trogrid").innerHTML=T.map(x=>{
+    const g=s.trophies[x.id],pl=x.place&&PLACES[x.place],lockedPl=pl&&isLocked(s,pl)&&!g;
+    const name=g||!x.hide?(lockedPl?"？？？討伐":x.n):"？？？",desc=g||!x.hide?(lockedPl?"まだ知らないダンジョンの大ボスを倒す":x.d):"？？？";
+    return `<div class="tro${g?" got":""}${x.gold?" gold":""}"><span class="tc">${esc(x.cat)}${x.gold?"・★":""}</span><span class="tn">${esc(name)}</span><span class="td">${esc(desc)}</span>${g?`<span class="tday">第${g}号で獲得</span>`:""}</div>`}).join("");
+  document.getElementById("zmon").innerHTML=mons.map(({c,list})=>{
+    const n=list.filter(m=>d.mon[m]).length;
+    return `<details><summary>${esc(c.n)}<small>${n}／${list.length}</small></summary><ul>${list.map(m=>d.mon[m]?`<li><span>${esc(m)}</span>${MON_ATTR[m]?`<span class="zat">${esc(MON_ATTR[m])}</span>`:""}<span class="zk">${d.kill[m]?`×${d.kill[m]}`:"未撃破"}</span></li>`:`<li class="no">？？？</li>`).join("")}</ul></details>`}).join("");
+  document.getElementById("zitem").innerHTML=items.filter(c=>c.list.length).map(c=>{
+    const n=c.list.filter(m=>d.item[m]).length;
+    return `<details><summary>${esc(c.n)}<small>${n}／${c.list.length}</small></summary><ul>${c.list.map(m=>d.item[m]?`<li><span>${esc(m)}</span><span class="zk">第${d.item[m]}号</span></li>`:`<li class="no">？？？</li>`).join("")}</ul></details>`}).join("");
+  document.getElementById("zplace").innerHTML=COUNTRIES.map(c=>{
+    const n=c.places.filter(pl=>d.place[pl.n]).length;
+    const TY={city:"都市",field:"フィールド",dungeon:"ダンジョン",last:"ダンジョン"};
+    return `<details><summary>${esc(c.n)}<small>${n}／${c.places.length}</small></summary><ul>${c.places.map(pl=>d.place[pl.n]?`<li><span>${esc(pl.n)}</span><span class="zat">${TY[pl.type]||""}</span><span class="zk">第${d.place[pl.n]}号</span></li>`:`<li class="no">？？？</li>`).join("")}</ul></details>`}).join("");
+}
 // ================= セーブ（このブラウザに自動保存） =================
 const SAVE_KEY="tabihato-save-v1",ARCHIVE_MAX=100;
 let loading=true;
