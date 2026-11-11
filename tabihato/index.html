@@ -1,0 +1,2351 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<title>セルレア大陸・旅鳩通信</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yusei+Magic&family=Shippori+Mincho+B1:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Maru+Gothic:wght@500&display=swap">
+<style>
+/* Layout: 紹介 → 個人ステータス → 装備 → 同行冒険者 → 現在地と移動先 → 届いた手紙 → 好感度 → 判定 → ランダム表。空色の紙に群青のインク、金の封蝋。 */
+:root{
+  --sky:#e8f0f5;--paper:#f7fafc;--ink:#1d2a4a;--ink-soft:#4d5a78;--line:#c9d6e2;
+  --cerulean:#2f7fb5;--gold:#a8822a;--gold-soft:#efe2bd;--violet:#6b5b8c;--rose:#b4495b;--leaf:#3d8a5f;
+  --display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+  --mono:"Zen Maru Gothic","Hiragino Maru Gothic ProN",sans-serif;
+  --hand:"Yusei Magic","Zen Maru Gothic","Hiragino Maru Gothic ProN",sans-serif;
+  --band:#a6dcef;--strip:#ffffff;--tabink:#16181d;--env:#e8ddcf;--pigeon:#4f8fc4;--pigeon-d:#2b5f8c;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --sky:#121a2b;--paper:#1a2438;--ink:#e3eaf4;--ink-soft:#a5b2c8;--line:#2e3b55;
+  --cerulean:#6fb3e3;--gold:#d9b45a;--gold-soft:#3a3220;--violet:#b3a3d6;--rose:#e88a99;--leaf:#7cc79b;--band:#1e3a50;--strip:#162033;--tabink:#dbe4f0;--env:#4a4134;--pigeon:#6fa8d8;--pigeon-d:#cfe3f5;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --sky:#121a2b;--paper:#1a2438;--ink:#e3eaf4;--ink-soft:#a5b2c8;--line:#2e3b55;
+  --cerulean:#6fb3e3;--gold:#d9b45a;--gold-soft:#3a3220;--violet:#b3a3d6;--rose:#e88a99;--leaf:#7cc79b;--band:#1e3a50;--strip:#162033;--tabink:#dbe4f0;--env:#4a4134;--pigeon:#6fa8d8;--pigeon-d:#cfe3f5;color-scheme:dark}
+
+body{background:var(--sky);color:var(--ink);font-family:var(--body);line-height:1.8;padding-bottom:64px}
+/* はじめに（入口） */
+.gate{position:fixed;inset:0;z-index:50;overflow-y:auto;background:var(--band);padding:max(24px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(32px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.gatecard{max-width:640px;margin:0 auto;background:var(--paper);color:var(--ink);border:3px solid var(--tabink);border-radius:18px;padding:28px clamp(18px,5vw,40px);display:flex;flex-direction:column;gap:16px}
+.gateeye{margin:0;font-size:12px;letter-spacing:.2em;color:var(--cerulean);font-weight:700}
+.gatecard h1{margin:0;font-family:var(--hand);font-size:clamp(28px,7vw,40px);line-height:1.2;color:var(--ink);text-wrap:balance}
+.gatelead{margin:0}
+.gatesec{display:flex;flex-direction:column;gap:6px;border-top:1px dashed var(--line);padding-top:12px}
+.gatesec h2{margin:0;font-family:var(--display);font-size:18px}
+.gatesec ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px}
+.gateai{border:2px solid var(--gold);border-radius:12px;padding:12px 16px;background:var(--gold-soft,transparent)}
+.gatenote{margin:0;font-weight:700}
+.gatebtns{display:flex;flex-wrap:wrap;gap:10px}
+.gatebye{margin:0;color:var(--ink-soft)}
+/* ヘッダー：空の帯＋白い帯にタブ（作者のラフより） */
+.bandin,.stripin,main.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.band{background:var(--band)}
+.bandin{max-width:900px;margin:0 auto;padding-block:22px 14px}
+.band .eyebrow{color:var(--tabink);opacity:.75}
+.strip{background:var(--strip);border-top:3px solid var(--tabink);border-bottom:3px solid var(--tabink)}
+.stripin{max-width:900px;margin:0 auto;padding-top:14px}
+.strip{position:relative;overflow:hidden}
+.strip.haspic::before{content:"";position:absolute;left:0;top:0;bottom:0;width:min(62%,600px);background:var(--locpic) center 30%/cover no-repeat;-webkit-mask-image:linear-gradient(90deg,#000 40%,transparent 100%);mask-image:linear-gradient(90deg,#000 40%,transparent 100%);pointer-events:none}
+.strip .stripin{position:relative;z-index:1}
+.strip.haspic .stripin{text-shadow:0 0 2px var(--strip),0 0 4px var(--strip),1px 1px 0 var(--strip),-1px -1px 0 var(--strip),1px -1px 0 var(--strip),-1px 1px 0 var(--strip)}
+.strip.haspic .where{text-shadow:0 0 3px var(--strip),0 0 6px var(--strip),0 0 12px var(--strip),2px 2px 0 var(--strip),-2px -2px 0 var(--strip),2px -2px 0 var(--strip),-2px 2px 0 var(--strip)}
+.where{margin:0 0 10px;font-family:var(--hand);font-size:clamp(24px,5.5vw,40px);line-height:1.2;color:var(--tabink)}
+.tabs{display:flex;align-items:flex-end;gap:10px;margin-bottom:-3px}
+.tab{white-space:nowrap;font-family:var(--hand);font-weight:400;font-size:clamp(15px,3.2vw,22px);color:var(--tabink);background:var(--strip);
+  border:3px solid var(--tabink);border-bottom:none;border-radius:10px 12px 0 0;padding:10px clamp(10px,2.4vw,22px) 8px;line-height:1.2;
+  transform:rotate(-1.2deg);transform-origin:bottom center;transition:transform .15s,background .15s}
+.tab:nth-child(2){transform:rotate(.8deg)} .tab:nth-child(3){transform:rotate(-.6deg)} .tab:nth-child(4){transform:rotate(1deg)}
+.tab:hover{transform:translateY(-3px) rotate(0)}
+.tab[aria-current="page"]{background:var(--sky);transform:translateY(-4px) rotate(0);padding-bottom:12px}
+.tab.env{position:relative;background:var(--env);border-radius:4px 4px 0 0;padding:44px clamp(16px,3vw,30px) 10px;font-size:clamp(17px,3.6vw,26px);transform:rotate(0);white-space:nowrap}
+.tab.env[aria-current="page"]{background:var(--env);transform:translateY(-4px);padding-bottom:14px;box-shadow:0 0 0 3px var(--sky) inset}
+.flap{position:absolute;inset:0 0 auto 0;width:100%;height:42px;fill:none;stroke:var(--tabink);stroke-width:3;vector-effect:non-scaling-stroke}
+.pseal{position:absolute;left:50%;top:14px;width:30px;height:30px;transform:translateX(-50%)}
+.ps-bg{fill:var(--pigeon);stroke:var(--tabink);stroke-width:2.5}
+.ps-bird{fill:var(--pigeon-d)} .ps-beak{fill:var(--gold)} .ps-eye{fill:var(--pigeon)}
+.envlabel{position:relative}
+.hud{margin-left:auto;align-self:center;display:flex;flex-direction:column;gap:3px;min-width:170px;padding:0 4px 10px;font-size:12px;color:var(--tabink);font-variant-numeric:tabular-nums}
+.hb{display:grid;grid-template-columns:6.2em 1fr;align-items:center;gap:8px;white-space:nowrap}
+.hl b{font-weight:700}
+.mini{display:block;height:8px;border-radius:999px;background:var(--line);overflow:hidden;border:1.5px solid var(--tabink)}
+.mini i{display:block;height:100%;background:var(--leaf)}
+.mini i.low{background:var(--rose)}
+.mini.rest i{background:var(--cerulean)} .mini.rest i.low{background:var(--gold)} .mini.rest i.bad{background:var(--rose)}
+.hcoins{display:flex;gap:12px}
+.hcoins .coin{font-size:12.5px;font-weight:400;gap:5px} .hcoins .coin i{width:13px;height:13px}
+.diffchip{align-self:flex-start;font-size:12.5px;font-weight:700;border-radius:999px;padding:2px 12px;background:var(--line);color:var(--ink)}
+.diffchip.d-1,.diffchip.d0{background:color-mix(in srgb,var(--leaf) 22%,transparent)}
+.diffchip.d1,.diffchip.d2{background:var(--gold-soft)}
+.diffchip.d3,.diffchip.d4,.diffchip.d5{background:color-mix(in srgb,var(--rose) 25%,transparent)}
+@media (max-width:560px){
+  .tabs{flex-wrap:wrap;gap:8px 6px}
+  .tab.env{order:-2;flex:1 0 100%;margin-left:0;text-align:center}
+  .hud{order:-1;flex:1 0 100%;margin:0;flex-direction:row;flex-wrap:wrap;gap:4px 14px;padding:2px 2px 6px}
+  .hb{flex:1 1 140px}
+  .tab:not(.env){flex:1 1 0;padding-inline:2px;font-size:14px;white-space:nowrap;min-width:0}
+}
+main.wrap{padding-top:28px}
+.pane{display:flex;flex-direction:column;gap:28px}
+.pane[hidden]{display:none}
+.subnav{display:flex;flex-wrap:wrap;gap:8px}
+.sublink{font-family:var(--hand);font-weight:400;font-size:15px;background:var(--paper);color:var(--ink);border:2px solid var(--tabink);border-radius:999px;padding:4px 14px}
+.nextdest{font-size:13px;color:var(--ink-soft);align-self:center}
+.linkbtn{background:none;border:none;padding:0;color:var(--cerulean);font-size:13px;font-weight:700;text-decoration:underline;border-radius:0}
+.wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.35}
+header{display:flex;flex-direction:column;gap:8px}
+.eyebrow{font-size:12px;letter-spacing:.2em;color:var(--cerulean);font-weight:700}
+h1{font-size:clamp(28px,6vw,42px);font-weight:800}
+header p,.sec-head p{margin:0;color:var(--ink-soft);max-width:64ch;font-size:14.5px}
+.sec-head{display:flex;flex-direction:column;gap:6px}
+.sec-head h2{font-size:24px}
+button{font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:9px 20px;cursor:pointer;border:1.5px solid var(--cerulean);background:var(--cerulean);color:var(--paper)}
+button.ghost{background:transparent;color:var(--cerulean)}
+button.small{font-size:13px;padding:4px 14px}
+button:disabled{opacity:.45;cursor:not-allowed}
+.tab:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+input,select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:6px 10px;min-width:0}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:22px clamp(18px,4vw,32px)}
+.lbl{font-size:12px;letter-spacing:.15em;color:var(--cerulean);font-weight:700}
+.tight{margin-top:-24px}
+
+/* ステータスシート */
+.sheet{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:24px 32px}
+@media (max-width:680px){.sheet{grid-template-columns:1fr}}
+.who{display:flex;flex-direction:column;gap:12px}
+.field{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--ink-soft)}
+.field input,.field select{font-size:15px}
+.classdesc{font-size:13px;color:var(--ink-soft);margin:0}
+.hp{display:flex;flex-direction:column;gap:4px;font-size:13px}
+.hp .bar{height:10px;border-radius:999px;background:var(--line);overflow:hidden}
+.hp .bar i{display:block;height:100%;background:var(--leaf);transition:width .3s}
+.hp .bar i.low{background:var(--rose)}
+.hp span{font-variant-numeric:tabular-nums}
+.kv{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;background:var(--gold-soft);color:var(--ink);border-radius:999px;padding:3px 12px}
+.stats{display:flex;flex-direction:column}
+.stat{display:grid;grid-template-columns:5.5em 2.6em 2.6em 1fr;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+.stat:first-child{border-top:none}
+.stat label{font-family:var(--display);font-weight:700;font-size:16px}
+.stat label small{display:block;font-family:var(--body);font-weight:400;font-size:11px;color:var(--ink-soft);line-height:1.3}
+.stat input{width:3.2em;text-align:center;font-variant-numeric:tabular-nums;padding:4px}
+.stat .cb{font-family:var(--mono);font-size:13px;color:var(--cerulean);font-variant-numeric:tabular-nums}
+.stat .cb.neg{color:var(--rose)}
+.pips{display:flex;gap:4px}
+.pips i{width:100%;max-width:26px;height:10px;border-radius:2px;background:var(--line)}
+.pips i.on{background:var(--cerulean)}
+.exp{display:flex;gap:3px}
+.exp i{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--gold)}
+.exp i.on{background:var(--gold)}
+.sheetnote{grid-column:1/-1;font-size:12.5px;color:var(--ink-soft);margin:0}
+
+.bar.rest i{background:var(--cerulean)}
+.bar.rest i.low{background:var(--gold)} .bar.rest i.bad{background:var(--rose)}
+.lbody .sumline{font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--cerulean)}
+.dg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px;margin-top:6px;padding:8px 12px;border-radius:4px;background:color-mix(in srgb,var(--rose) 8%,transparent);font-variant-numeric:tabular-nums}
+.towngrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px}
+@media (max-width:680px){.towngrid{grid-template-columns:1fr}}
+.tcol{display:flex;flex-direction:column;gap:6px;min-width:0}
+.shop{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.shop li{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
+.shop li:first-child{border-top:none}
+.shop li small{display:block;font-size:12px;color:var(--ink-soft)}
+.shop .price{font-family:var(--mono);font-size:13px;color:var(--gold);white-space:nowrap}
+.town{display:flex;flex-direction:column;gap:12px}
+
+.useitems{display:flex;flex-direction:column;gap:8px}
+.userow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;font-size:15px}
+.userow small{display:block;font-size:12.5px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+
+.controls.after{margin-top:-8px}
+.archive{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.archive h2{font-size:22px}
+.bnlist{display:flex;flex-direction:column;gap:8px}
+.bn{background:var(--paper);border:1px solid var(--line);border-radius:4px}
+.bn summary{cursor:pointer;padding:12px 18px;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;font-family:var(--display);font-weight:700;font-size:16px}
+.bn summary small{font-family:var(--body);font-weight:400;color:var(--ink-soft);font-size:13px}
+.bn[open] summary{border-bottom:1px solid var(--line)}
+.bn .lbody{padding:14px clamp(16px,4vw,32px) 18px;font-size:15.5px;line-height:1.9}
+
+.mapfig{margin:0;display:flex;flex-direction:column;gap:6px}
+.mapwrap{position:relative;border-radius:6px;border:3px solid var(--tabink);overflow:hidden;line-height:0}
+.mapwrap img{width:100%;height:auto;display:block}
+.hot{position:absolute;transform:translate(-50%,-50%);width:15%;aspect-ratio:1.5;border-radius:50%;padding:0;background:transparent;border:3px solid transparent;color:#2a1c0c;display:flex;align-items:flex-end;justify-content:center;line-height:1.2}
+.hot:disabled{cursor:default;opacity:1}
+.hot span{font-family:var(--hand);font-weight:400;font-size:clamp(10px,1.6vw,15px);background:rgba(255,248,232,.92);border:2px solid #2a1c0c;border-radius:999px;padding:1px 8px;transform:translateY(55%);white-space:nowrap}
+.hot.cur{border-color:#b4233a;background:rgba(180,35,58,.10)}
+.hot.cur span{background:#b4233a;color:#fff;border-color:#b4233a}
+.hot.adj{border:3px dashed rgba(42,28,12,.7);cursor:pointer;background:rgba(255,248,232,.12)}
+.hot.adj:hover,.hot.adj:focus-visible{background:rgba(255,248,232,.35);border-style:solid}
+.hot.picked{border:3px solid #1f5fa8;background:rgba(31,95,168,.18)}
+.hot.picked span{background:#1f5fa8;color:#fff;border-color:#1f5fa8}
+@media (max-width:560px){.hot{border-width:2px!important}.hot span{font-size:9px;padding:0 5px;border-width:1.5px}}
+@media (prefers-reduced-motion:no-preference){.hot.adj:not(.picked){animation:hotpulse 2.4s ease-in-out infinite}@keyframes hotpulse{50%{background:rgba(255,248,232,.32)}}}
+.mapfig figcaption{font-size:12.5px;color:var(--ink-soft)}
+
+.mates{display:flex;flex-direction:column;gap:8px}
+.materow{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.4fr) auto auto;gap:6px 14px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.materow:first-child{border-top:none}
+@media (max-width:620px){.materow{grid-template-columns:1fr auto}.materow .mw{grid-column:1/-1}}
+.materow small{display:block;font-size:12px;color:var(--ink-soft)}
+.rel{display:inline-block;min-width:5.2em;text-align:center;font-size:11.5px;font-weight:700;border-radius:999px;padding:1px 8px;margin-right:8px}
+.rel.r1{background:color-mix(in srgb,var(--rose) 22%,transparent)} .rel.r2{background:var(--gold-soft)} .rel.r3{background:var(--line)}
+.mb{font-variant-numeric:tabular-nums;font-size:13px}
+.lbody .mateletter{font-family:var(--body);font-size:14.5px;line-height:1.8;background:color-mix(in srgb,var(--cerulean) 7%,transparent);border-radius:6px;padding:8px 14px}
+.lbody .mateletter summary{cursor:pointer;color:var(--cerulean);font-weight:700;font-size:13.5px}
+.lbody .mateletter p{margin:6px 0 0}
+
+.sec-head.headrow{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px}
+.hrtext{flex:1 1 420px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.nextbig{flex:none;font-size:17px;padding:12px 28px}
+
+.charmake{display:flex;flex-direction:column;gap:16px}
+.cmgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,170px),1fr));gap:12px 18px}
+.cmgrid select,.cmgrid input{width:100%;box-sizing:border-box;height:2.5em;font-size:15px}
+.cmdesc{margin:0;font-size:13.5px;color:var(--ink-soft)}
+.dicebox{display:flex;flex-direction:column;gap:10px;border-top:1px dashed var(--line);padding-top:14px}
+.dicetbl{border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums;min-width:460px}
+.dicetbl th,.dicetbl td{padding:4px 10px;text-align:center;border-top:1px solid var(--line)}
+.dicetbl tr:first-child th{border-top:none;color:var(--ink-soft);font-weight:500;font-size:12.5px}
+.dicetbl th:first-child{text-align:left;color:var(--ink-soft);font-weight:500;font-size:12.5px}
+.dicetbl td.up{color:var(--leaf);font-weight:700} .dicetbl td.down{color:var(--rose);font-weight:700}
+.dicetbl tr.tot td{font-family:var(--display);font-weight:800;font-size:18px;color:var(--ink)}
+.dicebtns{display:flex;flex-wrap:wrap;gap:10px}
+.cmnote{margin:0;font-size:13.5px;color:var(--leaf);min-height:1.2em}
+.cmnote.err{color:var(--rose)}
+.profile{margin:0;font-size:15px;line-height:1.7}
+.profile small{font-size:12.5px;color:var(--ink-soft)}
+.stat .sl{font-family:var(--display);font-weight:700;font-size:16px}
+.stat .sl small{display:block;font-family:var(--body);font-weight:400;font-size:11px;color:var(--ink-soft);line-height:1.3}
+.stat .sv{font-family:var(--display);font-weight:800;font-size:22px;text-align:right;font-variant-numeric:tabular-nums}
+.sbar{display:flex;height:10px;border-radius:999px;background:var(--line);overflow:hidden;min-width:0}
+.sbar i{display:block;height:100%;background:var(--cerulean)} .sbar i.m{background:color-mix(in srgb,var(--cerulean) 40%,transparent)}
+
+/* 財布 */
+.purse{display:flex;gap:16px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.coin{display:flex;align-items:center;gap:7px;font-size:15px;font-weight:700}
+.coin i{width:18px;height:18px;border-radius:50%;display:inline-block;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.18)}
+.coin.g i{background:radial-gradient(circle at 35% 30%,#f6e3a0,#c79a2e 65%,#8a6516)}
+.coin.s i{background:radial-gradient(circle at 35% 30%,#ffffff,#b9c2cc 65%,#7d8794)}
+.coin small{font-weight:400;font-size:12px;color:var(--ink-soft)}
+.purse-note{font-size:11.5px;color:var(--ink-soft);width:100%;margin-top:-6px}
+
+/* 装備・同行 */
+.gear{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 24px;padding:18px 20px}
+@media (max-width:720px){.gear{grid-template-columns:1fr}}
+.gslot,.slot{display:flex;flex-direction:column;gap:8px;min-width:0}
+.gslot select,.slot select{font-size:15px;width:100%}
+.gdesc,.cdesc{font-size:13px;color:var(--ink-soft);margin:0}
+.party{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:620px){.party{grid-template-columns:1fr}}
+.slot{padding:18px 20px}
+.slot .cname{font-family:var(--display);font-weight:700;font-size:19px}
+.mods{display:flex;flex-wrap:wrap;gap:6px}
+.mod{font-size:12px;font-family:var(--mono);border-radius:4px;padding:1px 8px;border:1px solid var(--cerulean);color:var(--cerulean)}
+.mod.neg{border-color:var(--rose);color:var(--rose)}
+.mod.sp{border-color:var(--gold);color:var(--gold)}
+
+/* 現在地と移動先 */
+.loc{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px 32px}
+@media (max-width:680px){.loc{grid-template-columns:1fr}}
+.here{display:flex;flex-direction:column;gap:6px;min-width:0}
+.cn{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft)}
+.dot{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.here h3{font-size:clamp(22px,4vw,28px)}
+.ptype{font-family:var(--body);font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;margin-left:10px;vertical-align:middle;border:1px solid currentColor}
+.ptype.city{color:var(--cerulean)} .ptype.field{color:var(--leaf)} .ptype.dungeon{color:var(--rose)} .ptype.road{color:var(--gold)}
+.here p{margin:0;font-size:14.5px}
+.here .hx{color:var(--ink-soft);font-size:13.5px}
+.go{display:flex;flex-direction:column;gap:8px;min-width:0}
+.go select{font-size:15px;width:100%}
+.eta{font-size:13px;color:var(--ink-soft);margin:0}
+.eta b{color:var(--ink)}
+
+/* 手紙 */
+.controls{display:flex;gap:10px 14px;flex-wrap:wrap;align-items:center}
+.letter{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:36px clamp(20px,5vw,48px) 28px;box-shadow:0 18px 40px -28px rgba(29,42,74,.45)}
+.sharebtn{position:absolute;top:-17px;right:24px;font-size:14px;padding:6px 18px;background:var(--gold);border-color:var(--gold);color:#fff;box-shadow:0 4px 10px rgba(0,0,0,.15)}
+.sharebox{margin:-6px 0 16px;padding:12px 14px;border:1.5px dashed var(--gold);border-radius:6px;background:var(--gold-soft);display:flex;flex-direction:column;gap:4px}
+.sharetext{margin:0;font-size:14.5px;line-height:1.7;user-select:all;-webkit-user-select:all}
+.sharemsg{margin:0;font-size:12.5px;color:var(--ink-soft)}
+.seal{position:absolute;top:-18px;right:28px;width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f3d98a,var(--gold) 60%,#7a5c18);display:grid;place-items:center;color:#fff8e0;font-family:var(--display);font-weight:800;font-size:20px;box-shadow:0 4px 10px rgba(0,0,0,.2)}
+.lhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:18px}
+.lhead h2{font-size:22px}
+.lhead .meta{font-size:13px;color:var(--ink-soft)}
+.lbody{font-family:var(--display);font-size:17px;line-height:2;display:flex;flex-direction:column;gap:10px}
+.lbody p{margin:0}
+.lbody .roll{font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--violet);background:color-mix(in srgb,var(--violet) 9%,transparent);border-radius:4px;padding:6px 10px;font-variant-numeric:tabular-nums}
+.lbody .roll.ok b{color:var(--leaf)} .lbody .roll.ng b{color:var(--rose)}
+.lbody .intro{font-family:var(--body);font-size:14px;line-height:1.8;background:var(--paper2,rgba(127,160,200,.12));border-left:3px solid var(--cerulean);padding:6px 12px;margin:0;border-radius:0 6px 6px 0}
+.lbody .intro.warn{border-left-color:var(--gold);font-weight:700}
+.lbody .grow{font-family:var(--body);font-size:14px;color:var(--gold);font-weight:700}
+.lbody .talk{font-size:16px;border-left:3px solid var(--rose);padding-left:12px}
+.lbody .ps{color:var(--violet);font-size:15px}
+.rolls{margin-top:18px;border-top:1px dashed var(--line);padding-top:12px}
+.rolls summary{cursor:pointer;font-size:13px;color:var(--ink-soft)}
+.rolls ul{list-style:none;padding:0;margin:10px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:4px 16px;font-size:13px}
+.rolls li{display:flex;gap:8px;font-variant-numeric:tabular-nums}
+.rolls b{color:var(--cerulean);font-family:var(--mono);font-weight:500;min-width:6.5em}
+
+/* 好感度 */
+.aff{display:flex;flex-direction:column;gap:18px}
+.affrows{display:flex;flex-direction:column}
+.affrow{display:grid;grid-template-columns:10.5em 6.5em minmax(0,1fr);gap:4px 14px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.affrow:first-child{border-top:none}
+@media (max-width:560px){.affrow{grid-template-columns:1fr auto}.affrow .abar{grid-column:1/-1}}
+.affrow .an{font-family:var(--display);font-weight:700;font-size:16px;white-space:nowrap}
+.abar .track{max-width:240px}
+.tier{font-size:12px;border-radius:999px;padding:2px 10px;text-align:center;background:var(--line);color:var(--ink-soft);justify-self:start}
+.tier.t1{background:color-mix(in srgb,var(--cerulean) 18%,transparent);color:var(--cerulean)}
+.tier.t2{background:color-mix(in srgb,var(--violet) 20%,transparent);color:var(--violet)}
+.tier.t3{background:var(--gold-soft);color:var(--gold)}
+.tier.t4{background:color-mix(in srgb,var(--rose) 18%,transparent);color:var(--rose)}
+.abar{display:flex;flex-direction:column;gap:3px;min-width:0}
+.abar .track{height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+.abar .track i{display:block;height:100%;background:linear-gradient(90deg,var(--cerulean),var(--rose))}
+.abar small{font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.prof{grid-column:1/-1;font-size:13px}
+.prof summary{cursor:pointer;color:var(--cerulean);font-size:12.5px}
+.prof dl{display:grid;grid-template-columns:6.5em 1fr;gap:4px 12px;margin:8px 0 0}
+.prof dt{color:var(--ink-soft)} .prof dd{margin:0}
+.prof .locked{color:var(--ink-soft);opacity:.7}
+.marry{grid-column:1/-1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--rose)}
+.giftform{display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:14px}
+.giftrow{display:flex;flex-wrap:wrap;gap:8px}
+.giftrow select{font-size:14px;flex:1 1 9em}
+.giftnote{font-size:13px;color:var(--ink-soft);margin:0}
+
+/* ルール */
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:18px 28px;font-size:14px}
+.rules h3{font-size:16px;margin-bottom:4px}
+.rules p{margin:0}
+.formula{font-family:var(--mono);font-size:15px;color:var(--cerulean)}
+.odds{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;margin-top:6px}
+.odds th,.odds td{border-top:1px solid var(--line);padding:3px 6px;text-align:center}
+.odds th{color:var(--ink-soft);font-weight:500}
+.scroll{overflow-x:auto}
+
+/* 表 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,400px),1fr));gap:20px}
+.tbl{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:18px 20px;min-width:0}
+.tbl h3{font-size:18px;display:flex;align-items:baseline;gap:10px}
+.die{font-family:var(--mono);font-size:12px;color:var(--paper);background:var(--violet);border-radius:4px;padding:1px 7px}
+.tbl .note{font-size:12.5px;color:var(--ink-soft);margin:4px 0 10px}
+.tbl ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.tbl li{display:grid;grid-template-columns:2em 1fr;gap:8px;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
+.tbl li:first-child{border-top:none}
+.tbl .n{font-family:var(--mono);color:var(--cerulean);text-align:right}
+.tbl .fx{display:block;font-size:12px;color:var(--gold)}
+.tbl .ck{display:inline-block;font-size:11.5px;font-family:var(--mono);color:var(--violet);border:1px solid var(--violet);border-radius:3px;padding:0 5px;margin-right:6px}
+.tbl li.hit{background:var(--gold-soft);margin-inline:-8px;padding-inline:8px;border-radius:3px}
+@media (prefers-reduced-motion:no-preference){.letter.fresh{animation:drop .5s ease-out}@keyframes drop{from{transform:translateY(-8px);opacity:.4}to{transform:none;opacity:1}}}
+</style>
+
+<!-- ===== はじめに（入口・注意事項） ===== -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gatetitle" hidden>
+  <div class="gatecard">
+    <p class="gateeye">■セルレア大陸・旅鳩通信■</p>
+    <h1 id="gatetitle">旅立つ前に</h1>
+    <p class="gatelead">剣と魔法の大陸で、一日一回冒険して、相棒の鳩が手紙で結果を届けてくれる、定期更新風のテキストゲームです。読んでから、旅立つかどうか決めてくださいね。</p>
+    <section class="gatesec gateai">
+      <h2>生成AIを使っています</h2>
+      <ul>
+        <li>ゲームのプログラムと、手紙の文章の多くは、作者が生成AI（Claude）と一緒に作っています。</li>
+        <li>背景のイラストは、画像生成AI（ChatGPT・Grok）で作ったものを加工しています。</li>
+        <li>世界観・地名・ネームド冒険者の設定は、作者が作りました。</li>
+      </ul>
+      <p class="gatenote">生成AIを使った作品が苦手な方は、ここで引き返してください。無理をせず、いのちだいじに。</p>
+    </section>
+    <section class="gatesec">
+      <h2>このゲームについて</h2>
+      <ul>
+        <li>個人が趣味で作っている、無料の全年齢向けゲームです。</li>
+        <li>まだ試作版です。内容やバランスは予告なく変わることがあります。</li>
+        <li>冒険はこのブラウザに自動で保存されます。別の端末やブラウザには引き継げません。ブラウザのデータを消すと、冒険も消えます。</li>
+        <li>難易度「厳しい」「ハードコア」は修羅の道です。よく読んでから選んでください。</li>
+      </ul>
+    </section>
+    <section class="gatesec">
+      <h2>おねがい</h2>
+      <ul>
+        <li>手紙の「戦績をシェア」ボタンでの共有は大歓迎です。</li>
+        <li>ゲームの画像や文章を、素材として持ち出したり、転載したりするのはご遠慮ください。</li>
+        <li>このゲームで起きたことについて、作者は責任を負えません。のんびり楽しんでください。</li>
+      </ul>
+    </section>
+    <div class="gatebtns">
+      <button id="gateok">わかった、旅立つ！</button>
+      <button id="gateno" class="ghost">やめておく</button>
+    </div>
+    <p class="gatebye" id="gatebye" aria-live="polite"></p>
+  </div>
+</div>
+
+<header class="top">
+  <div class="band"><div class="bandin"><span class="eyebrow">■セルレア大陸・旅鳩通信■</span></div></div>
+  <div class="strip"><div class="stripin">
+    <p class="where">現在地：<span id="hdrloc">王都アズリア</span></p>
+    <nav class="tabs" aria-label="画面の切り替え">
+      <button class="tab" id="t-status" data-tab="status">ステータス</button>
+      <button class="tab" id="t-move" data-tab="move">移動</button>
+      <button class="tab" id="t-shop" data-tab="shop">買う</button>
+      <button class="tab" id="t-system" data-tab="system">システム</button>
+      <div class="hud" aria-label="いまの状態">
+        <div class="hb"><span class="hl">HP <b id="hudhp"></b></span><span class="mini"><i id="hudhpbar"></i></span></div>
+        <div class="hb"><span class="hl">休息度 <b id="hudrest"></b></span><span class="mini rest"><i id="hudrestbar"></i></span></div>
+        <div class="hcoins"><span class="coin g"><i aria-hidden="true"></i>金貨 <b id="hudgold"></b></span><span class="coin s"><i aria-hidden="true"></i>銀貨 <b id="hudsilver"></b></span></div>
+      </div>
+      <button class="tab env" id="t-letter" data-tab="letter">
+        <svg class="flap" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="2,2 50,30 98,2" /></svg>
+        <svg class="pseal" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" class="ps-bg"/><ellipse cx="22" cy="25" rx="10" ry="7" class="ps-bird"/><circle cx="15" cy="16" r="6" class="ps-bird"/><path d="M9 15 L4 17 L9 18 Z" class="ps-beak"/><circle cx="14" cy="15" r="1.2" class="ps-eye"/></svg>
+        <span class="envlabel">旅鳩通信</span>
+      </button>
+    </nav>
+  </div></div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===== 旅鳩通信 ===== -->
+  <section class="pane" id="tab-letter" aria-labelledby="t-letter">
+    <div class="controls">
+      <button id="next">次の日へ</button>
+      <button id="reroll" class="ghost">今日を振り直す</button>
+      <span class="nextdest" id="nextdest"></span>
+    </div>
+    <article class="letter fresh" id="lettercard" aria-live="polite">
+      <button class="sharebtn" id="sharebtn">戦績をシェア</button>
+      <div class="lhead"><h2 id="ltitle"></h2><span class="meta" id="lmeta"></span></div>
+      <div class="sharebox" id="sharebox" hidden>
+        <p class="sharetext" id="sharetext"></p>
+        <p class="sharemsg" id="sharemsg" aria-live="polite"></p>
+      </div>
+      <div class="lbody" id="lbody"></div>
+      <details class="rolls"><summary>今日の出目とシード</summary><ul id="lrolls"></ul></details>
+    </article>
+    <div class="controls after">
+      <button id="next2">次の日へ</button>
+      <span class="nextdest" id="nextdest2"></span>
+    </div>
+    <section class="archive" aria-labelledby="bn-title">
+      <h2 id="bn-title">バックナンバー</h2>
+      <p class="cdesc" id="bn-empty">「次の日へ」を押すと、読み終えた手紙がここに新しい順で並びます。</p>
+      <div class="bnlist" id="archive"></div>
+    </section>
+  </section>
+
+  <!-- ===== ステータス ===== -->
+  <section class="pane" id="tab-status" aria-labelledby="t-status" hidden>
+    <section class="sec-head"><h2>冒険者の個人ステータス</h2></section>
+    <section class="panel sheet" aria-label="冒険者の個人ステータス">
+      <div class="who">
+        <p class="profile" id="profile"></p>
+        <div class="hp"><span id="hptext"></span><div class="bar"><i id="hpbar"></i></div></div>
+        <div class="hp"><span id="resttext"></span><div class="bar rest"><i id="restbar"></i></div></div>
+        <div class="purse" id="purse"></div>
+        <div class="kv" id="kv"></div>
+      </div>
+      <div class="stats" id="stats"></div>
+      <p class="sheetnote">能力値は0〜100。判定は「1d100が成功率以下なら成功」で、成功率は能力値に装備・仲間などの補正を足して決まります。判定に成功するたび、その能力が少しずつ伸びることがあります（高いほど伸びにくい）。青い数字は装備と同行冒険者による補正です。</p>
+    </section>
+    <section class="sec-head"><h2>装備</h2></section>
+    <section class="gear panel" aria-label="装備" id="gear"></section>
+    <section class="sec-head"><h2>同行冒険者</h2></section>
+    <section class="party" aria-label="同行冒険者">
+      <div class="slot panel" id="slot0"></div>
+      <div class="slot panel" id="slot1"></div>
+    </section>
+    <section class="sec-head"><h2>キャラメイク</h2><p>名前・性別・口調・一人称・性格・鳩の設定は、変えるとすぐ反映されます。種族・職業・初期パラメータは「この冒険者で第1号から始める」を押すと反映され、冒険が最初からになります（このブラウザに保存している冒険は上書きされます）。冒険は毎日、自動でこのブラウザに保存されます。</p></section>
+    <section class="panel charmake" aria-label="キャラメイク">
+      <div class="cmgrid">
+        <label class="field" for="pname">名前<input id="pname" value="ユウ" maxlength="16" autocomplete="off"></label>
+        <label class="field" for="pgender">性別<select id="pgender"><option value="f">女性</option><option value="m">男性</option><option value="x">そのほか</option></select></label>
+        <label class="field" for="prace">種族<select id="prace"></select></label>
+        <label class="field" for="pjob">職業<select id="pjob"></select></label>
+        <label class="field" for="pspeech">口調<select id="pspeech"></select></label>
+        <label class="field" for="pfp">一人称<select id="pfp"></select></label>
+        <label class="field" for="ppersona">性格<select id="ppersona"></select></label>
+        <label class="field" for="pigeonname">鳩の名前<input id="pigeonname" value="ルリ" maxlength="12" autocomplete="off"></label>
+        <label class="field" for="ppsex">鳩の性別<select id="ppsex"></select></label>
+        <label class="field" for="pppersona">鳩の性格<select id="pppersona"></select></label>
+        <label class="field" for="pdiff">難易度<select id="pdiff"></select></label>
+      </div>
+      <p class="cmdesc" id="cmdesc"></p>
+      <div class="dicebox">
+        <div class="scroll"><table class="dicetbl" id="dicetbl"></table></div>
+        <div class="dicebtns">
+          <button id="rolldice" class="ghost">初期パラメータダイスを振る</button>
+          <button id="startgame">この冒険者で第1号から始める</button>
+        </div>
+        <p class="cmnote" id="cmnote" aria-live="polite"></p>
+      </div>
+    </section>
+
+  </section>
+
+  <!-- ===== 移動 ===== -->
+  <section class="pane" id="tab-move" aria-labelledby="t-move" hidden>
+    <section class="sec-head headrow"><div class="hrtext"><h2>現在地と移動先</h2><p>移動先を選んでから「次の日へ」を押すと出発し、旅鳩通信タブに新しい手紙が届きます。同じ国の中なら当日に着きます。国境を越えられるのは地図の矢印でつながった隣の国だけで、街道なら1日、山道（アズリア–ガンボージュ、オキサジン–ヴィリジャン、オキサジン–ノワ・ブラン）なら2日かかります。各国のダンジョンのうち奥の2つ（ノワ・ブランは3つ）は、噂を聞くまで地図に出てきません。</p></div><button id="next3" class="nextbig">次の日へ</button></section>
+
+    <section class="panel loc" aria-label="現在地と移動先">
+      <div class="here" id="here"></div>
+      <div class="go">
+        <label class="lbl" for="dest">明日の移動先</label>
+        <select id="dest"></select>
+        <p class="eta" id="eta"></p>
+        <label class="lbl" for="tactic">作戦</label>
+        <select id="tactic"></select>
+        <p class="eta" id="tacticd"></p>
+      </div>
+    </section>
+    <figure class="mapfig">
+      <div class="mapwrap" id="mapwrap">
+        <img src="map.jpg" alt="セルレア大陸の地図。北西にマジェンダ王国、北東にアズリア王国、中央にシェナ連合国、東にガンボージュ皇国、西にオキサジン神国、南東にヴィリジャン共和国、南に亡国ノワ・ブラン。赤い矢印が通れる国境" width="1200" height="850">
+        <div id="hotspots"></div>
+      </div>
+      <figcaption>セルレア大陸（作者画）。今いる国のとなりの国を押すと、明日の行き先がその国の首都になります。赤い矢印が通れる国境、山の絵の上は山道（2日）。</figcaption>
+    </figure>
+    <section class="sec-head"><h2>冒険者仲間（クロスプレイのテスト）</h2><p>ほかのプレイヤーの代わりに、テスト用の冒険者が10人、自分で大陸を旅しています。同じ日に同じ場所にいると、一緒に戦って援護し合ったり、倒れかけたときに助けてくれたり、焚き火を囲んだりします。相手の手紙に載るあなたの場面も、旅鳩通信の下で読めます。</p></section>
+    <section class="panel mates" aria-label="冒険者仲間"><div id="mates"></div><p class="giftnote" id="matenote" aria-live="polite"></p></section>
+    <section class="sec-head"><h2>持ち物を使う</h2><p>出発前に使っておけば、その日の冒険はそのぶん元気な状態で始まります。傷薬は都市の道具屋で買えます。</p></section>
+    <section class="panel useitems" aria-label="持ち物を使う">
+      <div id="useitems"></div>
+      <p class="giftnote" id="usenote" aria-live="polite"></p>
+    </section>
+  </section>
+
+  <!-- ===== 買う ===== -->
+  <section class="pane" id="tab-shop" aria-labelledby="t-shop" hidden>
+    <section class="sec-head"><h2>街でできること</h2><p>都市にいる日は、手紙を読んだあとで買い物や雇用ができます。買ったもの・雇った人は翌日から冒険に加わります。</p></section>
+    <section class="panel town" aria-label="街でできること">
+      <div class="towngrid" id="towninner"></div>
+      <p class="giftnote" id="townnote" aria-live="polite"></p>
+    </section>
+  </section>
+
+  <!-- ===== システム ===== -->
+  <section class="pane" id="tab-system" aria-labelledby="t-system" hidden>
+    <nav class="subnav" aria-label="システムの項目">
+      <button class="sublink" id="opengate">はじめに（注意事項）</button><button class="sublink" data-jump="sys-about">このゲームについて</button><button class="sublink" data-jump="sys-aff">好感度</button><button class="sublink" data-jump="sys-rules">判定のしくみ</button><button class="sublink" data-jump="sys-tables">ランダム表</button>
+    </nav>
+    <section class="sec-head" id="sys-about">
+      <h2>ようこそようこそ！セルレア大陸へ！</h2>
+      <p>この世界は剣と魔法のファンタジー世界だよ！ プレイヤーは冒険者PCを作って一日一回冒険するよ！ 毎日どんな冒険をして帰ってくるか楽しみ！ ネームドNPCとの出会いもあるよ！</p>
+      <p>たぶんゴールは魔王を倒すこと。でもそれに縛られなくていい。森でキノコを採ったり、おいしいごはんを食べたり、ネームドNPCとキャッキャしても良い。伝説の武器を求めてもいい。名声と好感度を高めて誰かと結婚してもいい。フリーシナリオです！</p>
+    </section>
+
+    <section class="sec-head" id="sys-aff"><h2>好感度</h2><p>出会うたびに＋1、一緒に冒険すると毎日＋1。＋5を超えると、相手の機嫌と魅力判定しだいで世間話・噂話・身の上話が聞けて、手紙に載ります。仲良くなるほど外見の描写が増え、口調も砕けていきます。贈り物は次に会ったときに渡します。</p></section>
+    <section class="panel aff">
+      <div class="affrows" id="affrows"></div>
+      <div class="giftform">
+        <span class="lbl">贈り物の予約</span>
+        <div class="giftrow">
+          <select id="giftnpc" aria-label="贈る相手"></select>
+          <select id="giftitem" aria-label="贈る品物"></select>
+          <button id="giftbtn" class="ghost">次に会ったら渡す</button>
+        </div>
+        <p class="giftnote" id="giftnote"></p>
+      </div>
+    </section>
+
+    <section class="sec-head" id="sys-rules"><h2>判定のしくみ</h2></section>
+    <section class="panel rules">
+      <div><h3>基本</h3>
+        <p class="formula">1d100 ≦ 成功率（基本＋能力値＋補正）</p>
+        <p>基本の成功率は、やさしい60・ふつう40・むずかしい20・大ボス10。そこに能力値（0〜100）と補正を足し、5〜95％に収めます。01〜05は大成功、96〜00は大失敗。フィールドとダンジョンでは土地の難易度1につき−10％、亡国ノワ・ブランではさらに−20％。会話と料理には影響しません。</p></div>
+      <div><h3>判定の種類</h3>
+        <p><b>戦闘</b>：腕力か魔力の高いほう。失敗でHPが減る。<br><b>HPの回復</b>：宿に泊まると＋10、野宿・野営で＋3、おいしいごはんで＋1。傷薬（道具屋で銀貨15）は移動タブからいつでも使えてHP＋3。<br><b>交渉・会話</b>：魅力。<br><b>探索</b>：知恵。<b>軽業</b>：技巧。<br>体力は判定に使わず、最大HP（10＋体力÷5）になります。<br><b>成長</b>：判定に成功するたび、（100−能力値）×0.3％の確率でその能力が＋1。無職は1.5倍。</p></div>
+      <div><h3>休息度</h3>
+        <p>初期15・最大30。毎日−5、戦闘で−2（敗北−3）、探索・軽業で−1。都市の宿（銀貨3×人数）で＋10、野宿・野営で＋2、ごはんで＋1〜3。0以下で疲労（判定−1）、−5以下で重度の疲労（判定−2・毎日HP−5）、−15以下で倒れて同じ国の都市へ撤退。</p></div>
+      <div><h3>ダンジョン</h3>
+        <p>入るたびに探索達成度（5〜10）が決まり、出来事の成功で探索度が貯まって、届けば探索成功で報酬。別の場所へ移ると探索度は0に戻ります。探索進度（難易度＋0で50、1上がるごとに＋10、最大100）は滞在1日で−2、探索の成功で−1、移動しても持ち越し。0以下で大ボスが出現し、ボスの体力（3＋難易度）を削りきるか、HPが0か休息度が−15になるまで1ラウンドずつ戦い続けます。負けると探索進度10・休息度0で街へ戻されます。死海の遺跡かマースの魔塔の大ボスを初めて倒すと「魔鏡の鍵」が手に入り、ペンタ・ノワの魔鏡の迷宮に入れるようになります。</p></div>
+      <div><h3>移動と噂</h3>
+      <p>隣の国にだけ移動でき、街道は1日、山道は2日。各国の奥のダンジョンは、酒場・古書店・冒険者との情報交換・ネームドの噂話で名前を聞くと地図に現れます。ノワ・ブランの都市では、死海の遺跡とマースの魔塔の噂が特に出やすくなっています。PCが斥候か、フェリオスを連れていると、噂が少し出やすくなります。</p></div>
+    <div><h3>フィールドと都市</h3>
+        <p>フィールドは一日3回の出来事で、探索の大成功でレアアイテム。都市では武具・食材・名産の購入、顔見知り以上のネームド（銀貨20）と見習い冒険者（銀貨8）の雇用ができます。</p></div>
+      <div><h3>おいしいごはん</h3>
+        <p>宿に泊まらない夜は、食材を1個使って料理します（技巧か知恵の高いほうで目標8）。大成功で休息度＋3、成功で＋2、失敗でも＋1。どれでもHP＋1。</p></div>
+      <div class="scroll"><h3>成功率の目安（補正なし）</h3>
+        <table class="odds" id="odds"></table></div>
+    </section>
+
+    <section class="sec-head" id="sys-tables"><h2>ランダム表</h2><p>各表は「出目 → 手紙の文 → 効果」の組。紫の札がついた行は判定が起きます。本番ではこの表をJSONにして、毎朝のタスクがスクリプトで振ります。今日出た行は金色になります。</p></section>
+    <div class="grid" id="tables"></div>
+  </section>
+</main>
+
+<script>
+// ================= 汎用 =================
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const clone=o=>JSON.parse(JSON.stringify(o));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pick=(arr,rnd)=>arr[Math.floor(rnd()*arr.length)];
+const L=(x,s,p)=>typeof x==="function"?x(s,p):x;
+
+// ================= 地名辞典（作者の「セルレア大陸 地名辞典」より） =================
+// d=着いたときの一文 x=滞在・景色の一文 find=その土地の拾い物 goods=店の品
+const COUNTRIES=[
+ {id:"az",ingr:"釣った魚",rare:"星屑の真珠",n:"アズリア王国",c:"#3b6fb6",food:"魚介のスープと青い屋根の下の焼きたてパン",camp:"釣った魚の塩焼き",goods:["詩集","干し果実"],find:"青い貝殻",
+  mons:["潮だまりの大蟹","青い羽の大蜂","浜辺の大ヤドカリ","星屑まといの夜光虫","さえずりを真似る化け茸","潮風のいたずら妖精"],dmons:["遺跡を守る石人形","青い鉱石をまとった大蜥蜴","古代文字の浮遊石板","つるはしを持った坑道の小鬼","光る苔のスライム","地底湖の目のない大魚"],places:[
+  {n:"王都アズリア",type:"city",d:"白い石畳と青い屋根がどこまでも続く王国の都だ。",x:"冒険者ギルドの本部があり、朝の広場は依頼書を眺める冒険者でにぎわっていた。"},
+  {n:"古都ブルーナ",type:"city",d:"苔むした青い城壁が今も街を囲む、かつての王都だ。",x:"夜は藍色のランタンが灯り、古い伝承を語る老人がどこかの酒場に必ずひとりいる。"},
+  {n:"魔術師の街インディガン",type:"city",d:"藍色の塔が林立する、学問と魔法の街だ。",x:"路地で失敗した魔法の煙がもくもくと上がったが、住人は誰も気にしていなかった。",goods:["古い学術書","魔術書","詩集"]},
+  {n:"星降りの丘",type:"field",d:"夜になると流れ星が手の届きそうなほど近くに降る丘だ。",x:"運がよければ、草むらで光る星のかけらを拾えるという。",find:"星のかけら"},
+  {n:"さえずりの森",type:"field",d:"一年じゅう小鳥の歌が響く、明るい森だ。",x:"旅鳩の故郷とも呼ばれ、迷子になっても鳥たちが出口へ案内してくれるそうだ。",find:"小鳥の落とし羽"},
+  {n:"アズリア海岸",type:"field",d:"透き通った青い海と白い砂浜が続く海岸線だ。",x:"貝拾いや釣りがのんびり楽しめるが、満ち潮の早さには要注意だ。",find:"青い巻貝"},
+  {n:"辺境の遺跡",type:"dungeon",d:"国境近くの草原にぽつんと残る、誰が建てたのかわからない石造りの遺跡だ。",x:"壁の古代文字は、まだ誰にも読めていない。",find:"古代文字の石片"},
+  {n:"廃坑跡地",type:"dungeon",d:"青い鉱石がよく採れた、昔の鉱山だ。",x:"閉ざされた坑道の奥から、ときどきつるはしの音が聞こえた。",find:"青い鉱石"},
+  {n:"地底湖の洞窟",type:"dungeon",d:"洞窟の奥に、光る苔に照らされた青い湖が眠っている。",x:"湖の底には沈んだ宝箱があると、冒険者のあいだでささやかれている。",find:"光る苔"},
+  {n:"蒼き獅子の古城",type:"dungeon",d:"かつて王国を守った英雄「蒼き獅子」が住んだ古い城だ。",x:"主のいない玉座の間には、今も誰かを待つように青い炎が揺れていた。",find:"獅子の紋章のかけら"}]},
+ {id:"ma",ingr:"赤い木の実",rare:"火喰い鳥の金の羽",n:"マジェンダ王国",c:"#c43d4b",food:"若い王様も買うという串焼き",camp:"紅葉の街道で拾った焼き栗",goods:["白葡萄酒","英雄譚の本"],find:"赤い木の実",
+  mons:["火の粉をまとった狐","紅葉に化けた木の魔物","赤毛の暴れ大うさぎ","夕焼けの影法師","入り江の珊瑚くらげ","祭り囃子に浮かれた火の玉"],dmons:["朱色の甲冑の亡者","やたら大きい火喰い鳥の雛","「迷ったら左」の落書き小鬼","溶岩のかたまりゴーレム","巣を守る火トカゲ","緋色の竜の子分の翼蜥蜴"],places:[
+  {n:"王都マジェンダ",type:"city",d:"真新しい赤レンガの建物が並ぶ、活気あふれる若い王都だ。",x:"気さくな若い王様が、市場で串焼きを買っている姿を見かけた気がする。"},
+  {n:"交易都市ローゼリア",type:"city",d:"薔薇の香りが漂う、港の商業都市だ。",x:"値切り上手な商人と押しの強い客の声が、一日じゅう響いていた。"},
+  {n:"祭りの街スカーレット",type:"city",d:"一年に三百日はお祭りをしているといわれる陽気な街だ。",x:"着いたその日に、なぜか踊りの輪へ引き込まれるのはお約束だ。"},
+  {n:"夕焼けの草原",type:"field",d:"夕暮れどきに草原全体が真っ赤に染まる、王国自慢の景色だ。",x:"赤い毛並みの野うさぎが、草のあいだをよく跳ねていた。",find:"赤い野花"},
+  {n:"紅葉の街道",type:"field",d:"両脇を紅葉並木が彩る、王都とスカーレットを結ぶ街道だ。",x:"落ち葉の上を行く馬車の音が、さくさくと心地よく響いた。",find:"真っ赤な紅葉"},
+  {n:"珊瑚の入り江",type:"field",d:"赤い珊瑚礁が広がる、静かな入り江だ。",x:"潜るときれいな赤い貝が見つかり、地元の子どもたちのいい遊び場になっている。",find:"赤い貝"},
+  {n:"朱塗りの迷宮",type:"dungeon",d:"設計者が凝りすぎて誰も出られなくなった、朱色の迷路だ。",x:"入口には「迷ったら左」という古い落書きがあった。",find:"朱塗りのかけら"},
+  {n:"火喰い鳥の巣穴",type:"dungeon",d:"炎を食べる大きな鳥が巣を作る、岩山の洞穴だ。",x:"巣の中には、鳥が集めたきらきら光る宝物が積まれているらしい。",find:"火喰い鳥の羽"},
+  {n:"紅蓮の火山洞",type:"dungeon",d:"活火山の中腹に口を開ける、熱い洞窟だ。",x:"溶岩の明かりで中は明るいが、水筒の水はすぐお湯になってしまった。",find:"溶岩石"},
+  {n:"緋色の竜の砦",type:"dungeon",d:"建国前からある古い砦で、緋色の竜が住み着いているといわれる。",x:"王国の若者は、いつか竜と話をつけるのが夢だという。",find:"緋色の鱗"}]},
+ {id:"ga",ingr:"金の麦穂",rare:"大粒の琥珀",n:"ガンボージュ皇国",c:"#d9a521",food:"焼きたてのパンとはちみつ菓子",camp:"麦がゆのはちみつがけ",goods:["蜂蜜の焼き菓子","干し果実"],find:"琥珀の粒",
+  mons:["麦畑を荒らす大猪","黄色い毛の大蜂","案山子に取り憑いたいたずら霊","向日葵の陰の大カマキリ","琥珀色の岩トカゲ","麦穂泥棒の大ネズミ"],dmons:["黄昏の墓守","雷をまとった鳥人形","夕暮れ色の燭台の亡霊","琥珀から目覚めた古代虫","稲光の精","金の鎧の近衛像"],places:[
+  {n:"皇都ガンボージュ",type:"city",d:"金色の屋根が陽に輝く、壮麗な皇帝のお膝元だ。",x:"時計塔が正午を告げると、街じゅうのパン屋から焼きたての香りが広がった。"},
+  {n:"黄金の街オーレア",type:"city",d:"金細工の職人が集まる、きらびやかな工房の街だ。",x:"お土産の金のペンダントは、冒険者のお守りとしても人気だ。",goods:["彫金のブローチ","蜂蜜の焼き菓子"]},
+  {n:"商都サフラナ",type:"city",d:"サフラン色の天幕が並ぶ、香辛料と商人の街だ。",x:"大市場では「この街で手に入らないのは魔王の首くらい」と冗談が飛び交っていた。",goods:["蜂蜜の焼き菓子","干し肉","白葡萄酒"]},
+  {n:"金麦の平原",type:"field",d:"地平線まで黄金の麦が揺れる、皇国の穀倉地帯だ。",x:"収穫祭の時期には、手伝った旅人にパンがふるまわれるという。",find:"金の麦穂"},
+  {n:"向日葵の野",type:"field",d:"背丈より高い向日葵が一面に咲く野原だ。",x:"花はみんな太陽を向いているので、迷ったら花の顔を見れば方角がわかる。",find:"向日葵の種"},
+  {n:"琥珀の渓谷",type:"field",d:"夕日を受けると岩肌が琥珀色に光る、深い渓谷だ。",x:"川底では、ときどき小さな琥珀の粒が見つかる。",find:"琥珀の粒"},
+  {n:"黄昏の墳墓",type:"dungeon",d:"古い貴族たちが眠る、いつも夕暮れ色の光に満ちた墓所だ。",x:"静かにしていれば、眠る人々も旅人を気にしないそうだ。",find:"古い銀の指輪"},
+  {n:"旧琥珀採掘場",type:"dungeon",d:"琥珀を掘り尽くして閉じられた採掘場だ。",x:"奥の壁には、大昔の虫や花を閉じこめた大きな琥珀がまだ埋まっている。",find:"虫入りの琥珀"},
+  {n:"雷鳴の塔",type:"dungeon",d:"いつも黄色い稲光をまとってそびえる、謎の塔だ。",x:"挑戦者の髪は、帰るころには必ず逆立っている。",find:"雷を帯びた石"},
+  {n:"金獅子帝の霊廟",type:"dungeon",d:"皇国を築いた初代皇帝「金獅子帝」が眠る、黄金の霊廟だ。",x:"皇帝の愛剣が、今も棺のそばに置かれていると伝えられている。",find:"金箔の切れ端"}]},
+ {id:"vi",ingr:"森のキノコ",rare:"千年樹の若枝",n:"ヴィリジャン共和国",c:"#3d8a4f",food:"キノコと木の実の煮込み",camp:"森のキノコの串焼き",goods:["干し果実","詩集"],find:"森のキノコ",
+  mons:["いたずら好きの木の精","大きな森蜘蛛","歩く毒キノコ","苔むす湿原の大蛙","羊にまぎれた綿毛の魔物","森のつむじ風の精"],dmons:["うごめく蔦の魔物","眠りを邪魔された木霊","古木の根の大ミミズ","神殿を守る青銅の獣像","翡翠色の水の精","竜の寝息から生まれた苔の獣"],places:[
+  {n:"首都ヴィリジャン",type:"city",d:"千年樹の根元に広がる、緑の葉に覆われた首都だ。",x:"大樹のうろの議事堂では、議論が長引いてリスが議員の膝で昼寝していた。"},
+  {n:"樹上都市エメラルダ",type:"city",d:"巨木の枝の上に家々がつながる、空中の街だ。",x:"吊り橋で家から家へ渡るので、高いところが苦手だとちょっと大変だ。"},
+  {n:"薬師の街セラドン",type:"city",d:"薬草園に囲まれた、薬師と治療院の街だ。",x:"どんなけがも治るといわれる軟膏は、冒険者の必需品だ。"},
+  {n:"翠緑の大森林",type:"field",d:"大陸最大の森。奥へ進むほど木々は高く、緑は深くなる。",x:"キノコや木の実の宝庫だが、似た毒キノコも多いので薬師の図鑑が手放せない。",find:"森のキノコ"},
+  {n:"苔むす湿原",type:"field",d:"ふかふかの苔がじゅうたんのように広がる湿原だ。",x:"夜には緑色の蛍が飛び交い、足もとがほんのり明るくなった。",find:"ふかふかの苔"},
+  {n:"若葉の丘",type:"field",d:"春の若葉色の草がいつも生えている、なだらかな丘だ。",x:"羊飼いと羊がのんびり過ごしていて、お昼寝にぴったりの場所だ。",find:"羊の毛玉"},
+  {n:"古木のうろ",type:"dungeon",d:"枯れた巨木の幹に開いた穴が、地下深くまで続いている。",x:"木の精霊が、迷い込んだ旅人にいたずらをしかけてきた。",find:"古木の実"},
+  {n:"蔦の絡まる神殿",type:"dungeon",d:"びっしりと蔦に覆われた、森に呑まれた古代の神殿だ。",x:"蔦はゆっくり動いていて、来るたびに通路の形が少し変わっている。",find:"神殿の青銅片"},
+  {n:"翡翠の地下水脈",type:"dungeon",d:"翡翠色の水が流れる、地下の川と洞窟だ。",x:"水はとても澄んでいて、飲むと疲れが少し取れる気がした。",find:"翡翠のかけら"},
+  {n:"深緑竜の寝床",type:"dungeon",d:"森のいちばん奥で、苔に覆われた深緑の竜が百年の眠りについている。",x:"起こさずに通り抜けられた者には、森の加護があるという。",find:"苔むした竜の鱗"}]},
+ {id:"sh",ingr:"なつめやし",rare:"砂漠の薔薇石",n:"シェナ連合国",c:"#9a6a3c",food:"甘いミントティーと羊肉の煮込み",camp:"なつめやしとミントティー",goods:["干し肉","犬の首輪"],find:"古代の壺のかけら",
+  mons:["砂の大蠍","乾いた風の精","歌う砂丘の砂鮫","枯れ谷のハゲワシ","蜃気楼の幻獣","夜の砂漠の大トカゲ"],dmons:["錆びた鎧の兵士","宝を運ぶ大蟻","王墓の包帯ミイラ","砂嵐の亡霊","錆を食べる鉄喰い虫","神殿の謎かけ蛇"],places:[
+  {n:"首都シェナ",type:"city",d:"赤茶けた日干しレンガの家々が並ぶ、大オアシスのほとりの首都だ。",x:"部族の長が集まる天幕会議は、今日もたぶん宴会になって終わった。"},
+  {n:"隊商都市セピア",type:"city",d:"ラクダの隊商が大陸じゅうから集まる、にぎやかな交易の街だ。",x:"古い地図や珍しい品を扱う露店が多く、掘り出し物探しが楽しい。"},
+  {n:"遺跡の街アンバー",type:"city",d:"砂に埋もれた古代都市の上に築かれた街だ。",x:"家の床下から古代の壺が出てくるのも珍しくなく、住人はたいてい小さな考古学者だ。"},
+  {n:"赤銅の砂丘",type:"field",d:"赤銅色の砂がうねるように続く大砂丘だ。",x:"風が吹くと、砂が歌うような音を立てた。",find:"赤銅色の砂"},
+  {n:"枯れ谷の荒野",type:"field",d:"大昔に川が流れていた跡が、深い谷となって残る荒野だ。",x:"雨が降った日だけ、谷底に一面の小さな花が咲くという。",find:"砂漠の小さな花"},
+  {n:"蜃気楼のオアシス",type:"field",d:"砂漠の真ん中に現れたり消えたりする、不思議なオアシスだ。",x:"本物にたどり着けた旅人は、甘いなつめやしを腹いっぱい食べられるそうだ。",find:"なつめやし"},
+  {n:"砂に沈んだ王墓",type:"dungeon",d:"古代の王が眠る、砂の下に埋もれた巨大な墓だ。",x:"入口は砂嵐のたびに場所が変わり、見つけるだけでも一苦労だ。",find:"古代の金の耳飾り"},
+  {n:"錆鉄の砦跡",type:"dungeon",d:"鉄の扉がすっかり錆びついた、古い戦の時代の砦だ。",x:"錆びた鎧の兵士たちが、まだ見張りを続けているという。",find:"錆びた鉄の紋章"},
+  {n:"焦茶の大蟻塚",type:"dungeon",d:"焦茶色の土でできた、塔のように高い巨大な蟻塚だ。",x:"中は複雑な迷路で、働き者の大蟻たちがせっせと宝物を運んでいる。",find:"大蟻の運んだ宝石"},
+  {n:"黄砂の大蛇の神殿",type:"dungeon",d:"砂漠の守り神とされる大蛇をまつった、古い神殿だ。",x:"大蛇は謎かけが大好きで、正しく答えた者だけを奥へ通すという。",find:"黄砂の鱗"}]},
+ {id:"ox",ingr:"野ぶどう",rare:"霊峰の紫水晶",n:"オキサジン神国",c:"#7a4fa0",food:"ラベンダー茶とぶどうジャムのパン",camp:"薄紫のぶどうジャムを塗った黒パン",goods:["蜂蜜酒","古い学術書"],find:"紫水晶のかけら",
+  mons:["霧の狼","迷い出た石の天使像","藤の花に化ける大蜂","菫の丘の眠り蝶","霊峰の霧の巨人","道を外れた巡礼の亡霊"],dmons:["紫水晶の魔物","さまよう聖歌の亡霊","紫水晶のコウモリ","封印から漏れ出た影","修道院の祈る骸骨","竜信徒の幻"],places:[
+  {n:"聖都オキサジン",type:"city",d:"紫水晶で飾られた大聖堂を中心に広がる、神国の都だ。",x:"夜明けの祈りの時間、街全体が淡い紫の光に包まれた。"},
+  {n:"巡礼の街ラベンディア",type:"city",d:"ラベンダー畑に囲まれた、巡礼者を迎える宿場の街だ。",x:"どの宿の枕にもラベンダーの香り袋が入っていて、旅の疲れがよく取れる。"},
+  {n:"修道の街モーヴ",type:"city",d:"静かな修道院が立ち並ぶ、祈りと学びの街だ。",x:"修道士たちが作る薄紫色のぶどうジャムは、知る人ぞ知る名物だ。"},
+  {n:"藤棚の参道",type:"field",d:"聖都へと続く、藤の花のトンネルが何里も続く参道だ。",x:"紫の花びらが、雪のように舞い散っていた。",find:"藤の花房"},
+  {n:"菫咲く丘",type:"field",d:"小さな菫の花が丘一面を覆う、やさしい風の吹く場所だ。",x:"巡礼者たちがひと休みして、遠くの聖都を眺めていた。",find:"菫の押し花"},
+  {n:"薄明の霊峰",type:"field",d:"夜明けと夕暮れのあいだ、いつも薄紫の光に包まれている聖なる山だ。",x:"山頂には神の声が聞こえる泉があると伝えられている。",find:"霊峰の湧き水"},
+  {n:"紫水晶の洞窟",type:"dungeon",d:"壁一面に紫水晶が生えた、光り輝く洞窟だ。",x:"水晶は魔力を帯びていて、魔術師にとっては宝の山だ。",find:"紫水晶"},
+  {n:"封印の地下聖堂",type:"dungeon",d:"大聖堂の真下にある、何かが封印された地下の聖堂だ。",x:"扉に刻まれた七つの鍵穴のうち、開いているのはまだ一つだけだ。",find:"古い銀の鍵"},
+  {n:"宵闇の修道院跡",type:"dungeon",d:"かつて修道士が暮らした、今は無人の修道院だ。",x:"誰もいない礼拝堂から、どこからともなく聖歌が聞こえてきた。",find:"古い祈祷書"},
+  {n:"紫紺の竜の大聖堂",type:"dungeon",d:"竜を神の使いとしてまつった、山奥の古い大聖堂だ。",x:"紫紺の鱗をもつ竜が、今も祭壇の上で神国を見守っているという。",find:"紫紺の鱗"}]},
+ {id:"nb",ingr:"灰色の根菜",rare:"白黒まだらの竜骨",n:"亡国ノワ・ブラン",c:"#8a8a8a",food:"豆の煮込みと固い黒パン",camp:"固い配給の黒パン",goods:["干し肉","黒葡萄酒","魔術書"],find:"黒い樹皮",
+  mons:["魔王軍の斥候","灰をまとった魔物","溶岩を泳ぐ灰の大蛇","黒い霧の狼","魔王軍の角笛兵","黒く染まった樹人"],dmons:["騎士の亡霊","黒い霧の魔物","白亜の城の首なし騎士","象牙色の骨の兵士","竜の骨から生まれた骨蜥蜴","時を狂わせる魔導人形"],places:[
+  {n:"抗都グレージュ",type:"city",d:"ノワ・ブラン王国最後の都市で、ヒトと魔族の戦争の最前線だ。",x:"軍勢や商人、難民が入り乱れ、街は今日も慌ただしかった。"},
+  {n:"トナーの村",type:"city",d:"死霊術師の隠れ里で、薬草とお香の香りが漂っている。",x:"人々は今も祖霊とともに、ひっそりと暮らしている。"},
+  {n:"灰被りの荒野",type:"field",d:"火山がくすぶり続け、空から灰が雪のように降り積もる荒野だ。",x:"足もとの灰の下では、まだ溶岩が赤く脈打っていた。",find:"火山灰の結晶"},
+  {n:"黒き樹海",type:"field",d:"厄災の黒い霧を吸って、幹も葉も墨のように黒く染まった大樹海だ。",x:"昼でも薄暗く、方位磁針はくるくる回るばかりだった。",find:"黒い樹皮"},
+  {n:"カーボナート断崖",type:"field",d:"灰色の荒波が打ちつける、白黒まだらの断崖だ。",x:"岩棚の魔王軍の見張り台から、潮風に乗って角笛の音が聞こえてきた。",find:"白黒まだらの小石"},
+  {n:"亡都ノワ・ブラン城",type:"dungeon",d:"厄災の日に一夜で滅んだ王国の都と、その白亜の王城だ。",x:"かつて王に仕えた騎士たちの亡霊が、敵味方の区別もなく剣を振るっている。",find:"白亜の紋章"},
+  {n:"アイボリアの墓所",type:"dungeon",d:"象牙色の石で築かれた、王家と死霊術師たちの眠る大墓所だ。",x:"厄災の影響で眠りを妨げられた死者たちが、目を覚ましている。",find:"象牙色の骨笛"},
+  {n:"屍竜の洞窟",type:"dungeon",d:"厄災に呑まれた竜が、骨だけの姿で蘇り巣くう洞窟だ。",x:"黒く変じた鱗のかけらは、凄腕の鍛冶師でもめったに扱えない幻の素材だ。",find:"黒い竜鱗のかけら"},
+  {n:"マースの魔塔",type:"dungeon",d:"漆黒の石を積み上げた、雲を突くほど高い魔王軍の塔だ。",x:"階を上るたびに、重力や時間がおかしくなる。",find:"漆黒の石片"},
+  {n:"死海の遺跡",type:"dungeon",d:"魚一匹すまない灰色の海に、半分沈んだ古い神殿の遺跡だ。",x:"最奥の封印の祭壇には、何者かの手で壊された跡が今も残っている。",find:"壊れた封印のかけら"},
+  {n:"ペンタ・ノワの魔鏡の迷宮",type:"last",d:"欲深き王子ペンタ・ノワが結界を破り、現れた黒衣の魔王の次元。",x:"迷宮を歩くものの辛い過去の体験が、鏡の床に浮かぶという。"}]}
+];
+const PLACES={}; COUNTRIES.forEach(C=>C.places.forEach(pl=>{pl.country=C;PLACES[pl.n]=pl}));
+const PLACE_DIFF={"星降りの丘":1,"さえずりの森":-1,"アズリア海岸":0,"辺境の遺跡":0,"廃坑跡地":0,"地底湖の洞窟":1,"蒼き獅子の古城":3,"夕焼けの草原":0,"紅葉の街道":0,"珊瑚の入り江":-1,"朱塗りの迷宮":2,"火喰い鳥の巣穴":2,"紅蓮の火山洞":4,"緋色の竜の砦":3,"金麦の平原":-1,"向日葵の野":0,"琥珀の渓谷":1,"黄昏の墳墓":1,"旧琥珀採掘場":1,"雷鳴の塔":3,"金獅子帝の霊廟":4,"翠緑の大森林":1,"苔むす湿原":0,"若葉の丘":-1,"古木のうろ":0,"蔦の絡まる神殿":2,"翡翠の地下水脈":2,"深緑竜の寝床":3,"赤銅の砂丘":2,"枯れ谷の荒野":1,"蜃気楼のオアシス":3,"砂に沈んだ王墓":3,"錆鉄の砦跡":2,"焦茶の大蟻塚":2,"黄砂の大蛇の神殿":3,"藤棚の参道":0,"菫咲く丘":-1,"薄明の霊峰":2,"紫水晶の洞窟":1,"封印の地下聖堂":3,"宵闇の修道院跡":2,"紫紺の竜の大聖堂":4,"灰被りの荒野":3,"黒き樹海":2,"カーボナート断崖":2,"亡都ノワ・ブラン城":4,"アイボリアの墓所":3,"屍竜の洞窟":5,"マースの魔塔":4,"死海の遺跡":3,"ペンタ・ノワの魔鏡の迷宮":7};
+const DIFF_LABEL={"-1":"初心者もらくらく","0":"初心者向け","1":"やや難易度が上がる","2":"難易度は高い","3":"だいぶ厳しい","4":"相当苦しい","5":"非常に厳しい","7":"ラストダンジョン"};
+const diffOf=pl=>pl.type==="city"||pl.type==="road"?0:(PLACE_DIFF[pl.n]??0);
+const nbOf=pl=>pl.country&&pl.country.id==="nb"?2:0;
+const sgn=n=>n>0?"＋"+n:n<0?"−"+(-n):"±0";
+const diffText=pl=>pl.type==="city"?"都市（難易度なし）":`難易度${sgn(diffOf(pl))} ${DIFF_LABEL[diffOf(pl)]||""}${nbOf(pl)?"（ノワ・ブランはさらに＋2）":""}`;
+const TYPE_LABEL={city:"都市",field:"フィールド",dungeon:"ダンジョン",last:"ラストダンジョン",road:"街道"};
+const START_PLACE="王都アズリア";
+const GIFT_PRICE={"傷薬":15,"魔術書":14,"黒葡萄酒":10,"詩集":8,"干し果実":3,"白葡萄酒":10,"英雄譚の本":9,"蜂蜜の焼き菓子":4,"古い学術書":12,"干し肉":3,"犬の首輪":6,"彫金のブローチ":15,"蜂蜜酒":8};
+const placeFind=pl=>pl.find||pl.country.find;
+const placeGoods=pl=>pl.goods||pl.country.goods;
+// 食材（一日の終わりに1個使って料理できる）
+const FOODS=["携帯食材","釣った魚","赤い木の実","金の麦穂","森のキノコ","なつめやし","野ぶどう","灰色の根菜","干し果実","干し肉","古木の実","向日葵の種","鳩の木の実"];
+// ダンジョンの難易度＝探索進度の初期値（国ごと、大ボスが有名な所は＋10）
+const DIFF={az:50,ma:60,ga:60,vi:70,sh:70,ox:80,nb:100};
+// 魔物の属性（書いていない魔物は属性なし）。モンスター図鑑と対応
+const MON_ATTR={"潮だまりの大蟹": "獣","青い羽の大蜂": "獣","浜辺の大ヤドカリ": "獣","星屑まといの夜光虫": "獣","青い鉱石をまとった大蜥蜴": "獣","地底湖の目のない大魚": "獣","地底湖の洞窟の主": "獣","玉座の間の青い炎の騎士": "アンデッド","火の粉をまとった狐": "獣","赤毛の暴れ大うさぎ": "獣","夕焼けの影法師": "漆黒","入り江の珊瑚くらげ": "獣","祭り囃子に浮かれた火の玉": "アンデッド","朱色の甲冑の亡者": "アンデッド","やたら大きい火喰い鳥の雛": "獣","巣を守る火トカゲ": "獣","緋色の竜の子分の翼蜥蜴": "竜","火喰い鳥の女王": "獣","紅蓮の火山洞の主": "竜","緋色の竜": "竜","麦畑を荒らす大猪": "獣","黄色い毛の大蜂": "獣","案山子に取り憑いたいたずら霊": "アンデッド","向日葵の陰の大カマキリ": "獣","琥珀色の岩トカゲ": "獣","麦穂泥棒の大ネズミ": "獣","黄昏の墓守": "アンデッド","夕暮れ色の燭台の亡霊": "アンデッド","琥珀から目覚めた古代虫": "獣","黄昏の墳墓の主": "アンデッド","旧琥珀採掘場の主": "獣","大きな森蜘蛛": "獣","苔むす湿原の大蛙": "獣","羊にまぎれた綿毛の魔物": "獣","古木の根の大ミミズ": "獣","竜の寝息から生まれた苔の獣": "竜・獣","寝ぼけた深緑の竜": "竜","砂の大蠍": "獣","歌う砂丘の砂鮫": "獣","枯れ谷のハゲワシ": "獣","蜃気楼の幻獣": "獣","夜の砂漠の大トカゲ": "獣","錆びた鎧の兵士": "アンデッド","宝を運ぶ大蟻": "獣","王墓の包帯ミイラ": "アンデッド","砂嵐の亡霊": "アンデッド","錆を食べる鉄喰い虫": "獣","神殿の謎かけ蛇": "獣","砂に沈んだ王墓の主": "アンデッド","錆鉄の砦跡の主": "アンデッド","焦茶の大蟻塚の主": "獣","謎かけ好きの黄砂の大蛇": "獣","霧の狼": "獣","藤の花に化ける大蜂": "獣","菫の丘の眠り蝶": "獣","道を外れた巡礼の亡霊": "アンデッド","さまよう聖歌の亡霊": "アンデッド","紫水晶のコウモリ": "獣","封印から漏れ出た影": "漆黒","修道院の祈る骸骨": "アンデッド","封印の地下聖堂の主": "漆黒","宵闇の修道院跡の主": "アンデッド","紫紺の竜": "竜","魔王軍の斥候": "漆黒","灰をまとった魔物": "漆黒","溶岩を泳ぐ灰の大蛇": "獣・漆黒","黒い霧の狼": "獣・漆黒","魔王軍の角笛兵": "漆黒","黒く染まった樹人": "漆黒","騎士の亡霊": "アンデッド","黒い霧の魔物": "漆黒","白亜の城の首なし騎士": "アンデッド","象牙色の骨の兵士": "アンデッド","竜の骨から生まれた骨蜥蜴": "アンデッド・竜","時を狂わせる魔導人形": "漆黒","亡霊の騎士団長": "アンデッド","アイボリアの墓所の主": "アンデッド","屍竜": "アンデッド・竜・漆黒","魔王軍の大魔導師": "漆黒","死海の遺跡の主": "漆黒","黒衣の魔王": "漆黒"};
+const hasAttr=(n,a)=>!!n&&(MON_ATTR[n]||"").split("・").includes(a);
+const BOSSES={
+  "蒼き獅子の古城":{n:"玉座の間の青い炎の騎士",gear:"aojishi"},
+  "金獅子帝の霊廟":{n:"金獅子帝の守護像",gear:"kinjishi"},
+  "紫紺の竜の大聖堂":{n:"紫紺の竜",gear:"shikon"},
+  "緋色の竜の砦":{n:"緋色の竜",item:"緋色の竜の宝玉"},
+  "深緑竜の寝床":{n:"寝ぼけた深緑の竜",item:"森の加護の葉"},
+  "屍竜の洞窟":{n:"屍竜",item:"屍竜の黒鱗"},
+  "黄砂の大蛇の神殿":{n:"謎かけ好きの黄砂の大蛇",item:"大蛇の謎かけの石板"},
+  "火喰い鳥の巣穴":{n:"火喰い鳥の女王",item:"火喰い鳥の宝の山のひとかけ"},
+  "雷鳴の塔":{n:"雷を操る魔導人形",item:"雷の魔導具"},
+  "マースの魔塔":{n:"魔王軍の大魔導師",item:"漆黒の魔導書"},
+  "ペンタ・ノワの魔鏡の迷宮":{n:"黒衣の魔王",item:"黒衣の魔王を討った証"},
+  "亡都ノワ・ブラン城":{n:"亡霊の騎士団長",item:"ノワ・ブラン王家の紋章"}};
+const bossOf=pl=>BOSSES[pl.n]||{n:`${pl.n}の主`,item:`${pl.n}の秘宝`};
+const initDepth=pl=>Math.min(100,50+10*Math.max(0,diffOf(pl)+nbOf(pl))); // 難易度＋0で50、＋5以上で100
+
+// ================= 能力値と職業 =================
+const STATS=[
+  {k:"str",l:"腕力",d:"剣・斧・素手の戦い"},{k:"dex",l:"技巧",d:"軽業・罠・手先の仕事"},
+  {k:"int",l:"知恵",d:"探索・地図・知識"},{k:"mag",l:"魔力",d:"魔法の戦い・精霊・死霊"},
+  {k:"cha",l:"魅力",d:"交渉・歌・人あたり"},{k:"vit",l:"体力",d:"最大HPになる"}];
+// 職業（初期値の土台。0〜100の尺度で、いちばん得意な能力でも20前後）
+const CLASSES=[
+  {id:"sword",n:"剣士",s:{str:18,dex:12,int:6,mag:4,cha:8,vit:16},d:"前に出て斬る。戦闘に強く、倒れにくい。"},
+  {id:"warrior",n:"戦士",s:{str:20,dex:8,int:4,mag:2,cha:6,vit:20},d:"力と体力に優れた前衛。細かいことは苦手。"},
+  {id:"knight",n:"騎士",s:{str:16,dex:6,int:8,mag:4,cha:12,vit:18},d:"守りに強く礼儀正しい。人あたりもよい。"},
+  {id:"mage",n:"魔術師",s:{str:4,dex:8,int:16,mag:20,cha:8,vit:6},d:"魔法で戦い、知識に明るい。打たれ弱い。"},
+  {id:"spirit",n:"精霊使い",s:{str:6,dex:10,int:13,mag:16,cha:13,vit:6},d:"精霊と語らう。何でもそこそこ、体は細い。"},
+  {id:"necro",n:"死霊術師",s:{str:4,dex:8,int:19,mag:19,cha:4,vit:8},d:"賢く強いが、人あたりは最悪。"},
+  {id:"priest",n:"神官",s:{str:6,dex:6,int:13,mag:15,cha:16,vit:10},d:"祈りの使い手。人に好かれる。"},
+  {id:"bard",n:"吟遊詩人",s:{str:5,dex:13,int:10,mag:8,cha:20,vit:8},d:"交渉と歌の達人。戦いは苦手。"},
+  {id:"scout",n:"斥候",s:{str:8,dex:20,int:15,mag:4,cha:8,vit:10},d:"罠と道に強い。身軽な旅人。"},
+  {id:"keeper",n:"鳩舎守",s:{str:8,dex:11,int:13,mag:8,cha:15,vit:10},d:"旅鳩を育てる者。鳩が迷子にならない。"},
+  {id:"jobless",n:"無職",s:{str:9,dex:9,int:9,mag:9,cha:9,vit:9},d:"何者でもない。そのぶん何にでもなれる（能力が1.5倍伸びやすい）。"}];
+// 種族（初期値への足し引き）
+const RACES=[
+  {n:"人間",s:{str:3,dex:3,int:3,mag:3,cha:3,vit:3},d:"何でもそつなくこなす。"},
+  {n:"エルフ",s:{str:-2,dex:4,int:5,mag:6,cha:2,vit:-2},d:"魔力と知恵に長ける。体は細い。"},
+  {n:"ドワーフ",s:{str:5,dex:2,int:2,mag:-3,cha:-1,vit:6},d:"頑丈で力持ち。魔法は苦手。"},
+  {n:"獣人",s:{str:5,dex:5,int:-2,mag:-2,cha:1,vit:4},d:"獣の力と身のこなし。"},
+  {n:"半獣人",s:{str:3,dex:6,int:1,mag:0,cha:2,vit:2},d:"身軽で器用。耳と尻尾がある。"},
+  {n:"羽耳族",s:{str:-3,dex:3,int:2,mag:5,cha:5,vit:-1},d:"鳥の羽耳をもつ一族。魔力と魅力に恵まれる。"},
+  {n:"有翼人",s:{str:-1,dex:6,int:2,mag:2,cha:3,vit:-2},d:"背中に翼をもつ。とても身軽。"},
+  {n:"竜人",s:{str:6,dex:-3,int:0,mag:3,cha:-2,vit:6},d:"竜の血をひく。力と体力が強い。"},
+  {n:"チート転生民",s:{str:25,dex:25,int:25,mag:25,cha:-4,vit:25},d:"なぜか最初から規格外に強い（得意な能力は50前後）。ただし人の話を聞かない（魅力−4）。"},
+  {n:"呂布",s:{str:50,dex:50,int:-10,mag:-10,cha:-10,vit:50},d:"人中に呂布あり。腕力・技巧・体力が桁外れ（＋50）。そのかわり知恵・魔力・魅力はからっきし（−10）。"},
+  {n:"鳥類",s:{str:-3,dex:7,int:-1,mag:2,cha:7,vit:-1},d:"鳥。どう見ても鳥。小さくて身軽で、かわいいので魅力が高い。力仕事は苦手。"}];
+// 難易度（キャラメイクで決める。あとから変えられない）
+const DIFFS=[
+  {id:"nuru",n:"ヌルゲー",d:"倒れても何も失わない。翌日は治療院で全快。"},
+  {id:"yuttari",n:"ゆったり",d:"倒れると治療院代（持ち金の半分、最低銀貨5枚）がかかる。"},
+  {id:"futsu",n:"ふつう",d:"倒れると治療院代に加えて、その日に手に入れたお金と拾い物を失う。"},
+  {id:"kibishii",n:"厳しい",d:"倒れると治療院代とその日の稼ぎに加えて、身につけている装備を全部失う。"},
+  {id:"hard",n:"ハードコア",d:"人生一度きり。HPが0になると旅が終わり、二度と続けられない。疲労や大ボスの敗北で倒れたときは「厳しい」と同じ。"}];
+// 作戦：HPが減ったら引き返すか（1日の途中でプレイヤーは手を出せないので、前もって決めておく）
+const TACTICS=[
+  {id:"safe",n:"いのちだいじに",d:"HPが半分を切ったら、その日は引き返す。大ボス戦でも撤退する。",th:.5},
+  {id:"normal",n:"バッチリがんばれ",d:"HPが3割を切ったら引き返す。大ボス戦でも撤退する。",th:.3},
+  {id:"allin",n:"ガンガンいこうぜ",d:"HPが0になるまで突き進む。死地に赴き続ける。",th:0}];
+const tacticOf=p=>TACTICS.find(x=>x.id===p.tactic)||TACTICS[1];
+const tooHurt=(s,p)=>{const th=tacticOf(p).th;return th>0&&s.hp>0&&s.hp<hpMax(s)*th};
+// 現在地の背景（国のイメージカラー代わり。その国の都市・フィールド・ダンジョンは全部同じ絵）
+const COUNTRY_PIC={az:"loc/azuria.jpg",ma:"loc/majenda.jpg",ga:"loc/gamboge.jpg",vi:"loc/viridian.jpg",sh:"loc/shena.jpg",ox:"loc/oxazine.jpg",nb:"loc/noirblanc.jpg"};
+const locPic=s=>{if(s.travel)return null;const pl=PLACES[s.loc];return pl?COUNTRY_PIC[pl.country.id]||null:null};
+const diffName=id=>(DIFFS.find(x=>x.id===id)||DIFFS[2]).n;
+const SPEECHES=["男性口調","女性口調","丁寧口調","粗野口調","柔和口調","傲慢口調","無骨口調","老人口調","ネット民口調","令嬢口調"];
+const FPS=["私","俺","僕","あたし","俺様","わたくし","我","わし","わらわ"];
+const PERSONAS=["誠実","陽気","豪快","傲慢","温和","知的","臆病"];
+const PIGEON_SEXES=["オス","メス","ひみつ"];
+const PIGEON_PERSONAS=["社交的","荒ぶる","高慢","温和","臆病","懐っこい"];
+// 名前のNGチェック（成人向け・差別・暴言など）。表記ゆれをそろえてから照合する
+const NG_WORDS=["せっくす","sex","ちんこ","ちんぽ","まんこ","ぺにす","ゔぁぎな","ばぎな","おっぱい","ちくび","乳首","えろ","fuck","shit","bitch","dick","cock","pussy","porn","hentai","れいぷ","強姦","しね","死ね","ころす","殺す","きちがい","がいじ","くず","ぶす","障害者","にがー","nigger","nigga","faggot","おなにー","射精","精液","便器","陰茎","陰部","痴漢","売春","援交","ろり","しょた","うんこ","くそ","糞","淫","乳","尻","股間"];
+function ngWord(str){
+  const n=String(str).normalize("NFKC").toLowerCase().replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60)).replace(/[\s・._\-ー〜~]/g,"");
+  return NG_WORDS.some(w=>n.includes(w));
+}
+
+
+// ================= 装備 =================
+const EQUIP={
+  weapon:{label:"武器",items:[
+    {id:"dagger",n:"短剣",m:{},d:"旅立ちの日に持たされた、ありふれた短剣。",price:"初期装備"},
+    {id:"longsword",n:"長剣",m:{str:1},d:"よく手入れされた片手剣。",price:"銀貨40"},
+    {id:"axe",n:"戦斧",m:{str:2,dex:-1},d:"重いが、当たれば強い。",price:"銀貨60"},
+    {id:"oakstaff",n:"樫の杖",m:{mag:1},d:"魔術士見習いの定番。",price:"銀貨30"},
+    {id:"lapisstaff",n:"群青石の杖",m:{mag:2},d:"先端に青い鉱石をはめた杖。インディガンの品。",price:"金貨2"},
+    {id:"bow",n:"短弓",m:{dex:1},d:"身軽な旅人向けの弓。",price:"銀貨35"},
+    {id:"rapier",n:"風切羽の細剣",m:{str:1,dex:1},d:"鍔に青い羽の意匠がある細剣。",price:"金貨3"},
+    {id:"aojishi",n:"蒼き獅子の剣",m:{str:2,vit:1},d:"英雄「蒼き獅子」が振るった青い刃。",price:"非売品",legend:true},
+    {id:"kinjishi",n:"金獅子帝の愛剣",m:{str:3,cha:1},d:"初代皇帝が振るった黄金の剣。",price:"非売品",legend:true}]},
+  armor:{label:"防具",items:[
+    {id:"clothes",n:"旅人の服",m:{},d:"丈夫なだけが取り柄の旅装。",price:"初期装備"},
+    {id:"leather",n:"革の胸当て",m:{vit:1},d:"急所だけは守ってくれる。",price:"銀貨30"},
+    {id:"mail",n:"鎖帷子",m:{vit:2,dex:-1},d:"重くて動きにくいが頼もしい。",price:"銀貨80"},
+    {id:"cloak",n:"魔術士の外套",m:{mag:1},d:"裏地に星図が縫い込まれている。",price:"銀貨50"},
+    {id:"pilgrim",n:"巡礼者の紫衣",m:{cha:1,vit:1},d:"オキサジンの巡礼者がまとう紫の衣。",price:"金貨2"}]},
+  acc:{label:"アクセサリー",items:[
+    {id:"none",n:"なし",m:{},d:"",price:""},
+    {id:"legband",n:"鳩の足環のお守り",m:{int:1},d:"迷わないように、というお守り。",price:"銀貨15"},
+    {id:"goldpendant",n:"オーレアの金のペンダント",m:{cha:1},d:"冒険者のお守りとして人気の金細工。",price:"銀貨45"},
+    {id:"amethyst",n:"紫水晶の指輪",m:{mag:1},d:"魔力を帯びた紫水晶をあしらった指輪。",price:"銀貨40"},
+    {id:"plume",n:"青い風切羽の帽子飾り",m:{dex:1},d:"風を読むのが少しうまくなる。",price:"銀貨25"},
+    {id:"shikon",n:"紫紺の竜鱗の護符",m:{mag:2,int:1},d:"紫紺の竜から授かった鱗の護符。",price:"非売品",legend:true}]}};
+const GEAR_ORDER=["weapon","armor","acc"];
+const gearItem=(s,sl)=>EQUIP[sl].items.find(x=>x.id===s.gear[sl]);
+const gearMods=(s,k)=>GEAR_ORDER.map(sl=>{const it=gearItem(s,sl);return{who:it.n,v:it.m[k]||0}}).filter(b=>b.v);
+const findGear=id=>GEAR_ORDER.map(sl=>EQUIP[sl].items.find(x=>x.id===id)).find(Boolean);
+const priceSilver=it=>{const m=/^(銀貨|金貨)(\d+)/.exec(it.price||"");return m?(m[1]==="金貨"?+m[2]*10:+m[2]):null};
+
+// ================= お金（1金貨＝10銀貨） =================
+function earn(s,silver,gold=0){s.silver+=silver;s.gold+=gold}
+function pay(s,n){while(s.silver<n&&s.gold>0){s.gold--;s.silver+=10}const paid=Math.min(n,s.silver);s.silver-=paid;return paid}
+const wealth=s=>s.gold*10+s.silver;
+
+// ================= ネームド冒険者（作者の「ネームド冒険者」より） =================
+// 外見：1=0〜 2=5〜 3=20〜 ／ 口調：1=0〜 2=20〜 3=50〜 4=結婚
+// 手紙の台詞は資料をもとにした仮の文。{name} はPCの名前に置き換わる。
+// 鳥類のPCと旅鳩の、鳥同士のやりとり（毎日ひとつ）
+const BIRD_TALK=[
+  "{name}と{pigeon}は、並んでおたがいの首まわりを羽繕いしあった。届かないところに届くのが、とてもうれしいらしい。",
+  "{pigeon}が「クルッ」と鳴くと、{name}も同じ調子で鳴き返した。そのまましばらく、ふたり（二羽）だけの会話が続いた。何を話していたのかは鳥にしかわからない。",
+  "日なたを見つけた{name}と{pigeon}は、同時に羽をふくらませてまんまるになった。通りがかった子どもが「おまんじゅうがふたつある」と言った。",
+  "水たまりで、{name}と{pigeon}がばしゃばしゃと水浴びをした。しぶきが虹になって、二羽とも満足そうに羽を震わせた。",
+  "{name}と{pigeon}は木の枝に並んでとまり、片足立ちで居眠りをした。起きたのもほぼ同時だった。",
+  "{pigeon}が見つけた木の実を、半分くちばしで割って{name}に差し出した。鳥の世界では、たぶん最上級の友情のあかしだ。",
+  "風の強い丘で、{name}と{pigeon}は向かい風に向かって羽を広げ、その場にふわりと浮いて遊んだ。「これこれ、これが楽しいんだよね」と言い合っている気がした。",
+  "{name}が尾羽をぴっと立てると、{pigeon}も尾羽を広げてみせた。どちらが格好いいかの品評会は、引き分けに終わった。",
+  "夕方、{name}と{pigeon}は屋根の上で並んで夕日を眺めた。羽と羽がちょっとだけ触れていた。",
+  "{pigeon}が{name}の頭のてっぺんの羽を、くちばしでそっと整えてくれた。寝ぐせがひとつ直った。",
+  "砂地を見つけた{name}と{pigeon}は、我先にと砂浴びを始めた。舞い上がった砂ぼこりの中から、ごきげんな鳴き声がふたつ聞こえた。",
+  "{pigeon}がうっかり{name}の羽をくわえて引っぱった。{name}が「ピッ」と抗議すると、{pigeon}はとぼけた顔で首をかしげた。",
+  "雨宿りの軒下で、{name}と{pigeon}はぴったりくっついて羽をふくらませた。ふたつ並ぶと、ひとつよりずっと温かい。",
+  "{name}が胸を張って高らかにさえずると、{pigeon}が負けじと胸をふくらませてクルクル鳴いた。宿の主人に「朝から合唱団かい」と笑われた。",
+  "道ばたのパンくずを見つけて、{name}と{pigeon}は同時に首を伸ばした。一瞬にらみ合ったあと、仲良く半分こした。",
+  "{pigeon}が{name}の翼の下にもぐりこんで、そのまま昼寝を始めた。{name}は動けなくなったが、まんざらでもなさそうだった。",
+  "{name}と{pigeon}は、空を横切る渡り鳥の群れをいっしょに見上げた。「いつか、あんなふうに遠くまで」と、二羽で同じことを考えた気がする。",
+  "{name}が羽ばたきの練習をしていると、{pigeon}が横で見本を見せてくれた。教え方はなかなか厳しかった。",
+  "{pigeon}がおもむろに{name}の前でくるりと回り、頭を下げてクルクル鳴いた。鳩なりの最大級のごあいさつらしい。{name}もていねいにお辞儀を返した。",
+  "{name}と{pigeon}は、おたがいの羽の色を見せあいっこした。光の加減で変わる首元のつやに、{name}はしばし見とれた。",
+  "朝いちばん、{pigeon}が{name}の枕元でくちばしをコツコツ鳴らした。鳥の目覚まし時計は、とても正確だ。",
+  "{name}と{pigeon}が並んで歩くと、首の振り方が完全にそろっていた。すれ違った旅人が二度見した。",
+  "どこからか集まってきた小鳥たちが、{name}と{pigeon}のまわりでさえずり始めた。気づけば小さな鳥の集会になっていた。",
+  "{pigeon}が手紙筒をくわえて{name}に見せびらかした。「これが自分の仕事なんだよ」と言いたげだった。{name}は心から拍手（羽ばたき）を送った。",
+  "焚き火のそばで、{name}と{pigeon}は羽を半分広げて背中を温めた。ふたりそろって、目がとろんとしていた。",
+  "高い木のてっぺんまで、{name}と{pigeon}で競争した。勝ったのは{pigeon}だったが、{name}は「こっちは荷物を持ってたから」と言い訳した。",
+  "{pigeon}が羽を一枚落とした。{name}はそれを拾って、大事そうに自分の羽のあいだに挟んだ。おそろいのお守りだ。",
+  "夜、{name}と{pigeon}は寄りそって眠った。夢の中でも、たぶん一緒に空を飛んでいる。"];
+const NAMED={
+ alvan:{n:"アルヴァン",race:"人間",job:"騎士",sex:"男性",age:26,home:"az",origin:"アズリア王国",
+  bio:"アズリア王国の騎士の家の四男。自由騎士として修業の身。",
+  looks:["長い黒髪に金の瞳の騎士。意志の強い端正な顔立ち。銀の甲冑をまとい常に姿勢がよい。","困るとすぐ眉が寄って八の字になる。長い前髪に視線を隠す。恥ずかしがり。すぐ赤くなる。","甲冑の下は無駄のない筋肉質。長身で厚い胸板、体幹が強い。"],
+  topics:"武具や騎士道精神、自然の詩的な美しさ。鳥が好き。本の話題など。",
+  likes:["詩集","干し果実"],marry:120,ring:"獅子紋のペンダント",
+  ability:{n:"かばう",d:"戦闘のダメージを時々半分にする"},mods:{str:2,vit:1},
+  first:(s,p)=>"長い黒髪に金の瞳の騎士と行き会った。銀の甲冑をまとい、背筋がまっすぐに伸びている。「……アルヴァンだ。自由騎士として修業の旅をしている」"+(p.gender==="f"?"それきり彼は口を閉ざし、眉を八の字に寄せて、長い前髪の陰に視線を隠してしまった。":"名乗りは短いが、礼は正しかった。"),
+  again:[
+   [(s,p)=>p.gender==="f"?"アルヴァンとまた会った。「……ああ。その、……いい天気だ」それだけ言うと、彼は耳まで赤くして黙りこんだ。":"アルヴァンとまた会った。「また会ったな。息災で何よりだ」",
+    (s,p)=>p.gender==="f"?"アルヴァンとすれ違った。会釈をすると、彼は一歩下がって深々と礼をした。耳が赤い。":"アルヴァンと道が重なった。何も言わずに並んで歩いた。"],
+   ["アルヴァンと再会した。「{name}か。……君の顔を見ると、少し肩の力が抜ける」","アルヴァンが道の先で立ち止まった。「次の町までなら、同行しよう。……いや、したいんだ」"],
+   ["アルヴァンが道の先で待っていた。「君が来る気がした。……青い鳥が、こちらへ飛んでいったから」","アルヴァンが、はにかみながら手を挙げた。「今日の空は、君に見せたい色をしている」"],
+   ["アルヴァンが駆け寄ってきた。手を取ると、彼は真っ赤になって「……会いたかった」と震える声で言った。"]],
+  look:["銀の甲冑が日を受けて光り、背筋はいつもまっすぐだ。","困ったように眉を八の字に寄せ、長い前髪の陰に視線を隠した。","甲冑を外して剣の手入れをしていた。無駄のない、厚い胸板の体つきだ。"],
+  small:[
+   ["「この先の峠は風が強い。外套の前を閉めておくといい」","「剣の手入れは毎晩欠かさない。騎士の務めだ」"],
+   ["「あの鳥はアオカケスだ。……羽の青は、光の加減で色が変わる。好きなんだ」","「騎士道とは、弱き者の盾となることだと教わった。……まだ、遠い」"],
+   ["はにかみながら短い詩を詠んでくれた。「――潮騒の 青に溶けゆく 鳩の羽」……「笑わないでくれ」","「最近読んだ本の話をしてもいいだろうか。古い騎士と、旅の鳩の物語なんだ」"],
+   ["「君の名前を、詩の終わりに置いてもいいだろうか。……どの言葉より、美しい響きだから」","肩が触れると、アルヴァンは真っ赤になって「き、君は、ずるい」と言葉を震わせた。"]],
+  rumor:[["「蒼き獅子の古城の玉座の間には、今も青い炎が揺れているそうだ。……騎士なら一度は見てみたい」","蒼き獅子の古城の青い炎"],["「辺境の遺跡の古代文字は、まだ誰にも読めていないらしい」","辺境の遺跡の古代文字"],["「金獅子帝の霊廟には、皇帝の愛剣が眠るという。……武具の話には目がなくてな」","金獅子帝の愛剣"]],
+  past:["「家では四男だった。継ぐものもないから、剣ひとつで自分の道を探しに出た」","「詩を好むのは騎士らしくないと言われたことがある。……それでも、やめられなかった」"],
+  join:"アルヴァンが旅の仲間に加わった。「前は私が立つ。君は後ろを頼む」",
+  battle:"アルヴァンが獅子紋の盾を構えて前列に立ち、「右から来る、退くな」と冷静に指示を飛ばした。"},
+
+ liberta:{n:"リベルタ",race:"人間",job:"吟遊詩人",sex:"男性",age:31,home:"ma",origin:"マジェンダ王国",
+  bio:"祭りの街スカーレットの大きな酒場の長男。世界じゅうの英雄譚を集めて、いつか自分の歌で大陸を笑顔にしたい。",
+  looks:["強くうねる癖の銀の短髪に、森のような明るい緑の瞳。日焼けした肌と樫のように太い腕。背中にリュートと、背丈ほどの大剣。","大剣を片手で振るえるほどの筋肉。感動するとすぐ泣く。鼻をすすりながら笑っている。","ふとした瞬間に、人をよく見ている静かな目をしている。"],
+  topics:"英雄譚、酒と宴会、犬、狩り、各地の民謡。魚の小骨の愚痴。",
+  likes:["白葡萄酒","英雄譚の本"],marry:100,ring:"太陽紋の指輪",
+  ability:{n:"戦の歌",d:"戦闘で時々、同行者全員の判定＋1"},mods:{cha:2,str:1},
+  first:"背中にリュートと背丈ほどの大剣を背負った、日焼けした大男が手を振ってきた。癖の強い銀髪に、森みたいな緑の瞳。「よう！ 俺はリベルタ、歌うたいだ！ 一曲どうだ？」返事も待たずに歌いはじめた。",
+  again:[
+   ["リベルタとまた会った。「おーい、{name}！ 元気してたか！」遠くからでもよく通る声だ。","リベルタが酒場の前で手を振っていた。「よう！ ちょうどいい、一杯付き合えよ！」"],
+   ["リベルタが駆け寄ってきた。「聞いてくれよ、新曲できたんだ！ 題して『{name}の靴ずれ』！」歌詞はだいたい頭が悪かった。","リベルタが肩を組んできた。「よう相棒！ 今日はどこで暴れる？」"],
+   ["焚き火のそばにリベルタがいた。「お、来たか。……なんか、お前の顔見るとほっとするな」","リベルタが静かに笑った。「待ってたんだぜ。ほんとに」"],
+   ["リベルタが両腕を広げて待っていた。「なあ、もうちょっとこっち来いよ。今日の分、まだぎゅってしてねえ」"]],
+  look:["樫の木みたいな太い腕で、リュートを軽々と抱えている。","英雄譚の一節で感極まって、鼻をすすりながら笑っていた。","ふと、静かな目でこちらを見ていた。人をよく見ている目だ。"],
+  small:[
+   ["「なあ、魚の小骨ってなんであんなに多いんだ？ 俺は魚に恨まれてる気がする」","「この辺の民謡、知ってるか？ 知らねえ？ じゃあ教えてやる！」"],
+   ["即興で『鳩がきた 手紙がきた 豆をくれ』という歌を作ってくれた。三番まであった。","「今度の宴会、お前も来いよ！ 親父の酒場ほどじゃねえけど、いい店知ってんだ」"],
+   ["焚き火の前で、リベルタの声が少し低くなった。「……実家の酒場、弟たちが回してんだ。ちゃんと食ってるかな、あいつら」","「俺さ、ひとりになると結構さみしいんだよ。だから歌ってんのかもな」"],
+   ["「なあ{name}、お前のこと歌にしていいか？ ……いや、もうしてる。毎晩歌ってる」","照れもせずに「好きだぞ」と言って、そのあと自分で泣いていた。"]],
+  rumor:[["「スカーレットじゃ今、三百一日目の祭りやってるってよ！」","スカーレットの三百一日目の祭り"],["「緋色の竜の砦の竜と、話をつけた奴がいるって噂だ。英雄譚の匂いがするぜ！」","緋色の竜と話をつけた誰か"],["「火喰い鳥の巣穴に、ぴかぴかの宝がどっさりあるらしい。狩りついでに行かねえか？」","火喰い鳥の巣穴の宝"]],
+  past:["「親父の酒場でさ、旅の連中の英雄譚を聞いて育ったんだ。いつか俺の歌で、大陸じゅう笑わせたいんだよ」","「長男なのに店継がずに飛び出しちまった。……親父、怒ってっかな」"],
+  join:"リベルタが旅の仲間に加わった。「よーし、景気づけに一曲いくぞ！」",
+  battle:"リベルタが大剣を振り回しながら戦の歌を張り上げた。熱くなって、少し前に出すぎている。"},
+
+ ferios:{n:"フェリオス",race:"人間",job:"斥候",sex:"男性",age:29,home:"ga",origin:"ガンボージュ皇国",
+  bio:"皇都ガンボージュの元宮廷書記。辞めた理由は語らない。今は各地を巡って地図と記録を書いている。何を調べているのかは誰も知らない。",
+  looks:["柔らかくうねる長い銀髪をゆるく一つに束ねる。冬の晴天のような冷たい青い瞳に細い金縁の眼鏡。磁器のように白い肌の、整いすぎた美貌。","表情はほとんど動かない。でも甘いものを前にすると、ほんの少しだけ目元がゆるむ。","考え事をしていると、無意識に自分の手首で脈を測っている。眼鏡を外すと、ぞっとするほど整った顔。"],
+  topics:"歴史、天文、各地の地理と噂、甘い焼き菓子、家族の定義。",
+  likes:["蜂蜜の焼き菓子","古い学術書"],marry:160,ring:"金縁の伊達眼鏡",
+  ability:{n:"下調べ",d:"探索判定＋2。ダンジョンの罠をよく見抜く（爆弾の罠は必ず）"},mods:{dex:2},
+  first:"柔らかな長い銀髪をゆるく束ねた、金縁眼鏡の青年が地図を描いていた。冬の晴天のような青い瞳が、こちらを一瞥する。「フェリオスと申します。……ご用件がなければ、これで」",
+  again:[
+   ["フェリオスとまた会った。「またお会いしましたね。道を塞いでおられますので、少し右へ」","フェリオスが地図から顔を上げた。「ああ、あなたですか。この先の橋は落ちています。迂回を」"],
+   ["フェリオスと再会した。「{name}さん。旅程の遅れは三日ほどですね。……冗談です。二日です」","フェリオスが会釈した。「ちょうど、あなたに話したいことを記録していたところです」"],
+   ["フェリオスが待っていた。「遅かったですね。心配など、していませんでしたが」","フェリオスが、珍しく自分から歩み寄ってきた。「……顔色が悪い。座りなさい」"],
+   ["フェリオスが眼鏡を外して微笑んだ。「おかえりなさい。……あなたは、私の家族ですから」"]],
+  look:["表情はほとんど動かない。整いすぎた顔立ちが、かえって近寄りがたい。","焼き菓子の屋台の前を通ったとき、ほんの少しだけ目元がゆるんだ。","考え事をしながら、無意識に自分の手首で脈を測っていた。"],
+  small:[
+   ["「本日の行程は予定より二刻早く進みました。記録しておきます」","「この地方の地図は三か所誤っています。直しておきました」"],
+   ["「歴史とは、上等な焼き菓子のようなものです。層を一枚ずつ剥がすと、中に何が詰まっているかわかる」","「今夜は流星が多いはずです。……見たければ、起こして差し上げますが」"],
+   ["「{name}さん、また無茶をしましたね。……しなさんな、と言っているんです」敬語が少し崩れていた。","夜中に目を覚ますと、フェリオスがこっそり蜂蜜菓子を食べていた。「……見ましたね。半分どうぞ」"],
+   ["「家族とは何か、ずっと定義を探していました。結論から言えば――」そこまで言って、彼は黙った。そして手を握った。","「あなたの寝顔も、記録しておきます。……冗談です。記録は、しません。覚えておきます」"]],
+  rumor:[["「封印の地下聖堂の扉には七つの鍵穴があり、開いているのはまだ一つだけだそうです」","封印の地下聖堂の七つの鍵穴"],["「雷鳴の塔の頂には、雷を操る魔導具が眠っているとか。挑戦者の髪は必ず逆立つそうですよ」","雷鳴の塔の魔導具"],["「死海の遺跡の封印の祭壇は、何者かに壊されていたそうです。……誰が、何のために」","死海の遺跡の壊された祭壇"]],
+  past:["「以前は皇都で書記をしていました。辞めた理由ですか。……記録に残すほどのことではありません」","「記録を残すのは癖です。忘れたくないことが、昔ありましたので」"],
+  join:"フェリオスが旅の仲間に加わった。「行程表を作り直しました。異論がなければ、これで参りましょう」",
+  battle:"フェリオスが細身の剣『海霧』で急所だけを突き、「左が手薄です。退路はあちら」と淡々と告げた。"},
+
+ vulkanu:{n:"ヴルカヌ",race:"人間",job:"剣士",sex:"男性",age:24,home:"sh",origin:"シェナ連合国",
+  bio:"隊商都市セピアの護衛傭兵。隊商の犬と一緒に育った。目標は「ねえよ」。強い奴に噛みつきに行っているだけらしい。",
+  looks:["日に透かすと金に光る焦げ茶の髪を背で一つに結び、前髪は片側だけ逆立てている。長いもみあげに顎髭、紫の瞳、やや濃い肌。しゃがれ声。","舌打ちが多い。でも犬を見かけるとしゃがみこんで、誰にも見せない顔で撫でている。","鍛え上げた体に古傷が多い。趣味は筋トレ。眠るときは子どもみたいな顔になる。"],
+  topics:"犬、剣の腕自慢、砂漠の旅、うまい干し肉の店。悪口なら一晩じゅう語れる。",
+  likes:["干し肉","犬の首輪"],marry:140,ring:"焦げ茶の髪紐",
+  ability:{n:"手負いの犬",d:"HPが半分以下のとき、戦闘判定＋2"},mods:{str:2,dex:1},
+  first:s=>"焦げ茶の髪を背で結び、前髪を片側だけ逆立てた男が、紫の瞳でこちらを睨めつけた。「おい、そこの路傍の石ころ。雨上がりの水たまりに映った月ほどの値打ちもねえ分際で、俺の道を塞ぐんじゃねえ。てめえの顔は、三日放っておいた粥より締まりがねえな」しゃがれ声だった。"
+    +(s.dogs>0?"……と言い終えたところで、足元の犬に気づいた。男はしゃがみこみ、誰にも見せないような顔で犬を撫ではじめた。「……ヴルカヌだ。覚えなくていい」":"男はヴルカヌと名乗りもせず、舌打ちを残して去っていった。名前は通りすがりの隊商が教えてくれた。"),
+  again:[
+   [s=>s.dogs>0?"ヴルカヌとまた会った。こちらには目もくれず、まっすぐ犬を撫でに来た。":"ヴルカヌとまた会った。「……チッ。またお前か」それだけ言って、なぜかついてきた。",
+    "ヴルカヌが道端で筋トレをしていた。「見てんじゃねえよ。……てめえもやるか？」"],
+   ["ヴルカヌがいた。「……ウゼェ」と言いながら、歩幅をこちらに合わせている。","ヴルカヌが顎で道の先を示した。「あっちは魔物が出る。……勝手にしろ」"],
+   ["ヴルカヌが干し肉を放ってよこした。「食え。……{name}。いや、なんでもねえ」","ヴルカヌがあくびをしながら近づいてきた。「遅えぞ、お前」"],
+   ["ヴルカヌが、犬にだけ向けていた低く優しい声で「{name}」と呼んだ。そしてすぐ目をそらした。"]],
+  look:["長いもみあげに顎髭、やや濃い肌。日に透けた焦げ茶の髪が金に光る。","犬を見かけるたびにしゃがみこんで、誰にも見せない顔で撫でている。","古傷だらけの鍛えた体。眠るときだけ、子どもみたいな顔になる。"],
+  small:[
+   ["「てめえの剣、なまくらだな。俺の槍鉾の方が百倍マシだ」","「この街の衛兵は全員腰抜けだ。顔に書いてある」"],
+   ["「うまい干し肉の店ならセピアだ。……教えてやっただけだ、勘違いすんな」","「犬ってのはな、嘘をつかねえ。人間と違ってな」"],
+   ["ぶっきらぼうに隊商の旅の話をしてくれた。「砂嵐の夜は、犬と固まって寝んだ。あったけえぞ」","「……{name}、明日も行くのか。……別に。聞いただけだ」"],
+   ["「俺の髪紐、お前が持ってろ。……なくすなよ」","低い声で名前を呼ばれた。顔を見ると、耳まで赤くして目をそらしていた。"]],
+  rumor:[["「錆鉄の砦跡にゃ、錆びた鎧の兵隊がまだ見張ってるってよ。噛みつき甲斐がありそうだ」","錆鉄の砦跡の鎧の見張り"],["「黄砂の大蛇は謎かけが好きらしい。くだらねえ。俺なら殴って通る」","黄砂の大蛇の謎かけ"],["「抗都グレージュじゃ傭兵を山ほど雇ってる。魔王軍相手にな」","抗都グレージュの傭兵募集"]],
+  past:["「隊商の犬と一緒に育った。……親の顔より犬の顔の方が覚えてる」","「目標？ ねえよ。強え奴がいたら噛みつく。それだけだ」"],
+  join:"ヴルカヌが旅の仲間に加わった。「……勘違いすんな。行く方向が同じなだけだ」",
+  battle:"ヴルカヌが槍鉾を担いで真っ先に敵へ突っ込んだ。荒っぽいが、勘は鋭い。",
+  moodDown:s=>s.dogs===0},
+
+ seres:{n:"セレス",race:"人間",job:"精霊使い",sex:"女性",age:27,home:"ox",origin:"オキサジン神国",
+  bio:"聖都オキサジンの神殿騎士団の元団長。若くして団長に上りつめたが、ある日職を辞して旅に出た。幼い日に一緒に詩集を読んだ誰かを、今も覚えている。",
+  looks:["真珠のような光沢のある長い銀髪を高く結い上げる。紫の薔薇のような瞳、白い肌の華やかで怜悧な美貌。白銀の外套。","冷たい表情の奥で、よく人を観察している。面白いものを見つけると、口の端だけでかすかに笑う。","しなやかに鍛えた体。胸は控えめだが均整が取れており、白い素足も眩しく美しい。"],
+  topics:"鍛錬、人間観察、彫金のアクセサリー、繕い物と髪の編み込み、蜂蜜酒、犬。",
+  likes:["彫金のブローチ","蜂蜜酒"],marry:130,ring:"氷薔薇の銀の髪飾り",
+  ability:{n:"氷の茨",d:"戦闘で時々敵を足止めし、目標値−2"},mods:{mag:2,dex:1},
+  first:"真珠のような光沢の銀髪を高く結い上げた、白銀の外套の女性が立っていた。紫の薔薇のような瞳が、値踏みするようにこちらを見る。「セレスだ。用があるなら手短にしろ」",
+  again:[
+   ["セレスとまた会った。「また会ったな。剣の握りが甘い。直せ」","セレスが腕を組んでこちらを眺めた。「……ふん。昨日よりはましな顔だ」"],
+   ["セレスと再会した。「{name}、外套の裾がほつれているぞ。……貸せ、繕ってやる」声に少し高い響きが混じった。","セレスが小さくため息をついた。「また怪我をしたのか。見せろ。……まったく、手のかかる」"],
+   ["セレスがくすりと笑った。「あら、{name}。そんな顔して、私に会いたかったんでしょ？」","セレスが後ろから肩をつついてきた。「ふふ、驚いた？ その顔が見たかったのよ」"],
+   ["セレスが耳元でささやいた。「おかえり、{name}」……からかうつもりだったらしいが、見つめ返すと彼女の方が真っ赤になった。"]],
+  look:["冷たく怜悧な美貌。白銀の外套が風に揺れている。","面白いものを見つけたのか、口の端だけでかすかに笑った。","しなやかに鍛えた体で、朝の鍛錬を欠かさない。"],
+  small:[
+   ["「鍛錬を怠るな。毎朝素振り五百回だ」","「あの商人、笑顔が嘘くさい。……関わるな」"],
+   ["セレスが髪を編み込んでくれた。「じっとしていろ。……ほら、少しは見られる顔になった」","「その犬、名前はあるのか。……ないなら私がつける」"],
+   ["「この彫金、見て。細工が細かいでしょ？ こういうの、好きなのよ」","「蜂蜜酒、一杯付き合ってくれるわよね？ 断ったら泣くわよ。嘘だけど」"],
+   ["「ねえ、もっとこっち。……ちょ、ちょっと、近い……！」押し返されると弱いらしい。","「あなたの髪、今夜は私が編むわ。……他の人には触らせないで」"]],
+  rumor:[["「宵闇の修道院跡では、夜になると誰もいない礼拝堂から聖歌が聞こえるそうだ」","宵闇の修道院跡の聖歌"],["「紫紺の竜は今も祭壇から神国を見ているという。……一度、手合わせしてみたいものだ」","紫紺の竜の大聖堂"],["「薄明の霊峰の山頂には、神の声が聞こえる泉があるそうだ」","薄明の霊峰の泉"]],
+  past:["「神殿騎士団の団長だった。……辞めた理由は聞くな。今はまだ」","「幼いころ、誰かと詩集を読んだ。その人の顔を、今も覚えている」"],
+  join:"セレスが旅の仲間に加わった。「隊列は私が決める。文句は受けつけない」",
+  battle:"セレスが細剣を閃かせて氷の精霊を呼び、戦場に氷の茨を咲かせた。「足を止めた。今だ、叩け」"},
+ melvi:{n:"メルヴィ",race:"人間",job:"魔法使い",sex:"男性",age:26,home:"nb",origin:"亡国ノワ・ブラン",
+  bio:"ノワ・ブランの元宮廷魔術師だが、謎が多い。漆黒の厄災を非常に憎んでいる。",
+  looks:["暗い灰色の長い髪。紫の瞳。灰色のローブ。細身で背はあまり高くない。美少女のような美しい顔立ち。","常に表情を変えない。厄災の話の時だけ底知れない憎悪を瞳に宿し、冷たい表情になる。","ローブの下は傷跡だらけの肌。"],
+  topics:"ノワ・ブラン王国の情報。黒衣の魔王の噂。漆黒の厄災への憎悪。",
+  likes:["魔術書","黒葡萄酒"],marry:200,ring:"読めない文字の手帳",
+  ability:{n:"影の魔術",d:"戦闘で高確率で敵を足止めし、目標値−1"},mods:{mag:2,int:1},
+  first:"暗い灰色の長い髪に紫の瞳、灰色のローブの小柄な魔術師がいた。美少女のような顔立ちなのに、表情はぴくりとも動かない。「……メルヴィ。用がないなら、その間の抜けた顔ごと視界から消えてくれる？」",
+  again:[
+   ["メルヴィとまた会った。「また君か。暇なの？ 私は暇じゃない」","メルヴィがこちらを一瞥した。「生きてたんだ。……運だけはいいみたいだね」"],
+   ["メルヴィと再会した。「{name}。その装備で今日まで生き延びたなら、魔物の方がよほど手加減してくれたんだろうね」","メルヴィが足を止めた。「……で？ 何かあったなら話しなよ。聞くだけは聞く」"],
+   ["メルヴィが小さく息をついた。「来たんだ。……私の葬式の予行演習にしては、顔色がいいね」口調がいつもより柔らかい。","メルヴィが待っていた。「遅い。魔王軍が君より先に私を迎えに来るところだった」"],
+   ["メルヴィが{name}の手を取り、蕩けるように微笑んだ。「待ってたよ。……俺の前でだけは、そんな無防備な顔をしていい」"]],
+  look:["表情はぴくりとも動かない。灰色のローブの裾が、影のように揺れた。","厄災の話になった途端、紫の瞳に底知れない憎悪が宿り、空気が冷えた。","袖口からのぞく肌は、古い傷跡だらけだった。"],
+  small:[
+   ["「その剣、飾り？ 振り回すなら私に当てないでね」","「祈ってる暇があったら走りなよ。神様は足が遅いから」"],
+   ["「この先の村の領主、税を三重取りしてる。顔に『小物』って書いてあったでしょ。……気づかなかった？」","めずらしく黙って、{name}の話を最後まで聞いていた。「……で、君はどうしたいの」"],
+   ["「魔王の城に行くなら、遺書は二通書いておきなよ。一通目は魔物に食べられるから」……少しだけ、口の端が上がった。","「トナーの村の葬式は、本人も参列するんだ。便利だよね。……冗談だよ。半分は」"],
+   ["「俺のそばにいなよ。……どこへ行くのも、もう許さないから」耳元で、低く甘く囁かれた。","メルヴィが{name}の髪を指に絡めて、蕩けるように微笑んだ。「影より近くにいてあげる」"]],
+  rumor:[["「マースの魔塔の頂で、魔導師どもがまだ儀式を続けてる。……止めないと、次はもっと悪いものが来る」","マースの魔塔の儀式"],["「黒衣の魔王は、欲深い王子が結界を破って呼び出した。……愚か者の名前くらい、覚えておいて損はないよ」","黒衣の魔王を呼んだ王子"],["「死海の遺跡の祭壇を壊したのが誰か。……私はそれを探してる」","死海の遺跡の祭壇を壊した者"]],
+  past:["「ノワ・ブランの宮廷魔術師だった。……国が一晩で消えるのを、塔の上から見ていたよ」","「漆黒の厄災は、必ず私が消す。そのためなら、何を使ってもいい」その瞳は、凍るように冷たかった。"],
+  join:"メルヴィが旅の仲間に加わった。「勘違いしないで。君が使えるうちは、使ってあげるだけ」",
+  battle:"メルヴィの足元の影が伸びて、敵を絡めとり、引き裂いた。「動かないで。……手間が増える」"},
+
+ sarmas:{n:"サーマス",race:"エルフ",job:"精霊使い",sex:"男性",age:128,home:"vi",origin:"ヴィリジャン共和国",
+  bio:"持ち前のマイペースさで排他的なエルフの里から旅立った。薬草と錬金術の修行をしている。",
+  looks:["長い銀の髪。暗い緑の瞳。整った顔だが、楽天的な性格が表情に出ている。","不死者が苦手ですぐ泣いて取り乱す。その外見の落差は麗しいエルフには見えない。","喋らなければきれいなお兄さん。喋ると残念なオタクエルフ。"],
+  topics:"自然。動植物や、博物学。毒虫やネズミなども嫌いではない。不死者の怖さも語る。",
+  likes:["干し果実","古い学術書"],marry:100,ring:"トネリコの杖",
+  ability:{n:"緑の祝福",d:"戦闘判定＋1"},mods:{int:1,mag:1},
+  first:"長い銀髪のエルフが、道ばたにしゃがみこんでキノコを観察していた。暗い緑の瞳がこちらを向く。「やあ、こんにちは。僕はサーマス。ねえ、このキノコ見て。かさの裏がすごくきれいなんだよ」",
+  again:[
+   ["サーマスとまた会った。「あっ、きみ！ 元気だった？ 僕はね、昨日すごい苔を見つけたんだ」","サーマスが木の上から手を振ってきた。「やあ。鳥の巣を見てたんだよ。卵が三つあった！」"],
+   ["サーマスが駆け寄ってきた。「{name}！ 聞いて聞いて、このあたりの薬草はね、根の形が北と南で全然違ってて、つまり土の――」止まらない。","サーマスと再会した。「ちょうどよかった、これ持ってて。あ、それ毒あるから素手で触らないでね」"],
+   ["サーマスがいた。「{name}、今日は湿原に行こう！ 蛍の幼虫が見たいんだ。え、予定？ 大丈夫大丈夫」こちらの返事は聞いていない。","サーマスが、背負い袋いっぱいの石を見せてきた。「全部持って帰るよ。重い？ 半分持ってくれるよね？」"],
+   ["サーマスが嬉しそうに分厚い標本帳を広げた。「{name}にだけ見せるね。これが僕の宝物。……一緒に、もっと集めようよ。ずっと」"]],
+  look:["長い銀髪に暗い緑の瞳。整った顔だけど、のんきな笑みが隠しきれていない。","骸骨の魔物の話が出ただけで涙目になり、{name}の背中に隠れた。麗しいエルフの面影はどこにもない。","木漏れ日の下で黙って立っていると、絵画のようなエルフだ。……口を開くまでは。"],
+  small:[
+   ["「この葉っぱ、噛むと少し甘いんだよ。……あ、こっちは噛んじゃだめなやつ」","「ネズミってかわいいよね。前歯がずっと伸び続けるんだよ。すごくない？」"],
+   ["キノコの話を振ったら、そこから一刻、胞子の飛び方について早口で語られた。","「鉱石ってね、割ると中が全然違う色だったりするんだ。ほら、この孔雀石の縞！ 一本一本がね――」"],
+   ["「あ、そっちじゃなくてこっち行こう。珍しい毒虫がいそうな気配がする」勝手に道を変えられた。","サーマスが夜中に{name}を揺り起こした。「見て、光るキノコ！ ……え、寝てた？ ごめんね、でも見て！」"],
+   ["「{name}、僕の好きなもの、全部知ってほしいんだ。今日はクモの巣の話からね。夜は長いよ」","サーマスが標本帳の最後のページを指さした。「ここ、まだ空いてるでしょ。{name}と見つけたものを貼るんだ」"]],
+  rumor:[["「深緑竜の寝床の苔はね、竜の寝息で育つらしいんだ。採取したいなあ……起こしたら怒られるかな」","深緑竜の寝床の苔"],["「アイボリアの墓所、死者が起きてるんだって。……僕は絶対行かないからね！ 絶対！」","アイボリアの墓所の目覚めた死者"],["「翡翠の地下水脈の水、疲れが取れるって言うでしょ。たぶん溶けてる鉱物のせいだと思うんだよね」","翡翠の地下水脈の水"]],
+  past:["「エルフの里って、変わらないことが一番大事なんだ。僕は変わるものが好きだったから、出てきちゃった」","「百二十八年生きてるけど、知らない草はまだまだあるよ。だから旅は楽しいんだ」"],
+  join:"サーマスが旅の仲間に加わった。「よろしくね。あ、途中で寄り道したくなったら言うね。たぶん毎日」",
+  battle:(s,t)=>{
+   const ud=hasAttr(t.foe,"アンデッド");
+   if(ud){const P=["サーマス「ギャアアアッ！ アンデッドだぁぁぁ！！！」 麗しいエルフが、泣き叫びながら{name}の背中にしがみついた。それでもヤドリギの杖から、支援の光はちゃんと飛んできた。",
+     "サーマス「無理無理無理無理！ 骨！ 骨が動いてる！！」 涙と鼻水でぐしゃぐしゃになりながら、緑の光を闇雲に撒き散らしている。",
+     "サーマスは"+t.foe+"を見た瞬間に白目をむいて叫んだ。「ギャアアアッ！ アンデッドダァァァ！！！」……でも杖は離さなかった。えらい。",
+     "サーマス「やだやだやだ、こっち見てる！ {name}、僕を置いてかないでね！？ 絶対だよ！？」 半泣きのまま、支援の光だけは律儀に飛ばしてくる。"];
+    return pick(P,t.rnd)}
+   if(t.C&&t.C.id==="nb")return "サーマスは亡者の気配に怯えて、ずっと{name}の袖をつかんでいた。それでもヤドリギの杖から、支援の光はちゃんと飛んできた。";
+   return "サーマスが後ろからヤドリギの杖を掲げ、緑の光で仲間を包んだ。「がんばって！ 僕、応援してるから！」"}},
+ tiel:{n:"ティエル",race:"羽耳族",job:"精霊使い",sex:"男性",age:21,home:"sh",origin:"シェナ連合国",
+  bio:"シェナ連合国の羽耳族の里で生まれ育つ。神官の跡継ぎとして教育されてきたが、広く世界を見て来いと長老から言われて旅立った。",
+  looks:["肩までの淡い金髪。葡萄色の瞳。白い羽耳。育ちの良さそうな、穏やかな表情。革で補強された神官衣。","びっくりすると頭頂のアホ毛が逆立つ。ティエルはオカメインコの羽耳族。臆病。","肌は白く、体は細い。羽耳の付け根を撫でられるととろけてしまう。"],
+  topics:"シェナ連合国の多彩な国と種族、世界の広さ。各国の信仰の奥深さに興味がある。",
+  likes:["蜂蜜の焼き菓子","砂漠の小さな花"],marry:120,ring:"水晶の盃",
+  ability:{n:"白き鳥の癒し",d:"戦闘が終わるたびにHP＋3"},mods:{cha:1,mag:1},
+  first:"肩までの淡い金髪に白い羽耳の青年が、道ばたの小さな花に水をやっていた。葡萄色の瞳がこちらを見て、穏やかに笑う。「こんにちは。僕はティエルといいます。羽耳族の里から、世界を見に来たところなんです」",
+  again:[
+   ["ティエルとまた会った。「あっ、またお会いできましたね。お怪我はありませんか？」","ティエルが道の向こうから小走りでやってきた。何かに驚いたのか、頭のてっぺんの羽がぴんと立っている。"],
+   ["ティエルと再会した。「{name}さん！ 聞いてください、昨日は魔物から逃げなかったんです。……足は震えてましたけど」","ティエルが白い羽耳をぱたぱたさせて手を振った。「{name}さんのお顔を見ると、なんだか安心します」"],
+   ["ティエルが真剣な顔で言った。「{name}さん、俺……あ、いえ、僕、もっと強くなりたいんです。何か、こつを教えてくれませんか」","ティエルが胸を張った。「お、俺に任せてください！」……言い慣れていないのが丸わかりだった。"],
+   ["ティエルが駆け寄ってきて、そっと{name}の手を両手で包んだ。「おかえりなさい。あなたにふさわしい僕でいられるよう、今日も頑張りました」"]],
+  look:["淡い金髪のあいだから、白い羽耳がのぞいている。育ちの良さそうな、穏やかな顔だ。","物音にびっくりして、頭のてっぺんの羽がぴーんと逆立った。","羽耳の付け根を撫でてみたら、ティエルはとろけたような顔で目を細めた。"],
+  small:[
+   ["「シェナには、たくさんの部族と種族が暮らしているんですよ。みんな違って、みんな素敵なんです」","「お祈りの言葉って、国によって全然違うんですね。旅に出て初めて知りました」"],
+   ["遠くで獣が吠えた。ティエルはおろおろと辺りを見回し、それでも{name}の前に一歩出た。「だ、大丈夫です、僕がついてます……！」","「オキサジンの神官さまと、お祈りの話をしてみたいなあ。神様の数え方から違うんです」"],
+   ["「{name}さん、剣の握り方を見せてもらえますか。俺……僕も、守られてばかりじゃいけないと思って」","「俺、今日はひとりで魔物を追い払えたんです！ ……ちょっとだけ、杖で叩いただけですけど」"],
+   ["「あなたの隣にいるのにふさわしい僕でいたいんです。……だから今夜も、羽耳、撫でてくれますか？」","ティエルが{name}の外套のほつれを、黙って丁寧に繕ってくれていた。「僕にできることは、全部したいんです」"]],
+  rumor:[["「黄砂の大蛇さまは、正しい答えを言えた人だけを通してくださるそうです。どんな謎かけなんでしょう」","黄砂の大蛇の謎かけ"],["「聖都オキサジンの夜明けの祈りは、街じゅうが紫に光るそうですね。いつか見てみたいです」","聖都オキサジンの夜明けの祈り"],["「遺跡の街アンバーでは、床下から古代の壺が出てくるんですって。昔の祈りの道具もあるかもしれません」","遺跡の街アンバーの古代の壺"]],
+  past:["「僕、里では神官の跡継ぎだったんです。でも長老さまが『広い世界を見てこい』って」","「本当は、戦うのはすごく怖いんです。……でも、誰かが傷つくのは、もっと怖いから」"],
+  join:"ティエルが旅の仲間に加わった。「け、怪我をしたら、すぐ言ってくださいね。僕、治しますから……！」",
+  battle:"ティエルが後ろで杖を握りしめ、羽耳を震わせながらも祈りの言葉を唱えていた。"},
+
+ gloria:{n:"グロリア・グレイブ",race:"半獣人",job:"剣士",sex:"女性",age:29,home:"sh",origin:"シェナ連合国",
+  bio:"シェナ連合国の半獣人の部族の生まれ。雇われて傭兵などしていた。魔王騒ぎに金の匂いを嗅ぎつける。",
+  looks:["長い濃い色の金髪。金茶の瞳。狐耳に狐尻尾。長身で、気の強そうな顔立ちの女性。砂除けの外套に革の胸当て。","日焼けした肌。値踏みするときには眉を寄せる癖がある。","スレンダーな体型。筋肉がつきつつも細身でしなやか。尻尾はふわふわ。"],
+  topics:"シェナ連合国の歴史、半獣人の種族差別問題、お金と戦争の話題。",
+  likes:["黒葡萄酒","白葡萄酒","蜂蜜酒"],marry:120,ring:"隕鉄の短刀",
+  ability:{n:"疾風追撃",d:"どんな判定でも、大失敗を出したとき一日一度だけ振り直す"},mods:{dex:2,str:1},
+  first:"狐耳に狐の尻尾、砂除けの外套をまとった長身の女が、金茶の瞳でこちらを上から下まで眺めた。「ふうん。装備は安物、財布は軽そう。……あたしはグロリア。雇いたきゃ前払いでね」",
+  again:[
+   ["グロリアとまた会った。「また来たの。冷やかしなら銀貨一枚もらうよ」","グロリアが眉を寄せてこちらを値踏みした。「……先週よりは、ましな靴を履いてるね」"],
+   ["グロリアと再会した。「{name}。世の中、正義で腹はふくれないんだよ。……まあ、あんたらしいけどさ」","グロリアが尻尾をゆらりと振った。「ちょうどいい、愚痴を聞きな。今日の雇い主がまたケチでね」"],
+   ["グロリアに背中をばしんと叩かれた。「しゃんとしな、{name}！ あんたが倒れたら、あたしの取り分が減るだろ。……冗談だよ」","グロリアがにやりと笑った。「来たね、相棒。今日はあたしが一杯おごってやる。明日返しな」"],
+   ["グロリアが{name}の腕に尻尾を巻きつけて、甘い声で言った。「ねえ、あたしの旦那様。次の街で、新しい耳飾りが欲しいなあ」"]],
+  look:["長い濃い金髪に狐耳。気の強そうな顔立ちの、背の高い女傑だ。","日焼けした肌。値踏みするとき、眉をきゅっと寄せる癖がある。","しなやかな細身の体。ふわふわの尻尾が、機嫌よさそうに揺れていた。"],
+  small:[
+   ["「その鎧、銀貨三十枚ってとこかね。ぼられたろ」","「魔王様々だよ。戦があるところに、仕事と金がある」"],
+   ["「半獣人ってだけで、宿代を倍取る街もあるんだよ。……世間なんて、そんなもんさ」","「正義の騎士様ってのは、たいてい給金の払いが悪いんだ」皮肉っぽく笑った。"],
+   ["「あんた、無茶する前にあたしに言いな。一人で背負い込むやつは、早死にするよ」","「いいかい、値切りってのはね、相手の目を見て笑うんだ。……ほら、やってみな」"],
+   ["「今夜はあたしの膝で寝な。拒否権？ ないね」","「稼ぎは全部あたしが預かるからね。……代わりに、あんたの一生はあたしが面倒見てやる」"]],
+  rumor:[["「抗都グレージュじゃ、傭兵の日当が跳ね上がってる。命の値段ってやつさ」","抗都グレージュの傭兵の日当"],["「砂に沈んだ王墓、砂嵐のあとに入口が出るって話だ。お宝の匂いがするねえ」","砂に沈んだ王墓の入口"],["「商都サフラナの大市場、魔王の首以外はなんでも手に入るって？ じゃあ首を持ち込めば大儲けだね」","商都サフラナの大市場"]],
+  past:["「シェナの半獣人の部族の生まれさ。食うために剣を覚えた。それだけ」","「あたしが金にうるさいのはね、金がないとどうなるか、嫌ってほど見てきたからだよ」"],
+  join:"グロリアが旅の仲間に加わった。「契約成立だね。あたしの腕は高いよ。損はさせないけど」",
+  battle:"グロリアがゆるく反った二振りの刀を抜き、風のような身のこなしで敵を翻弄した。"},
+
+ sevein:{n:"セヴェイン",race:"人間",job:"聖騎士",sex:"女性",age:25,home:null,ban:"ox",origin:"オキサジン神国",
+  bio:"女神の命を破って破門され、オキサジン神国を追放された贖罪の聖騎士。贖いの旅を続けるが、まあそれはそれで元気である。",
+  looks:["紺色のベリーショート。夜空のような深い青の瞳。無骨な鉄の鎧に身を包むが、元聖騎士の気品は隠しきれない。長身。","高身長に加えて筋肉もムチムチである。喜怒哀楽がよく出る、整った顔。感情豊かすぎて表情が忙しい。","筋肉だけでなく、女性らしい肉付きも豊か。聖騎士時代の傷の残る肌。"],
+  topics:"素朴な庶民の日常、自分の信仰。罪と罰。真面目に考え込んだり、ご飯のことを考えたり。",
+  likes:["古い祈祷書","菫の押し花"],marry:120,ring:"聖別された銀の短剣",
+  ability:{n:"聖剣開放",d:"漆黒属性の敵に対して戦闘判定＋2"},mods:{str:2,vit:1},
+  first:"紺色の短い髪に、無骨な鉄の鎧。背の高い女が、道ばたの屋台の前で目を輝かせていた。「うおお、なんだこの串焼き、うまそうだなあ！ ……ん？ よう！ 俺はセヴェイン。見ての通り、ただの旅の剣士さ」",
+  again:[
+   ["セヴェインとまた会った。「よう、{name}！ 元気そうだな。俺か？ 俺はいつでも元気だぞ！」","セヴェインが大きく手を振ってきた。「おーい！ ちょうど飯にしようと思ってたんだ。一緒にどうだ？」"],
+   ["セヴェインが駆け寄ってきた。「{name}、見てくれよこれ！ 川で拾った石なんだけど、すげえ青いんだ。外の世界ってのは、なんでもあるんだなあ」","セヴェインと再会した。「なあ{name}、この国のパンって、なんでこんなにふかふかなんだ？ 俺の村じゃ石みたいに固かったぞ」"],
+   ["セヴェインが、静かに夕日を見ていた。「……{name}か。俺はな、許されたくて歩いてるんじゃないんだ。歩くこと自体が、俺の祈りなんだと思う」","セヴェインが剣を地面に立て、目を閉じて祈っていた。終わると、いつもの顔で笑った。「よし！ 今日も女神さまに顔向けできるようにがんばるか！」"],
+   ["セヴェインが{name}を見つけるなり、鎧ごと抱きついてきた。「おかえり！ なあなあ、今日も一日がんばったからさ、俺のこと撫でてくれよ。……へへ、幸せだなあ」"]],
+  look:["紺色のベリーショートに、夜空のような深い青の瞳。無骨な鉄の鎧なのに、立ち姿にどこか気品がある。","長身でたくましい体つき。笑ったかと思えば驚き、驚いたかと思えば感動している。表情が忙しい。","鎧を脱ぐと、豊かな体つきに古い傷あとがいくつも残っていた。聖騎士だったころの名残だという。"],
+  small:[
+   ["「なあ、この辺の名物ってなんだ？ 俺、腹が減っててさ」","「宿のおかみさんがおまけしてくれたんだ。人の親切ってのは、ありがたいもんだよなあ」"],
+   ["「すげえ……海って、こんなにでかいのか！」セヴェインは波打ち際で、しばらく動かなかった。","「この花、オキサジンでは見たことないな。なんて名前なんだろう。……あ、食えるのかな」"],
+   ["「罰ってのは、誰かに与えられるもんじゃなくて、自分で背負うもんだと思うんだ。……ま、腹が減ってたら背負えないけどな！」","「女神さまの救いは、きっと誰にでもある。破門された俺にだって。……そう信じてる」"],
+   ["「{name}の隣にいるとさ、贖罪とかどうでもよくなっちまいそうで困るんだよな。……いや、どうでもよくはないぞ！ ないけど！ へへ」","「なあ、もうちょっとくっついててもいいか？ 鎧、脱いでくるからさ」"]],
+  rumor:[["「封印の地下聖堂の奥には、聖騎士でも近づいちゃいけない扉があるんだ。……俺は、昔そこの番をしてた」","封印の地下聖堂の禁じられた扉"],["「紫紺の竜は、女神さまのお使いだって教わった。いつか、ちゃんと挨拶しに行きたいんだ」","紫紺の竜の大聖堂"],["「死海の遺跡のあたりは、黒い霧が濃いって話だ。俺の剣が役に立つなら、行かなきゃな」","死海の遺跡の黒い霧"]],
+  past:["「俺はな、女神さまの命令を破ったんだ。……それで破門。でも、あのとき見捨てるほうを選んでたら、俺はもっと自分を許せなかったと思う」","「イセリアとは姉妹みたいに育ったんだ。あいつ、今ごろ泣いてないといいけどな」"],
+  join:"セヴェインが旅の仲間に加わった。「おう、任せとけ！ 前は俺が守る。その代わり、晩飯はうまいもん食おうな！」",
+  battle:(s,t)=>hasAttr(t.foe,"漆黒")?"セヴェインが聖剣を両手で構えた。「女神よ、この剣に光を！」 刃が白く燃え上がり、漆黒の魔物めがけて真っ向から斬りこんでいった。":"セヴェインが鉄の鎧を鳴らして最前線に躍り出た。「女神の名のもとに！ うおおおおっ！」"},
+
+ iselia:{n:"イセリア",race:"人間",job:"神官",sex:"女性",age:25,home:"ox",origin:"オキサジン神国",
+  bio:"オキサジン神国の『女神』の声が聞こえる託宣の巫女。姉妹のように育ったセヴェインを追って、国外に初めて出る。",
+  looks:["くせのない長い銀髪に銀の瞳。透けるような白い肌。儚い白い花のような、可憐な女性。","腕も足も折れそうに細い。白いローブをまとって祈る姿はとても神秘的で神々しい。","巫女の仮面の下に、少女のような無垢で素直な遊び心を含ませる。ちゃんと現実を見ている。"],
+  topics:"外の世界への素直な驚き。男性への慣れなさ。女神への敬虔な祈り。入信しないか勧めてくる。",
+  likes:["古い祈祷書","菫の押し花"],marry:150,ring:"聖銀のペンダント",
+  ability:{n:"巫女の祈り",d:"戦闘中、50％の確率で毎ターンHP＋2"},mods:{mag:1,cha:1},
+  first:"長い銀髪に白いローブの女性が、道の真ん中で静かに祈っていた。銀の瞳がゆっくりとこちらを向く。「……女神は告げられました。今日、ここで旅人に会うと。わたくしはイセリア。人を、探しております」",
+  again:[
+   ["イセリアとまた会った。「……また、お会いしましたね。これも女神のお導きでしょう」","イセリアが静かに一礼した。「旅人よ。あなたに女神の加護がありますように」"],
+   ["イセリアと再会した。「{name}さま！ 聞いてください、あの屋台の飴、とっても甘いのです！ ……こほん。失礼いたしました」","イセリアがそっと{name}の頬の泥をぬぐった。「まあ、また無茶をなさって。……仕方のないかた」"],
+   ["イセリアが胸を張った。「わたくしのほうが年上……あ、いえ、同じくらいでしたね。……でも、お姉さんですから！」と、にっこり言い切った。","イセリアが小首をかしげた。「{name}さま、そろそろ入信なさいませんか？ 今なら、わたくしが直々にお祈りを教えて差し上げます」"],
+   ["イセリアが{name}の腕にすっと身を寄せて、いたずらっぽく見上げた。「ふふ、驚きました？ 巫女だって、甘えたい日はあるのですよ。……今日は、離しませんから」"]],
+  look:["くせのない長い銀髪に銀の瞳。透けるように白い肌の、儚い白い花のような女性だ。","白いローブで祈る細い姿は、触れたら消えてしまいそうなほど神々しい。","祈りを終えたイセリアが、ふと少女のように笑った。巫女の仮面の下の素顔は、思ったよりずっとたくましい。"],
+  small:[
+   ["「外の世界は、音が多いのですね。……けれど、どの音にも、女神の御心が宿っております」","「殿方と、こうしてお話しするのは……あまり、慣れておりません」少しだけ目を伏せた。"],
+   ["「見てください、{name}さま！ 鳩が、パンくずを取り合っています！ ……かわいい」","「疲れたお顔をしておいでです。さあ、ここに座って。少し休みましょう」"],
+   ["「セヴェインは昔から、無茶ばかりするのです。わたくしがいないと……いえ、わたくしがお姉さんなので！」","「女神の声は、いつも聞こえるわけではないのですよ。……ここだけの話です」"],
+   ["「{name}さま、今日はわたくしが膝枕をして差し上げます。……拒否はできませんよ？ 女神のお告げですから」","「ふふ、あなたの困った顔、とても好きです。もう少し、からかってもよろしいですか？」"]],
+  rumor:[["「宵闇の修道院跡の聖歌は、亡くなった修道士たちの祈りだそうです。……鎮めて差し上げたいのです」","宵闇の修道院跡の聖歌"],["「薄明の霊峰の泉では、女神の声がいっそうはっきり聞こえるといわれております」","薄明の霊峰の泉"],["「女神は、亡国の地に眠る黒き鏡のことを告げられました。……アイボリアの墓所の死者たちも、それに怯えているのだと」","アイボリアの墓所の怯える死者"]],
+  past:["「わたくしは、生まれたときから女神の声を聞く巫女でした。外に出たのは、これが初めてなのです」","「セヴェインが破門されたとき、わたくしは何もできませんでした。……だから今度は、わたくしが追いかけてきたのです」"],
+  join:"イセリアが旅の仲間に加わった。「女神のお導きのままに。……傷を負ったら、隠さずおっしゃってくださいね。お見通しですから」",
+  battle:"イセリアが後ろで銀の錫杖を掲げ、澄んだ声で祈りを捧げた。淡い光が、仲間の背中をやさしく包んだ。"}
+
+};
+const NAMED_IDS=Object.keys(NAMED);
+const speechTier=(s,id)=>s.spouse===id?4:s.aff[id]>=50?3:s.aff[id]>=20?2:1;
+const lookTier=a=>a>=20?3:a>=5?2:1;
+const SPEECH_LABEL=["","口調1","口調2（好感度20〜）","口調3（好感度50〜）","口調4（結婚）"];
+function tierOf(s,id){
+  const a=s.aff[id],m=NAMED[id].marry;
+  if(s.spouse===id) return {t:"伴侶",c:"t4"};
+  if(m&&a>=m) return {t:"結婚可能",c:"t4"};
+  if(a>=50) return {t:"親しい仲",c:"t3"};
+  if(a>=20) return {t:"友人",c:"t3"};
+  if(a>=5) return {t:"話し相手",c:"t2"};
+  if(a>=1) return {t:"顔見知り",c:"t1"};
+  return {t:"未遭遇",c:""};
+}
+
+// ================= 同行冒険者 =================
+// 見習い冒険者（どの都市の酒場にもいる）
+const HIRES=[
+  {id:"ap_fighter",n:"見習い戦士",d:"剣を握って三か月。元気だけはある。",mods:{str:1}},
+  {id:"ap_mage",n:"見習い魔術士",d:"インディガン帰りの、杖の扱いがまだ危なっかしい若者。",mods:{mag:1}},
+  {id:"ap_scout",n:"見習い斥候",d:"道と噂に詳しい、すばしっこい子。",mods:{int:1}},
+  {id:"ap_bard",n:"見習い吟遊詩人",d:"リュートは下手だが、人あたりはいい。",mods:{cha:1}}];
+const HIRE_NAMED=20,HIRE_APPRENTICE=8;
+const COMPANIONS=[
+  ...NAMED_IDS.map(id=>({id,n:NAMED[id].n,tag:"ネームド",named:true,mods:NAMED[id].mods,
+    daily:id==="liberta"?(s,t)=>{if(t.rnd()<1/3){s.dogs++;t.out.push({c:"p",t:"リベルタの歌につられて、犬がまた一匹ついてきた。"})}}:id==="ferios"?s=>{s.ferios=true}:null})),
+  ...HIRES.map(h=>({...h,tag:"見習い"}))];
+// d100の尺度へ：装備・同行者の補正を5倍（旧＋1＝新＋5）
+GEAR_ORDER.forEach(sl=>EQUIP[sl].items.forEach(it=>{for(const k in it.m)it.m[k]*=5}));
+NAMED_IDS.forEach(id=>{const m=NAMED[id].mods;for(const k in m)m[k]*=5});
+HIRES.forEach(hh=>{for(const k in hh.mods)hh.mods[k]*=5});
+const COMP=id=>COMPANIONS.find(c=>c.id===id);
+const partyMembers=s=>[...new Set(s.party)].map(COMP).filter(Boolean);
+function activeComps(s,t){const a=partyMembers(s);if(t&&t.guest&&!a.some(c=>c.id===t.guest))a.push(COMP(t.guest));return a}
+const foe=(t,list)=>(t.foe=pick(list,t.rnd));
+const isActive=(t,id)=>activeComps(t.s,t).some(c=>c.id===id);
+function compMods(s,p,k,t){return [...gearMods(s,k),...activeComps(s,t).map(c=>({who:c.n,v:c.mods[k]||0})).filter(b=>b.v)]}
+const eff=(s,p,k,t)=>s.stats[k]+compMods(s,p,k,t).reduce((a,b)=>a+b.v,0);
+</script>
+<script>
+// ================= ランダム表 =================
+const KIND_LABEL={combat:"戦闘",dex:"軽業",int:"探索",cha:"交渉",talk:"会話",cook:"料理"};
+const REST_MAX=30,REST_START=15;
+const TABLES={
+ weather:{label:"天気",die:"d12",note:"雰囲気づけ。一部は判定や鳩に影響。",rows:[
+  {text:"空は抜けるような快晴だった。"},
+  {text:"薄曇りで、旅には悪くない日和だった。"},
+  {text:"一日じゅう細かな霧雨が降っていた。",fx:"軽業 −10",effect:(s,t)=>t.add("dex","霧雨",-10)},
+  {text:"強い風が吹き、鳩が何度も流されかけた。",fx:"鳩が迷子になりやすい",effect:(s,t)=>{t.windy=true}},
+  {text:"夕方、空が分離色のように青と紫に滲んだ。珍しい空だ。"},
+  {text:"日暮れに金泥を流したような夕焼けが広がった。",fx:"交渉・会話 ＋10（みんな機嫌がいい）",effect:(s,t)=>t.add("cha","夕焼け",10)},
+  {text:"朝は霧が深かったが、昼過ぎにはすっきり晴れた。"},
+  {text:"雨上がりの空に、二重の虹がかかった。"},
+  {text:"にわか雨に降られ、しばらく木陰で雨宿りをした。"},
+  {text:"やわらかい風が吹いて、足取りが軽かった。",fx:"休息度 ＋1",effect:s=>{s.rest+=1}},
+  {text:"ひどく暑い一日で、汗が止まらなかった。",fx:"休息度 −1",effect:s=>{s.rest-=1}},
+  {text:"夜、満天の星が広がった。流れ星がひとつ、尾を引いて落ちていった。"}]},
+ encounter:{label:"出会い",die:"d12",note:"一日1回。ネームドは出身国にいると出会いやすい（3倍）。同行中の人は出てこない。",rows:[
+  {label:"土地の人に会う（土地の表へ）"},{label:"土地の人に会う（土地の表へ）"},{label:"土地の人に会う（土地の表へ）"},{label:"土地の人に会う（土地の表へ）"},{label:"土地の人に会う（土地の表へ）"},
+  {label:"ネームド冒険者に会う"},{label:"ネームド冒険者に会う"},{label:"ネームド冒険者に会う"},{label:"ネームド冒険者に会う"},{label:"ネームド冒険者に会う"},
+  {label:"翼の折れた小鳥を助ける",fx:"徳 ＋1"},{label:"誰とも会わない"}]},
+ people_city:{label:"土地の人（都市）",die:"d6",note:"",rows:[
+  {text:"荷車を引く旅商人とすれ違い、軽く会釈を交わした。"},
+  {text:"衛兵に道を尋ねた。親切に地図まで描いてくれた。"},
+  {text:"広場で子どもたちに相棒の鳩を囲まれた。鳩はまんざらでもなさそうだった。"},
+  {text:"屋台の主人に、名物の味見をすすめられた。"},
+  {text:"別の冒険者パーティと情報交換をした。",fx:"噂がひとつ増えることも",effect:(s,t)=>{if(t.rnd()<.5){const dn=rumorDungeon(t.C,s,t.rnd);addRumor(s,dn.n+"の話",t);t.out.push({c:"p",t:`彼らは${dn.n}から戻ったばかりだという。`});flush(t)}}},
+  {text:"旅鳩舎の鳩番と、鳩の羽の色つやについて長々と語り合った。"}]},
+ people_field:{label:"土地の人（フィールド・街道）",die:"d6",note:"",rows:[
+  {text:"羊飼いが、羊の数を数えながら手を振ってくれた。"},
+  {text:"荷車の旅商人とすれ違った。"},
+  {text:"土地の狩人に、近道を教わった。",fx:"探索 ＋10",effect:(s,t)=>t.add("int","狩人の近道",10)},
+  {text:"紫の衣の巡礼者たちと、しばらく同じ道を歩いた。"},
+  {text:"野良鳩の群れについて来られた。うちの鳩が少し得意げだった。"},
+  {text:"薬草摘みのおばあさんに、傷薬を分けてもらった。",fx:"HP ＋2",effect:(s,t)=>{s.hp=Math.min(hpMax(s),s.hp+2)}}]},
+ people_dungeon:{label:"土地の人（ダンジョン）",die:"d6",note:"",rows:[
+  {text:"別の冒険者パーティとすれ違った。「この先、気をつけな」"},
+  {text:"怪我をした冒険者に薬を分けた。",fx:"徳 ＋1",effect:s=>{s.virtue++}},
+  {text:"遺跡を調べている学者に出会った。壁の模様を写すのに夢中だった。"},
+  {text:"壁に、先人の古い落書きを見つけた。「ここまで来た」とだけ書いてある。"},
+  {text:"迷い込んだ野良犬が、なぜかついてきた。",fx:"犬 ＋1",effect:s=>{s.dogs++}},
+  {text:"古い亡霊が、こちらに丁寧にお辞儀をして消えていった。"}]},
+ ev_city:{label:"出来事（都市）",die:"d8",note:"都市では一日1回。夜は宿に泊まる（銀貨3×人数・休息度＋10）。",rows:[
+  {label:"街を見て回る",text:(s,t)=>`${t.here.n}の街を見て回った。${t.here.x}`},
+  {label:"店で値切る",check:{kind:"cha",dc:8},fx:"その国の名産（贈り物向き）を値切って買う",
+   text:(s,t)=>{t.item=pick(placeGoods(t.here),t.rnd);t.price=GIFT_PRICE[t.item]||5;return `店先に${t.item}が並んでいた。値札は銀貨${t.price}枚。`},
+   ok:(s,t)=>{const c=Math.ceil(t.price*.7);if(wealth(s)<c)return "値切りは通ったが、財布が足りなかった。";pay(s,c);s.items.push(t.item);return `うまく値切って、銀貨${c}枚で${t.item}を買った。`},
+   ng:()=>"値切りは通らなかった。今日は見送ることにした。"},
+  {label:"酒場で噂を聞く",check:{kind:"cha",dc:8},fx:"この国のダンジョンの噂（隠れたダンジョンが見つかることも）",text:"酒場で、地元の常連に話しかけてみた。",
+   ok:(s,t)=>{const dn=rumorDungeon(t.C,s,t.rnd);addRumor(s,dn.n,t);const c=pay(s,1);return `${c?"銀貨1枚で一杯おごると、":""}「${dn.n}って知ってるか？ ${dn.x}」と教えてくれた。`},
+   ng:()=>"常連は鼻を鳴らして、自分の酒に戻ってしまった。"},
+  {label:"ギルドの依頼",check:{kind:"combat",dc:9},fx:"成功で銀貨15・名声＋1",text:(s,t)=>`冒険者ギルドの依頼で、街はずれに出る${foe(t,t.C.mons)}の退治を請け負った。`,
+   ok:s=>{earn(s,15);s.fame++;return "依頼を果たし、報酬の銀貨15枚を受け取った。"},
+   ng:(s,t)=>{hurt(s,t,3);return "手ひどくやられて、依頼は失敗に終わった。"}},
+  {label:"スリ",check:{kind:"int",dc:8},text:"人混みで、誰かの手が財布に伸びた。",
+   ok:()=>"気づいて手首をつかむと、スリは慌てて逃げていった。",
+   ng:(s,t)=>{const l=pay(s,3+Math.floor(t.rnd()*6));return l?`気づいたときには銀貨${l}枚が消えていた。`:"財布は空だったので、スリはがっかりして去った。"}},
+  {label:"お祭り・催し",text:"通りで催しに行き合い、踊りの輪に引き込まれた。楽しかった。"},
+  {label:"食堂でごはん",fx:"銀貨2×人数・休息度＋2・HP＋1",text:(s,t)=>{const c=2*(1+s.party.length);if(wealth(s)<c)return `食堂から${t.C.food}のいい匂いがしたが、財布が足りなかった。`;pay(s,c);s.rest+=2;heal(s,1);return `食堂で${t.C.food}を食べた。おいしかった。（銀貨${c}枚・休息度＋2・HP＋1）`}},
+  {label:"古書店で調べもの",check:{kind:"int",dc:8},fx:"どこかのダンジョンの噂",text:"古書店で、古い旅行記や地誌をめくってみた。",
+   ok:(s,t)=>{const C=pick(COUNTRIES,t.rnd),dn=rumorDungeon(C,s,t.rnd);addRumor(s,dn.n,t);return `${C.n}の${dn.n}についての記述を見つけた。${dn.d}`},
+   ng:()=>"難しい本ばかりで、すぐ眠くなった。"}]},
+ ev_field:{label:"出来事（フィールド・街道）",die:"d8",note:"一日3回。探索で大成功するとその国のレアアイテム。",rows:[
+  {label:"景色を眺める",text:(s,t)=>t.here.x||"なだらかな道が、地平線まで続いていた。"},
+  {label:"採集",check:{kind:"int",dc:7},fx:"その土地の拾い物",text:"道ばたで、何か採れそうなものを探した。",
+   ok:(s,t)=>{const it=placeFind(t.here);s.items.push(it);return `${it}を見つけた。`},ng:()=>"めぼしいものは見つからなかった。"},
+  {label:"魔物",check:{kind:"combat",dc:9},fx:"成功で銀貨5・名声＋1",text:(s,t)=>`${foe(t,t.C.mons)}が襲いかかってきた。`,
+   ok:s=>{s.fame++;earn(s,5);return "見事に退けた。落とし物の銀貨5枚を拾った。"},ng:(s,t)=>{hurt(s,t,3);return "手傷を負って、どうにか逃げきった。"}},
+  {label:"道に迷う",check:{kind:"int",dc:9},text:"気づけば道がわからなくなっていた。",
+   ok:()=>"太陽と風の向きを頼りに、日が傾く前に道へ戻れた。",ng:(s,t)=>{hurt(s,t,1);return "同じ岩の前を三度通り、くたびれ果てた。"}},
+  {label:"難所",check:{kind:"dex",dc:8},text:"道が崩れていて、細い岩棚を渡るしかなかった。",
+   ok:()=>"慎重に渡りきった。",ng:(s,t)=>{hurt(s,t,2);return "足を滑らせ、擦り傷だらけになった。"}},
+  {label:"旅人を助ける",fx:"徳＋1・干し果実",text:"荷車の車輪が溝にはまって困っている旅人を手伝った。お礼に干し果実をもらった。",effect:s=>{s.virtue++;s.items.push("干し果実")}},
+  {label:"食材集め",check:{kind:"int",dc:7},fx:"その国の食材",text:"今夜のごはんになりそうなものを探した。",
+   ok:(s,t)=>{s.items.push(t.C.ingr);return `${t.C.ingr}を手に入れた。今夜のごはんにしよう。`},ng:()=>"食べられそうなものは見つからなかった。"},
+  {label:"小さな発見",text:"草むらで小鳥の巣を見つけた。そっとしておいた。"}]},
+ ev_dungeon:{label:"出来事（ダンジョン）",die:"d8",note:"一日最大5回。成功で探索度＋2（大成功＋3）、判定なしは＋1、失敗は＋0。",rows:[
+  {label:"罠",check:{kind:"dex",dc:9},fx:"罠の表を振る（爆弾は難易度2以上のダンジョンだけ）。フェリオスがいると75%で見抜く（爆弾は必ず）",
+   text:(s,t)=>{const ok=TRAPS.filter(x=>!x.minDiff||diffOf(t.here)>=x.minDiff);t.trap=pick(ok,t.rnd);return t.trap.text},
+   pre:(s,t)=>{if(isActive(t,"ferios")&&(t.trap.id==="bomb"||t.rnd()<.75)){t.out.push({c:"p",t:t.trap.id==="bomb"?"フェリオスが無言で{name}の襟首をつかんで引き戻した。「……火薬の匂いがします。そこから先は、私の後ろを」 下調べのおかげで爆弾の罠を避けられた。":"フェリオスが「そこは踏まないように」と腕を引いた。下調べのおかげで罠を避けられた。"});return true}},
+   ok:(s,t)=>t.trap.ok,ng:(s,t)=>t.trap.ng(s,t)},
+  {label:"魔物",check:{kind:"combat",dc:10},fx:"成功で銀貨4・名声＋1",text:(s,t)=>`奥から${foe(t,t.C.dmons)}が現れた。`,
+   ok:s=>{s.fame++;earn(s,4);return "打ち倒して、落ちていた銀貨4枚を拾った。"},ng:(s,t)=>{hurt(s,t,4);return "深手を負い、這うように逃げた。"}},
+  {label:"強敵",check:{kind:"combat",dc:11},fx:"成功で銀貨10・名産・名声＋2",text:(s,t)=>`ひときわ大きな${foe(t,t.C.dmons)}が立ちふさがった。`,
+   ok:(s,t)=>{s.fame+=2;earn(s,10);const it=placeFind(t.here);s.items.push(it);return `激闘の末に打ち倒し、銀貨10枚と${it}を手に入れた。`},
+   ng:(s,t)=>{hurt(s,t,5);return "歯が立たず、命からがら逃げ出した。"}},
+  {label:"隠し通路",check:{kind:"int",dc:10},fx:"成功で銀貨8",text:"壁の一部だけ、風の流れが違う気がした。",
+   ok:s=>{earn(s,8);return "隠し通路を見つけ、奥の小部屋で銀貨8枚を見つけた。"},ng:()=>"気のせいだったようだ。"},
+  {label:"宝箱",check:{kind:"int",dc:8},fx:"成功で銀貨6",text:"古びた宝箱を見つけた。",
+   ok:s=>{earn(s,6);return "仕掛けを外して開けると、銀貨6枚が入っていた。"},ng:(s,t)=>{hurt(s,t,2);return "開けた途端、煙が噴き出してむせ返った。"}},
+  {label:"迷う",check:{kind:"int",dc:9},text:"通路が何本にも分かれていた。",
+   ok:()=>"壁に印をつけながら進み、迷わずに済んだ。",ng:(s,t)=>{hurt(s,t,1);return "同じ通路をぐるぐる回り、へとへとになった。"}},
+  {label:"奥へ進む",text:(s,t)=>`慎重に奥へ進んだ。${t.here.x}`},
+  {label:"引き返す",fx:"その日の探索はここまで",stop:true,text:"嫌な気配がして、今日の探索はここで切り上げた。"}]},
+ find:{label:"拾い物",die:"d12",note:"一日1回。1〜2はいる土地の名産。",rows:[
+  {label:"その土地の名産",local:true},{label:"その土地の名産",local:true},
+  {item:"青い風切羽",text:"見事な青い風切羽を拾った。羽ペンにしたら良さそうだ。"},
+  {item:"古い地図の切れ端",text:"誰かの古い地図の切れ端を拾った。半分しか残っていない。"},
+  {item:"干し果実",text:"親切な農夫から干し果実をひと袋もらった。"},
+  {item:"番号入りの足環",text:"どこかの鳩舎の足環を拾った。番号が刻まれている。"},
+  {silver:3,text:"道端の草むらで、銀貨が3枚光っていた。"},
+  {gold:1,text:"古い道標の根元から、金貨を一枚掘り当てた。"},
+  {silver:1,text:"足もとで、銀貨が1枚光っていた。"},
+  {text:"今日はめぼしい拾い物はなかった。"},{text:"今日はめぼしい拾い物はなかった。"},{text:"今日はめぼしい拾い物はなかった。"}]},
+ pigeon_moment:{label:"鳩とのひととき",die:"d20",note:"毎晩1回。同行中のネームドがいると、ときどきその人と鳩の場面になる。",rows:[
+  {text:"夜、{pigeon}が{name}の手のひらに乗ってきた。小さな体の重みと温かさが、じんわり伝わってくる。",fx:"休息度＋1",effect:s=>{s.rest+=1}},
+  {text:"{pigeon}が胸をふくらませ、尾羽を広げて、{name}の前でくるくる回りながらクルックーと鳴いた。……求愛のダンスだろうか。"},
+  {label:"襟元にもぐりこむ（土地で変わる）",text:(s,t)=>t.kind==="dungeon"?"暗い通路が怖いのか、{pigeon}が{name}の襟元にもぐりこんできた。首すじに羽毛が当たって、くすぐったい。":"{pigeon}が{name}の襟元にもぐりこんで、顔だけ出してあたりを見回していた。"},
+  {text:"{pigeon}が羽繕いをしていた。風切羽を一枚ずつ丁寧にくちばしでしごいて、最後に全身をぶるっとふるわせる。見ていて飽きない。"},
+  {label:"日光浴・モテる（土地で変わる）",text:(s,t)=>t.kind==="city"?"広場で{pigeon}が地元の鳩たちに囲まれていた。モテているらしい。けれど名前を呼ぶと、すぐにこちらへ飛んで帰ってきた。":t.kind==="dungeon"?"{pigeon}は天井の割れ目から差すわずかな光の下に陣取って、ちゃっかり片方の翼を広げていた。":"日だまりで、{pigeon}が片方の翼をぱたりと広げ、横倒しになって日光浴をはじめた。一瞬倒れたのかと思って心配した。"},
+  {text:"指を差し出すと、{pigeon}がくちばしでそっとつついてきた。ちっとも痛くない。どうやら挨拶らしい。"},
+  {text:"{name}がうとうとしていると、{pigeon}が頭の上に乗ってきて、そのまま一緒にうたた寝をした。",fx:"休息度＋1",effect:s=>{s.rest+=1}},
+  {text:"{pigeon}が水たまりで水浴びをはじめた。羽をばしゃばしゃさせて、びしょ濡れになって満足そうだ。"},
+  {text:"{pigeon}がくちばしで{name}の髪をひと房くわえて、くいくいと引っぱった。かまってほしいらしい。"},
+  {text:"豆を数粒手のひらに乗せると、{pigeon}は一粒ずつ大事そうについばんで、最後に手のひらをきれいに掃除していった。"},
+  {text:"{pigeon}が{name}の頬に、ふかふかの胸をぎゅっと押しつけてきた。……あったかい。今日の疲れが少し溶けた気がする。",fx:"休息度＋1",effect:s=>{s.rest+=1}},
+  {text:"{pigeon}が喉の奥でクゥ、クゥと小さく鳴きながら、{name}の膝の上で目を細めていた。"},
+  {text:"{pigeon}が片方の翼をのばして、{name}の腕にふわりとかけてきた。翼の下はほかほかだった。"},
+  {text:"眠っている{pigeon}が、寝言のようにクゥ……と鳴いた。夢の中でも飛んでいるのだろうか。"},
+  {text:"{name}が鼻歌を歌うと、{pigeon}が首をかしげて、じっと聞き入っていた。"},
+  {text:"{pigeon}がくちばしで{name}の指を軽くはさんで、羽繕いのお返しをしてくれた。"},
+  {text:"{pigeon}の首もとに指を差し入れると、ふかふかの羽毛の奥があたたかかった。{pigeon}は目を閉じて、されるがままになっている。",fx:"休息度＋1",effect:s=>{s.rest+=1}},
+  {text:"こぼれた麦粒を見つけた{pigeon}が、ちょこちょこ歩きで追いかけ回していた。"},
+  {text:"{pigeon}が{name}の膝の上で丸くなり、下まぶたがゆっくりと上がって、目が閉じていった。",fx:"休息度＋1",effect:s=>{s.rest+=1}},
+  {text:"{pigeon}が水たまりに映った自分の姿に向かって、胸をふくらませてクルックーと鳴いていた。"}]},
+ pigeon:{label:"手紙を届けた鳩の様子",die:"d20",note:"相棒鳩のひとこと。4は強風だと出やすい。",rows:[
+  {text:"{pigeon}は今日も元気に、まっすぐこの手紙を運んできた。"},
+  {text:"{pigeon}は少し眠そうで、手紙の端に羽毛がついていた。"},
+  {text:"{pigeon}は寄り道したらしく、手紙と一緒に小さな木の実をくわえていた。",fx:"所持品に木の実",effect:s=>{s.items.push("鳩の木の実")}},
+  {text:"{pigeon}は道に迷ったらしく、この手紙は少し遅れて届いた。本鳩は何事もなかった顔をしている。",fx:"鳩舎守なら振り直し"},
+  {text:"{pigeon}はやけに張り切っていて、鳩胸をめいっぱいふくらませて胸を張っていた。"},
+  {text:"{pigeon}は手紙を渡すなり、豆を要求してきた。くちばしで手のひらをこつこつ叩いてくる。"},
+  {text:"{pigeon}は手紙を届けると、そのまま肩に降りて、耳の後ろの髪をくちばしで整えはじめた。くすぐったい。"},
+  {text:"{pigeon}は着地に失敗して、手紙ごところんと転がった。そして何もなかったように、首を前後に振りながら歩き出した。"},
+  {text:"{pigeon}の首もとの羽が、日を受けて緑と紫の玉虫色に光っていた。きれいだね、と言うと、得意げにクルックーと鳴いた。"},
+  {text:"{pigeon}は手紙と一緒に、小さな小枝をくわえてきた。巣材のつもりの、贈り物らしい。",fx:"所持品に小枝",effect:s=>{s.items.push("鳩がくれた小枝")}},
+  {text:"{pigeon}は手紙を渡したあと、片足立ちのまま、まんまるにふくらんで眠ってしまった。"},
+  {text:"{pigeon}は羽をぶるぶるっと震わせて、しずくをこちらに浴びせてきた。わざとだと思う。"},
+  {text:"{pigeon}は手紙を渡すと、{name}の手の甲に頭をすりすりとこすりつけてきた。"},
+  {text:"{pigeon}は首を前後に振りながら得意げに歩いてきて、手紙をぽとりと置いた。"},
+  {text:"{pigeon}の胸の羽に、どこかの花びらが一枚くっついていた。"},
+  {text:"{pigeon}は手紙をくわえたまま離さず、ちょっとした引っぱりっこになった。"},
+  {text:"{pigeon}は着くなり水を飲みはじめた。くちばしを水に差し込んで、ごくごくと吸い上げている。"},
+  {text:"{pigeon}の尾羽が一本、ちょっと曲がっていた。本鳩はまったく気にしていない。"},
+  {text:"{pigeon}は手紙を届けると、ここが定位置とばかりに{name}の頭の上に乗ってきた。"},
+  {text:"帰りの風が気持ちよかったのか、{pigeon}は上機嫌でクルクルと喉を鳴らしていた。"}]}
+};
+// 同行中のネームドと鳩
+const PIGEON_FRIEND={
+  alvan:"アルヴァンが{pigeon}をそっと指にとまらせていた。「……美しい羽だ。{pigeon}というのか」見たこともないほど柔らかい顔をしている。",
+  liberta:"リベルタが即興で『{pigeon}のうた』を歌いはじめた。{pigeon}はリュートの棹にとまって、拍子に合わせて首を振っていた。",
+  ferios:"フェリオスが焼き菓子のかけらを、{pigeon}にこっそり分けていた。「記録には残しません」と言いながら、目元がゆるんでいる。",
+  vulkanu:"ヴルカヌが{pigeon}を睨んでいた。{pigeon}も睨み返していた。しばらくして見ると、ヴルカヌの膝の上で{pigeon}が寝ていた。",
+  melvi:"メルヴィの肩に{pigeon}がとまった。「……重い。降りて」と言いながら、払いのけはしなかった。",
+  sarmas:"サーマスが{pigeon}の羽を一枚ずつ観察しながら、風切羽の構造について早口で語っていた。{pigeon}はまんざらでもなさそうだった。",
+  tiel:"ティエルが{pigeon}と並んで羽繕いをしていた。白い羽耳をぴくぴくさせながら、二羽……いや、ひとりと一羽で、小さくクルクルと鳴き交わしている。",
+  gloria:"グロリアが{pigeon}を眺めて「伝書鳩一羽、いくらで売れるかね」と言った。冗談だよ、と笑いながら、ふわふわの尻尾で{pigeon}をそっと包んでやっていた。",
+  sevein:"セヴェインが{pigeon}を両手ですくい上げて「お前、ふわっふわだなあ！ すげえ！」と頬ずりしていた。{pigeon}は少し迷惑そうだった。",
+  iselia:"イセリアの肩に{pigeon}がとまると、彼女は「女神の使いですね」と真顔で言った。そのあと、こっそりパンくずをあげていた。",
+  seres:"セレスが{pigeon}の乱れた羽を、指先で一枚ずつ整えてやっていた。「……いい子だ」口の端がかすかに笑っている。"};
+// 罠の表（ダンジョンの「罠」の行を引いたら、ここから選ぶ）
+const TRAPS=[
+  {id:"arrow",n:"矢の罠",text:"足もとの床がかちりと鳴った。罠だ。",ok:"とっさに飛びのいて、飛んできた矢をかわした。",
+   ng:(s,t)=>{hurt(s,t,3);return "矢が肩をかすめた。（HP−3）"}},
+  {id:"pit",n:"落とし穴",text:"踏みしめた床が、ぐらりと沈んだ。",ok:"とっさに縁へ飛びついて、落とし穴を飛び越えた。",
+   ng:(s,t)=>{hurt(s,t,4);t.stopNow=true;return "落とし穴に落ちた。這い上がるころには、今日はもう奥へ進む気力が残っていなかった。（HP−4・今日の探索はここまで）"}},
+  {id:"gas",n:"毒ガスの罠",text:"壁の穴から、しゅうっと音がした。",ok:"息を止めて走り抜け、毒ガスから逃れた。",
+   ng:(s,t)=>{hurt(s,t,2);s.rest-=3;return "紫色のガスを吸ってしまった。頭がずきずきして、体が重い。（HP−2・休息度−3）"}},
+  {id:"bomb",n:"爆弾の罠",minDiff:2,text:"足もとで、かちり。続いて、じりじりと何かが燃える音がした。",ok:"「伏せろ！」 間一髪で物陰に飛びこんだ。背後で轟音が響き、天井から砂が降ってきた。",
+   ng:(s,t)=>{const n=t.lastFumble?15:10;hurt(s,t,n);return `爆風に吹き飛ばされ、壁に叩きつけられた。（HP−${n}${t.lastFumble?"・大失敗で直撃":""}）`}},
+  {id:"warp",n:"転移の罠",text:"床に描かれた古い魔法陣が、足もとで青く光り始めた。",ok:"光が強まる前に、魔法陣の外へ転がり出た。",
+   ng:(s,t)=>{if(s.dg)s.dg.prog=0;t.stopNow=true;return "視界が真っ白になり、気がつくとダンジョンの入口に立っていた。今日の探索は振り出しだ。（探索度0・今日の探索はここまで）"}}];
+const TABLE_ORDER=["weather","encounter","people_city","people_field","people_dungeon","ev_city","ev_field","ev_dungeon","find","pigeon_moment","pigeon"];
+// 国のつながり（作者の地図より）。数字は街道を進む日数。2は山道
+const ADJ={ma:{az:1,sh:1},az:{ma:1,sh:1,ga:2},sh:{ma:1,az:1,ox:1},ox:{sh:1,vi:2,nb:2},vi:{ox:2,ga:1},ga:{az:2,vi:1},nb:{ox:2}};
+const MAP_SPOT={ma:[26,21],az:[56,32.5],sh:[41.6,41.5],ga:[70.2,46.5],ox:[36.2,56.5],vi:[56.3,61],nb:[48.3,79]};
+const capitalOf=C=>C.places.find(x=>x.type==="city");
+const roadDays=(a,b)=>a===b?0:(ADJ[a]&&ADJ[a][b])||null;
+// 噂を聞くまで地図に出ないダンジョン：各国のダンジョンの下2つ（ノワ・ブランは下3つ）
+const HIDDEN={};COUNTRIES.forEach(C=>{const d=C.places.filter(x=>x.type==="dungeon");d.slice(C.id==="nb"?-3:-2).forEach(x=>{HIDDEN[x.n]=true})});
+const HIDDEN_ALIAS={"蒼き獅子の古城":["蒼き獅子"],"緋色の竜の砦":["緋色の竜"],"金獅子帝の霊廟":["金獅子帝"],"深緑竜の寝床":["深緑竜","深緑の竜"],"黄砂の大蛇の神殿":["黄砂の大蛇"],"紫紺の竜の大聖堂":["紫紺の竜"],"屍竜の洞窟":["屍竜"],"雷鳴の塔":["雷鳴の塔"],"マースの魔塔":["マースの魔塔"],"死海の遺跡":["死海の遺跡"]};
+const isLocked=(s,pl)=>pl.type==="last"?!s.mirrorKey:(!!HIDDEN[pl.n]&&!s.known.includes(pl.n));
+// 噂の文から隠しダンジョンを見つけたら地図に書き込む（文の後にまとめて出す）
+function learn(s,t,text){
+  Object.keys(HIDDEN).forEach(n=>{
+    if(s.known.includes(n))return;
+    if([n,...(HIDDEN_ALIAS[n]||[])].some(a=>text.includes(a))){s.known.push(n);(t.later=t.later||[]).push({c:"grow",t:`〔噂を聞いて、地図に「${n}」を書き込んだ。行けるようになった〕`})}
+  });
+}
+const flush=t=>{if(t.later&&t.later.length){t.later.forEach(x=>t.out.push(x));t.later=[]}};
+const randDungeon=(C,rnd)=>pick(C.places.filter(x=>x.type==="dungeon"),rnd);
+// 噂話の種：まだ知らない隠しダンジョンが半分の確率で選ばれる
+// 噂が出やすくなる：PCが斥候か、フェリオスが同行している
+const rumorBoost=s=>pc.job==="scout"||s.party.includes("ferios");
+// 魔鏡の鍵につながるダンジョン（ノワ・ブランの都市では優先して噂になる）
+const KEY_DUNGEONS=["死海の遺跡","マースの魔塔"];
+function rumorDungeon(C,s,rnd){
+  const all=C.places.filter(x=>x.type==="dungeon"),unk=all.filter(x=>isLocked(s,x));
+  if(C.id==="nb"){const ku=unk.filter(x=>KEY_DUNGEONS.includes(x.n));if(ku.length&&rnd()<.7)return pick(ku,rnd)}
+  return unk.length&&rnd()<(rumorBoost(s)?.75:.5)?pick(unk,rnd):pick(all,rnd);
+}
+function addRumor(s,r,t){if(!s.rumors.includes(r))s.rumors.push(r);if(t)learn(s,t,r)}
+
+// ================= 状態 =================
+// いまのPC（キャラメイクの内容）
+const pc={name:"ユウ",gender:"f",race:"人間",job:"sword",speech:"女性口調",fp:"私",persona:"陽気",pigeon:"ルリ",pigeonSex:"メス",pigeonPersona:"懐っこい",diff:"futsu",tactic:"normal"};
+// 作成中の案（種族・職業・ダイス）。「始める」で pc と base に入る
+const draft={race:"人間",job:"sword",dice:null,diff:"futsu"};
+const rollDice=()=>Object.fromEntries(STATS.map(x=>[x.k,Math.floor(Math.random()*11)-5])); // 各能力 −5〜＋5
+const calcStats=(race,job,dice)=>{const j=CLASSES.find(c=>c.id===job).s,r=RACES.find(x=>x.n===race).s,o={};STATS.forEach(x=>{o[x.k]=Math.max(1,j[x.k]+r[x.k]+(dice?dice[x.k]:0))});return o};
+draft.dice=rollDice();
+let base=calcStats(draft.race,draft.job,draft.dice);
+let state,snapshot,currentSeed,lastRolls={},acted=false;
+const baseSeed=20261110;
+const player=()=>({...pc,cls:pc.job});
+const hpMax=s=>10+Math.floor(Math.max(0,eff(s,player(),"vit"))/5); // 体力30でHP16、100で30
+function newGame(){
+  state={day:1,gold:0,silver:30,loc:START_PLACE,dest:null,travel:null,known:[],buddies:clone(BUDDIES_INIT).map(b=>({...b,travel:null,stay:0})),bond:{},rest:REST_START,
+    party:[],gear:{weapon:"dagger",armor:"clothes",acc:"none"},owned:["dagger","clothes","none"],
+    dg:null,depth:{},town:null,
+    aff:Object.fromEntries(NAMED_IDS.map(k=>[k,0])),met:{},joined:{},gifts:[],spouse:null,
+    stats:clone(base),exp:{str:0,dex:0,int:0,mag:0,cha:0,vit:0},hp:0,dogs:0,fame:0,virtue:0,items:["携帯食材"],rumors:[],ferios:false,down:false};
+  state.hp=hpMax(state);
+  state.town=townToday(state,mulberry32(baseSeed));
+}
+const restState=s=>s.rest<=-5?"重度の疲労":s.rest<=0?"疲労":s.rest>=20?"元気いっぱい":"ふつう";
+const fatigue=s=>s.rest<=-5?{who:"重度の疲労",v:-20}:s.rest<=0?{who:"疲労",v:-10}:null;
+const innCost=s=>3*(1+s.party.length);
+// 街にいるネームド（顔見知り以上・同行していない人がランダムに）
+function townToday(s,rnd){
+  const pl=PLACES[s.loc];if(s.travel||pl.type!=="city")return null;
+  const named=NAMED_IDS.filter(id=>s.aff[id]>=1&&!s.party.includes(id)&&NAMED[id].ban!==pl.country.id&&rnd()<(NAMED[id].home===pl.country.id?.6:.3));
+  return {place:s.loc,named};
+}
+
+// ================= 判定 =================
+// 成長：判定に成功するたび、(100−能力値)×0.3％の確率で＋1（無職は1.5倍）。高くなるほど伸びにくい
+let gRnd=Math.random;
+function gainExp(s,k,out,prefix){
+  const cur=s.stats[k];if(cur>=100)return false;
+  const ch=(100-cur)/100*0.3*(pc.job==="jobless"?1.5:1);
+  if(gRnd()>=ch)return false;
+  s.stats[k]=cur+1;out.push({c:"grow",t:`〔${prefix||""}${STATS.find(x=>x.k===k).l}が ${cur} → ${cur+1} に上がった！〕`});return true;
+}
+const heal=(s,n)=>{s.hp=Math.min(hpMax(s),s.hp+n)};
+function hurt(s,t,n){
+  n=tryRescue(s,t,n);
+  if(isActive(t,"alvan")&&t.rnd()<.5){n=Math.ceil(n/2);t.out.push({c:"p",t:"アルヴァンが獅子紋の盾でかばってくれた。（ダメージ半減）"})}
+  s.hp-=n;
+}
+// 判定：1d100が成功率以下なら成功。成功率＝基本（目標の難しさ）＋能力値＋補正−土地の難易度×10。5〜95％に収める
+// 基本：やさしい60／ふつう40／むずかしい20（旧2d6の目標7→60、9→40、11→20）。01〜05は大成功、96〜00は大失敗
+const baseChance=dc=>130-10*dc;
+function check(s,t,ck){
+  const p=t.p,rnd=t.rnd;
+  let k=ck.kind;
+  if(k==="combat")k=eff(s,p,"str",t)>=eff(s,p,"mag",t)?"str":"mag";
+  else if(k==="cook")k=eff(s,p,"dex",t)>=eff(s,p,"int",t)?"dex":"int";
+  else if(k==="talk")k="cha";
+  const statLabel=STATS.find(x=>x.k===k).l;
+  const bon=[...compMods(s,p,k,t),...(t.bonus[ck.kind]||[]),...(ck.kind==="talk"?(t.bonus.cha||[]):[]),...(t.bonus.all||[]),...(ck.extra||[])];
+  const fg=fatigue(s);if(fg)bon.push(fg);
+  const base=baseChance(ck.dc);
+  if(ck.kind!=="talk"&&ck.kind!=="cook"){if(t.diff)bon.push({who:`${t.here.n}の難易度`,v:-10*t.diff});if(t.nb)bon.push({who:"ノワ・ブランの危険",v:-20})}
+  if(ck.kind==="combat"){
+    const named=activeComps(s,t).filter(c=>c.named);
+    if(named.length&&!ck.quiet){const bl=NAMED[pick(named,rnd).id].battle;t.out.push({c:"p",t:typeof bl==="function"?bl(s,t):bl})}
+    if(isActive(t,"liberta")&&rnd()<.5)bon.push({who:"戦の歌",v:10});
+    if(isActive(t,"vulkanu")&&s.hp<=hpMax(s)/2)bon.push({who:"手負いの犬",v:20});
+    if(isActive(t,"seres")&&rnd()<.5)bon.push({who:"氷の茨",v:20});
+    if(isActive(t,"melvi")&&rnd()<.75)bon.push({who:"影の魔術",v:10});
+    if(isActive(t,"sarmas"))bon.push({who:"緑の祝福",v:10});
+    if(isActive(t,"sevein")&&hasAttr(t.foe,"漆黒"))bon.push({who:"聖剣開放",v:20});
+  }
+  {const hp=ck.kind==="combat"&&t.mates?t.mates.find(m=>m.id!==t.assistSkip):null;if(hp)bon.push({who:`${hp.n}の援護`,v:10})}
+  if(ck.kind==="int"&&isActive(t,"ferios"))bon.push({who:"下調べ",v:20});
+  const chance=Math.max(5,Math.min(95,base+s.stats[k]+bon.reduce((a,b)=>a+b.v,0)));
+  let d=1+Math.floor(rnd()*100),redo="";
+  if(d>=96&&isActive(t,"gloria")&&!t.gloriaUsed){t.gloriaUsed=true;redo="（大失敗をグロリアの疾風追撃で振り直し）";d=1+Math.floor(rnd()*100)}
+  const crit=d<=5,fumble=d>=96;
+  const ok=crit||(!fumble&&d<=chance);
+  const parts=[`${statLabel}${s.stats[k]}`,`基本${base}`,...bon.filter(b=>b.v).map(b=>b.v>0?`${b.who}＋${b.v}`:`${b.who}−${-b.v}`)];
+  const verdict=crit?"大成功":fumble?"大失敗":ok?"成功":"失敗";
+  t.out.push({c:"roll "+(ok?"ok":"ng"),t:`〔${ck.label||KIND_LABEL[ck.kind]+"判定"}〕 1d100＝${d} ／ 成功率${chance}％（${parts.join("、")}） → ${verdict}${redo}`});
+  return {ok,crit,fumble,k};
+}
+// 出来事を1回処理。返り値：{checked, ok, crit, kind, stop}
+function runEvent(row,s,t){
+  t.foe=null;t.stopNow=false;t.lastFumble=false;
+  const tx=L(row.text,s,t);
+  if(tx)t.out.push({c:"p",t:tx});
+  if(row.effect)row.effect(s,t);
+  if(!row.check)return {checked:false,stop:!!row.stop};
+  if(row.pre&&row.pre(s,t))return {checked:true,ok:true,crit:false,kind:row.check.kind};
+  const hp0=s.hp,ck=row.check.kind;
+  const r=check(s,t,row.check);t.lastFumble=r.fumble;
+  let res=r.ok?row.ok(s,t):row.ng(s,t);
+  if(r.crit){s.fame++;res+="会心の出来だった。"}
+  let cost=0;
+  if(ck==="combat")cost=r.ok?2:3;else if(ck==="int"||ck==="dex")cost=1;
+  if(cost){s.rest-=cost;res+=`（休息度−${cost}）`}
+  t.out.push({c:"p",t:res});flush(t);
+  if(r.crit&&ck==="int"&&t.kind==="field"){s.items.push(t.C.rare);t.out.push({c:"grow",t:`〔大成功！ めったに見つからない${t.C.rare}を手に入れた〕`})}
+  if(r.fumble&&!r.ok)hurt(s,t,1);
+  if(ck==="combat"&&isActive(t,"tiel")&&s.hp>0){heal(s,3);t.out.push({c:"p",t:"戦いが終わると、ティエルが白い光で傷を癒してくれた。（白き鳥の癒し・HP＋3）"})}
+  if(ck==="combat"&&isActive(t,"iselia")&&s.hp>0&&s.hp<hpMax(s)&&t.rnd()<.5){heal(s,2);t.out.push({c:"p",t:"イセリアの祈りが届き、傷がやわらかな光にふさがれていった。（巫女の祈り・HP＋2）"})}
+  const g=[];
+  if(r.ok)gainExp(s,r.k,g);
+  if(s.hp<hp0&&s.hp>0)gainExp(s,"vit",g,"痛い目を見て、");
+  g.forEach(x=>t.out.push(x));
+  return {checked:true,ok:r.ok,crit:r.crit,kind:ck,stop:t.stopNow};
+}
+
+// ================= ネームドとの交流 =================
+function meet(s,id,t){
+  s.met[id]=true;s.aff[id]++;
+  const q=s.gifts.filter(g=>g.npc===id);s.gifts=s.gifts.filter(g=>g.npc!==id);
+  q.forEach(g=>{
+    const N=NAMED[id],idx=s.items.indexOf(g.item);
+    if(idx<0){t.out.push({c:"p",t:`${N.n}に${g.item}を渡そうとしたが、荷物に見当たらなかった。`});return}
+    s.items.splice(idx,1);
+    const liked=N.likes.includes(g.item);s.aff[id]+=liked?5:1;
+    t.out.push({c:"p",t:liked?`${N.n}に${g.item}を贈った。目に見えて喜んでくれた。（好感度＋5）`:`${N.n}に${g.item}を贈った。礼を言って受け取ってくれた。（好感度＋1）`});
+  });
+}
+function encounterLine(s,t,id){
+  const N=NAMED[id];
+  if(!s.met[id])return L(N.first,s,t.p);
+  let line=L(pick(N.again[speechTier(s,id)-1],t.rnd),s,t.p);
+  if(t.rnd()<.6)line+=pick(N.look.slice(0,lookTier(s.aff[id])),t.rnd);
+  return line;
+}
+function talk(s,t,id){
+  const N=NAMED[id],p=t.p,rnd=t.rnd;if(s.aff[id]<5)return;
+  let md=1+Math.floor(rnd()*6);if(N.moodDown&&N.moodDown(s))md=Math.max(1,md-2);
+  const mood=md===1?{w:"不機嫌",v:-20}:md===6?{w:"上機嫌",v:20}:{w:"いつもどおり",v:0};
+  const kr=rnd(),kind=kr<.5?"small":kr<.8?"rumor":"past";
+  const dc={small:7,rumor:8,past:10}[kind],kl={small:"世間話",rumor:"噂話",past:"身の上話"}[kind];
+  const tier=speechTier(s,id),extra=[];
+  if(mood.v)extra.push({who:mood.w,v:mood.v});
+  const shy=id==="alvan"&&p.gender==="f"&&tier===1;
+  if(shy)extra.push({who:"気まずさ",v:-20});
+  const r=check(s,t,{kind:"talk",dc,extra,label:`${N.n}と${kl}`});
+  if(!r.ok){t.out.push({c:"p",t:shy?"アルヴァンに話しかけたが、彼は赤くなって黙りこみ、会話は続かなかった。":mood.v<0?`${N.n}は機嫌が悪いらしく、話はそれきりだった。`:`${N.n}と少し話したが、${kl}にはならなかった。`});return}
+  let line;
+  if(kind==="rumor"){const R=pick(N.rumor,rnd);line=R[0];addRumor(s,R[1],t);learn(s,t,R[0])}
+  else if(kind==="past")line=pick(N.past,rnd);
+  else line=pick(N.small[tier-1],rnd);
+  if(shy)line="目を逸らしたまま、ぼそりと言った。"+line;
+  t.out.push({c:"talk",t:`${N.n}の${kl}――${line}`});flush(t);
+  const g=[];gainExp(s,"cha",g);g.forEach(x=>t.out.push(x));
+}
+
+// ================= 冒険者仲間（クロスプレイのテスト用：ほかのプレイヤーの代わり） =================
+const BUDDIES_INIT=[
+  {id:"mimoza",n:"ミモザ",sex:"女性",race:"有翼人",cls:"scout",speech:"丁寧口調",fp:"私",persona:"知的",pigeon:"ソラ",pigeonSex:"メス",pigeonPersona:"社交的",loc:"王都アズリア"},
+  {id:"gard",n:"ガルド",sex:"男性",race:"ドワーフ",cls:"warrior",speech:"粗野口調",fp:"俺",persona:"豪快",pigeon:"マメ",pigeonSex:"オス",pigeonPersona:"荒ぶる",loc:"さえずりの森"},
+  {id:"noel",n:"ノエル",sex:"そのほか",race:"エルフ",cls:"mage",speech:"柔和口調",fp:"僕",persona:"臆病",pigeon:"シロ",pigeonSex:"メス",pigeonPersona:"臆病",loc:"交易都市ローゼリア"},
+  {id:"haruto",n:"ハルト",sex:"男性",race:"人間",cls:"knight",speech:"男性口調",fp:"俺",persona:"誠実",pigeon:"クロ",pigeonSex:"オス",pigeonPersona:"温和",loc:"王都マジェンダ"},
+  {id:"luna",n:"ルナ",sex:"女性",race:"羽耳族",cls:"priest",speech:"柔和口調",fp:"私",persona:"温和",pigeon:"モモ",pigeonSex:"メス",pigeonPersona:"懐っこい",loc:"聖都オキサジン"},
+  {id:"gonzo",n:"ゴンゾウ",sex:"男性",race:"竜人",cls:"warrior",speech:"老人口調",fp:"わし",persona:"豪快",pigeon:"ダイフク",pigeonSex:"オス",pigeonPersona:"高慢",loc:"首都シェナ"},
+  {id:"lily",n:"リリィ",sex:"女性",race:"半獣人",cls:"bard",speech:"令嬢口調",fp:"わたくし",persona:"陽気",pigeon:"ベル",pigeonSex:"メス",pigeonPersona:"社交的",loc:"祭りの街スカーレット"},
+  {id:"taro",n:"タロウ",sex:"男性",race:"チート転生民",cls:"jobless",speech:"ネット民口調",fp:"俺",persona:"傲慢",pigeon:"ピーちゃん",pigeonSex:"オス",pigeonPersona:"荒ぶる",loc:"皇都ガンボージュ"},
+  {id:"shizuku",n:"シズク",sex:"女性",race:"エルフ",cls:"spirit",speech:"丁寧口調",fp:"わたくし",persona:"知的",pigeon:"ミズ",pigeonSex:"メス",pigeonPersona:"高慢",loc:"首都ヴィリジャン"},
+  {id:"wolf",n:"ヴォルフ",sex:"男性",race:"獣人",cls:"scout",speech:"無骨口調",fp:"我",persona:"誠実",pigeon:"ハヤテ",pigeonSex:"オス",pigeonPersona:"社交的",loc:"抗都グレージュ"}];
+const buddyStats=b=>{const j=CLASSES.find(c=>c.id===b.cls).s,r=RACES.find(x=>x.n===b.race).s,o={};for(const k in j)o[k]=j[k]+r[k];return o};
+// ================= 口調・性格・鳩の性格（クロスプレイの文に使う） =================
+const GREET={
+  "男性口調":"「よう、{to}。{fp}もちょうどこのあたりを回ってたところだ」",
+  "女性口調":"「あら、{to}じゃない。{fp}もこのあたりにいたのよ」",
+  "丁寧口調":"「{to}さん、こんにちは。{fp}もちょうどこちらに来ていたんです」",
+  "粗野口調":"「おう、{to}か！ {fp}もこの辺うろついてたとこだぜ」",
+  "柔和口調":"「{to}、また会えたね。{fp}、なんだか嬉しいな」",
+  "傲慢口調":"「ふん、{to}か。{fp}の行く先にばかり現れるな」",
+  "無骨口調":"「……{to}か。{fp}もここだ」",
+  "老人口調":"「おお、{to}かの。{fp}もこのあたりで一休みしておったところじゃ」",
+  "ネット民口調":"「{to}氏キタコレ。{fp}もここでレベル上げ中なんですわｗ」",
+  "令嬢口調":"「まあ、{to}様。{fp}もこちらにいらしておりましたのよ」"};
+const SHOUT={
+  "男性口調":"「{to}、下がってろ！」","女性口調":"「{to}、下がって！」","丁寧口調":"「{to}さん、下がってください！」",
+  "粗野口調":"「どけ{to}、ここは{fp}がやる！」","柔和口調":"「{to}、大丈夫、{fp}が守るから！」","傲慢口調":"「{to}、{fp}の前で倒れるなど許さん！」",
+  "無骨口調":"「……下がれ」","老人口調":"「{to}、下がっておれ！」","ネット民口調":"「{to}氏ピンチ！ {fp}が肉壁になりますぞ！」","令嬢口調":"「{to}様、おさがりあそばせ！」"};
+const THANKS={
+  "男性口調":"「助かったぜ、{to}！」","女性口調":"「ありがと、{to}！」","丁寧口調":"「ありがとうございます、{to}さん！」",
+  "粗野口調":"「借りができたな、{to}！」","柔和口調":"「ありがとう、{to}……本当に」","傲慢口調":"「……礼は言わんぞ、{to}。だが、覚えておく」",
+  "無骨口調":"「……恩に着る」","老人口調":"「すまんのう、{to}。助かったわい」","ネット民口調":"「{to}氏、神すぎて草……感謝ですぞ」","令嬢口調":"「{to}様、感謝いたしますわ！」"};
+const PERSONA_ACT={"誠実":"まっすぐにこちらの目を見て","陽気":"大きく手を振りながら","豪快":"豪快に笑いながら","傲慢":"腕を組んで見下ろすように","温和":"穏やかに微笑んで","知的":"読んでいた本から顔を上げて","臆病":"少し離れたところからおずおずと"};
+const PIGEON_REACT={"社交的":"すぐに相手の鳩のそばへ寄っていって、クルクルと挨拶した","荒ぶる":"翼をばしっと広げて、胸を張って威嚇した","高慢":"つんとそっぽを向いて、相手にしなかった","温和":"隣に並んで、のんびり日向ぼっこを始めた","臆病":"持ち主の襟元に逃げ込んで、顔だけ出していた","懐っこい":"相手の鳩にすり寄って、首すじの羽繕いを始めた"};
+const say=(tpl,who,to)=>tpl[who.speech].replaceAll("{to}",to).replaceAll("{fp}",who.fp);
+const jobName=id=>(CLASSES.find(c=>c.id===id)||CLASSES[0]).n;
+function matePigeon(b,rnd){
+  let line=`{pigeon}は${PIGEON_REACT[pc.pigeonPersona]}。${b.pigeon}は${PIGEON_REACT[b.pigeonPersona]}。`;
+  const pair=[pc.pigeonSex,b.pigeonSex].sort().join();
+  if(pair==="オス,メス"&&rnd()<.4)line+=`……どうやら{pigeon}と${b.pigeon}は、お互いのことが気になるらしい。`;
+  return line;
+}
+
+const buddyClass=b=>`${b.race}・${jobName(b.cls)}`;
+const whereOf=b=>b.travel?`${PLACES[b.travel.to].country.n}へ向かう${b.travel.mtn?"山道":"街道"}`:b.loc;
+// 仲間の1日の移動（本番では各プレイヤーの指示で動く）
+function moveBuddy(b,rnd){
+  if(b.travel){if(b.travel.left>0)b.travel.left--;else{b.loc=b.travel.to;b.travel=null}return}
+  if(b.stay>0){b.stay--;return}
+  const r=rnd();if(r<.55)return;
+  const C=PLACES[b.loc].country;
+  if(r<.9){const cand=C.places.filter(x=>x.n!==b.loc&&x.type!=="last"&&!HIDDEN[x.n]);if(cand.length)b.loc=pick(cand,rnd).n;return}
+  const adj=Object.keys(ADJ[C.id]||{});if(!adj.length)return;
+  const cid=pick(adj,rnd),C2=COUNTRIES.find(x=>x.id===cid),to=pick(C2.places.filter(x=>x.type==="city"),rnd),days=roadDays(C.id,cid);
+  b.travel={to:to.n,left:days-1,mtn:days>1};
+}
+const mlog=(t,b,line)=>{(t.mlog[b.id]=t.mlog[b.id]||[]).push(line)};
+const bondUp=(s,b,n)=>{s.bond[b.id]=(s.bond[b.id]||0)+n};
+// 自分が倒れそうなとき、同じ場所の仲間が助けに入る
+function tryRescue(s,t,n){
+  if(t.rescued||!t.mates||!t.mates.length||s.hp-n>0)return n;
+  t.rescued=true;
+  const b=pick(t.mates,t.rnd),st=buddyStats(b),k=st.str>=st.mag?"str":"mag",v=st[k];
+  const chance=Math.max(5,Math.min(95,40+v-10*((t.diff||0)+(t.nb||0)))),d=1+Math.floor(t.rnd()*100),ok=d<=chance;
+  t.out.push({c:"roll "+(ok?"ok":"ng"),t:`〔${b.n}の救援判定〕 1d100＝${d} ／ 成功率${chance}％（${k==="str"?"腕力":"魔力"}${v}、基本40${t.diff||t.nb?`、難易度−${10*((t.diff||0)+(t.nb||0))}`:""}） → ${ok?"成功":"失敗"}`});
+  if(ok){
+    t.out.push({c:"p",t:`倒れかけたそのとき、${b.n}が飛び込んできて敵の一撃を受け止めた。${say(SHOUT,b,"{name}")}……命拾いした。（絆＋2）`});
+    mlog(t,b,`{name}が倒れかけていたので、飛び込んで敵の一撃を受け止めた。${say(THANKS,pc,b.n)}と言われた。間に合ってよかった。`);
+    bondUp(s,b,2);(t.hl||[]).push(`${b.n}に救われる`);return Math.max(0,s.hp-1);
+  }
+  t.out.push({c:"p",t:`${b.n}が駆けつけてくれたが、あと一歩間に合わなかった。`});
+  mlog(t,b,`{name}が危ないと気づいて駆けつけたが、間に合わなかった。悔しい。`);
+  bondUp(s,b,1);return n;
+}
+const MATE_PIGEON=[
+  (b)=>`{pigeon}と${b.pigeon}（${b.n}の鳩）が並んで、互いの首すじを羽繕いしあっていた。`,
+  (b)=>`{pigeon}と${b.pigeon}が、焚き火のそばでくっついてまんまるに眠っていた。${b.n}と顔を見合わせて、思わず笑った。`,
+  (b)=>`${b.pigeon}が{pigeon}の前で胸をふくらませてくるくる回っていた。{pigeon}はそっぽを向いている。${b.n}が「振られたな」と笑った。`];
+const MATE_DISH=["野草のスープ","干し肉のあぶり焼き","木の実の甘煮","香草を詰めた包み焼き"];
+
+// ================= 一日 =================
+function playDay(s,seed){
+  const rnd=mulberry32(seed),p=player(),out=[],rolls={};gRnd=rnd;
+  const t={s,bonus:{},out,rnd,p,guest:null,mates:[],mlog:{},hl:[],add(kind,who,v){(this.bonus[kind]=this.bonus[kind]||[]).push({who,v})}};
+  const roll=key=>{const T=TABLES[key],i=Math.floor(rnd()*T.rows.length);(rolls[key]=rolls[key]||[]).push(i);return T.rows[i]};
+  const pigeon=()=>{const n=TABLES.pigeon.rows.length;let pi=Math.floor(rnd()*n);if(t.windy&&rnd()<.5)pi=3;if(pi===3&&p.cls==="keeper")pi=Math.floor(rnd()*n)===3?3:0;
+    (rolls.pigeon=rolls.pigeon||[]).push(pi);const pg=TABLES.pigeon.rows[pi];if(pg.effect)pg.effect(s,t);out.push({c:"p",t:pg.text});if(p.race==="鳥類")out.push({c:"p",t:pick(BIRD_TALK,rnd)})};
+  const ps=s.ferios;s.ferios=false;
+  const rest0=s.rest,money0=s.gold*10+s.silver,items0=[...s.items];
+  const pm=partyMembers(s);
+  const withWho=pm.length?pm.map(c=>c.n).join("と")+"を連れて、":"";
+
+  // 第1号：はじめての手紙（キャラメイクへの案内と旅立ち）。冒険は第2号から
+  if(s.day===1&&!s.down){
+    [["intro","初めまして。これを読んでいる君は初心者ですか？ キャラメイクは済ませましたか？"],
+     ["intro","上の「ステータス」タブを押して、ページのいちばん下までスクロールすると、キャラメイク画面があります。好きに選んでみてください！ 初期パラメータダイスは何回でも振り直せます。"],
+     ["intro warn","※種族・職業・初期パラメータ・難易度は、冒険を始めたあとから変えられません。特に難易度の「厳しい」「ハードコア」は修羅の道です。よく理解してから選んでくださいね！"],
+     ["intro","「この冒険者で第1号から始める」を押すと、ステータスに反映されます。画面右上の「旅鳩通信」タブを押すと、またこの画面に戻ってきます。"],
+     ["intro","相棒の鳩とともに、セルレア大陸の旅を楽しんでくださいね！"],
+     ["p",`短剣と旅人の服、銀貨30枚を手に、${p.name}はこの大地に旅立った。${s.loc}の空は高く、肩の上で{pigeon}が小さくクルッと鳴いた。`],
+     ["p","明日の行き先は「移動」タブで選べる。準備ができたら「次の日へ」。"]
+    ].forEach(([c,x])=>out.push({c,t:x}));
+    s.town=townToday(s,rnd);
+    return {out,rolls,ps,p,mates:[],hl:["セルレア大陸に旅立った"],where:s.loc};
+  }
+  // 休養日（倒れた翌日）
+  if(s.down){
+    s.down=false;s.hp=hpMax(s);s.rest=Math.min(REST_MAX,Math.max(s.rest,0)+10);
+    out.push({c:"p",t:`${p.name}は${s.loc}の治療院で一日休んだ。窓の外を鳩が何度も行き来していた。（HP全快・休息度＋10）`});
+    if(s.dest)out.push({c:"p",t:"出発は見合わせた。"});
+    s.dest=null;s.town=townToday(s,rnd);
+    out.push({c:"sumline",t:`〔今日の終わり　HP ${s.hp}/${hpMax(s)}　休息度 ${rest0} → ${s.rest}（${restState(s)}）〕`});
+    s.buddies.forEach(b=>moveBuddy(b,rnd));
+    s.buddies.filter(b=>whereOf(b)===s.loc).forEach(b=>{if(s.bond[b.id]!==undefined){bondUp(s,b,1);out.push({c:"p",t:`${b.n}が見舞いに来て、${b.pigeon}と一緒に枕元でしばらく話していった。（絆＋1）`});mlog(t,b,"{name}が倒れたと聞いて、治療院へ見舞いに行った。顔色は思ったより悪くなかった。")}});
+    pigeon();return {out,rolls,ps,p,mates:mateLetters(t),hl:t.hl,where:s.loc};
+  }
+
+  // 移動
+  let mode="stay",here;
+  const from=PLACES[s.loc];
+  let cont=false;
+  if(s.travel){
+    if(s.travel.left>0){s.travel.left--;mode="road";cont=true}
+    else{s.loc=s.travel.to;s.travel=null;mode="arrive"}
+  }
+  else if(s.dest&&s.dest!==s.loc){
+    const to=PLACES[s.dest],days=roadDays(from.country.id,to.country.id);
+    if(isLocked(s,to))out.push({c:"p",t:to.type==="last"?`${to.n}へ入るには「魔鏡の鍵」が要る。出発を見合わせた。`:`${to.n}への道がわからず、出発を見合わせた。`});
+    else if(days===0){s.loc=s.dest;mode="arrive"}
+    else if(days){s.travel={to:s.dest,left:days-1,mtn:days>1};mode="road"}
+    else out.push({c:"p",t:`${to.country.n}へは、${from.country.n}から直接行く道がない。出発を見合わせた。`});
+  }
+  s.dest=null;
+  if(mode!=="stay"&&s.dg){out.push({c:"sumline",t:`〔${s.dg.place}の探索を途中でやめたので、探索度は0に戻った〕`});s.dg=null}
+  if(mode==="road"){const to=PLACES[s.travel.to];here={n:`${to.country.n}へ向かう${s.travel.mtn?"山道":"街道"}`,type:"road",country:to.country,find:to.country.find,x:s.travel.mtn?"岩だらけの急な坂道が、雲の中まで続いていた。":""};t.to=to}
+  else here=PLACES[s.loc];
+  t.here=here;t.C=here.country;t.diff=diffOf(here);t.nb=nbOf(here);
+  const kind=here.type==="city"?"city":(here.type==="dungeon"||here.type==="last")?"dungeon":"field";t.kind=kind;
+  // 仲間もそれぞれ1日を進め、同じ場所にいる人を集める
+  s.buddies.forEach(b=>moveBuddy(b,rnd));
+  t.mates=s.buddies.filter(b=>whereOf(b)===here.n);
+
+  s.rest-=5; // 一日一回
+  const w=roll("weather");if(w.effect)w.effect(s,t);
+  let open;
+  if(mode==="road"){
+    const way=s.travel.mtn?"険しい山道":"街道",when=s.travel.left>0?"到着はあさってになりそうだ。":"到着は明日になりそうだ。";
+    open=cont?`${p.name}は今日も、${withWho}${t.to.n}を目指して${way}を進んだ。${when}`:`${p.name}は今日、${withWho}${from.n}を発ち、${t.to.n}を目指して${t.C.n}へ向かう${way}を進んだ。${when}`;
+  }
+  else if(mode==="arrive")open=`${p.name}は今日、${withWho}${here.n}に着いた。${here.d}`;
+  else open=`${p.name}は今日、${withWho}${here.n}で一日を過ごした。`;
+  out.push({c:"p",t:open+w.text});
+
+  // 同行中のネームド
+  pm.forEach(c=>{if(c.daily)c.daily(s,t)});
+  const namedParty=pm.filter(c=>c.named).map(c=>c.id);
+  namedParty.forEach(id=>{if(!s.joined[id]){s.joined[id]=true;out.push({c:"p",t:NAMED[id].join})}meet(s,id,t)});
+  if(namedParty.includes("sevein")&&t.C&&t.C.id==="ox")out.push({c:"p",t:pick([
+    "セヴェインは顔がすっぽり隠れる鉄の兜をかぶっていた。「大丈夫大丈夫、これで誰にもバレねえって！」……声が大きすぎる。",
+    "すれ違った神殿騎士に呼び止められかけたが、兜姿のセヴェインは「ど、どうも、ただの通りすがりの鎧です」と言い張って切り抜けた。",
+    "兜の中でセヴェインがくぐもった声を出した。「なあ{name}、俺、怪しくないよな？ な？」 鎧ごとそわそわしていて、正直かなり怪しい。",
+    "大聖堂の鐘が鳴ると、兜をかぶったままのセヴェインがそっと胸に手を当て、小さく祈りの言葉を唱えていた。",
+    "セヴェインは兜の上から外套のフードまでかぶっていた。「完璧な変装だろ？」 道ゆく巡礼者が二度見していった。"],rnd)});
+
+  // 同じ場所の冒険者仲間
+  t.mates.forEach(b=>{
+    const mine=`{name}は${PERSONA_ACT[pc.persona]}、${say(GREET,pc,b.n)}と言った。`;
+    if(s.bond[b.id]===undefined){s.bond[b.id]=0;out.push({c:"p",t:`同じ${here.type==="road"?"道":"場所"}で、${b.n}という${b.race}の${jobName(b.cls)}と知り合った。${b.n}は${PERSONA_ACT[b.persona]}、${say(GREET,b,"{name}")}と言った。相棒の鳩は${b.pigeon}（${b.pigeonSex}）というらしい。`});mlog(t,b,`${here.n}で、{name}という${pc.race}の${jobName(pc.job)}と知り合った。${mine}`)}
+    else{out.push({c:"p",t:`${here.n}で${b.n}と一緒になった。${b.n}は${PERSONA_ACT[b.persona]}、${say(GREET,b,"{name}")}と言った。（絆＋1）`});mlog(t,b,`${here.n}で{name}と一緒になった。${mine}`)}
+    bondUp(s,b,1);
+  });
+  // 出会い（一日1回）
+  roll("encounter");const ei=rolls.encounter[0];
+  if(ei<=4){const r=roll("people_"+kind);out.push({c:"p",t:r.text});if(r.effect)r.effect(s,t)}
+  else if(ei<=9){
+    const cands=NAMED_IDS.filter(id=>!namedParty.includes(id)&&NAMED[id].ban!==t.C.id);
+    if(!cands.length)out.push({c:"p",t:"仲間たちとにぎやかに歩いた。ほかには誰とも会わなかった。"});
+    else{
+      const wts=cands.map(id=>NAMED[id].home===t.C.id?3:1);let r=rnd()*wts.reduce((a,b)=>a+b,0),id=cands[0];
+      for(let i=0;i<cands.length;i++){r-=wts[i];if(r<0){id=cands[i];break}}
+      let line=encounterLine(s,t,id);
+      if(id==="liberta"){s.dogs++;line+="気づけば足元の犬が一匹増えていた。"}
+      if(id==="ferios")s.ferios=true;
+      out.push({c:"p",t:line});
+      const firstVul=id==="vulkanu"&&!s.met[id]&&s.dogs===0;
+      const shyAlvan=id==="alvan"&&p.gender==="f"&&speechTier(s,id)===1;
+      t.hl.push(s.met[id]?`${NAMED[id].n}と再会`:`${NAMED[id].n}と出会う`);
+      meet(s,id,t);talk(s,t,id);
+      if(!firstVul){t.guest=id;out.push({c:"p",t:shyAlvan?"アルヴァンは少し離れた後ろを、黙ってついてきた。今日は一緒に来てくれるらしい。":`今日は${NAMED[id].n}が途中まで一緒に来てくれるらしい。`})}
+    }
+  } else if(ei===10){s.virtue++;out.push({c:"p",t:"道端で翼の折れた小鳥を見つけ、添え木をしてやった。"})}
+  else out.push({c:"p",t:"今日は誰とも会わなかった。"});
+
+  // 撤退（倒れた・極度の疲労・大ボスに敗北）：同じ国のどこかの都市へ
+  let fell=false;
+  const toCity=(msg,safe)=>{
+    const cities=t.C.places.filter(x=>x.type==="city"),c=pick(cities,rnd);
+    fell=true;
+    if(p.diff==="hard"&&s.hp<=0){s.dead=true;s.travel=null;s.dg=null;
+      out.push({c:"p",t:"目の前が暗くなっていく。仲間の呼ぶ声が、遠く、遠くなっていった。"});return}
+    s.loc=c.n;s.travel=null;s.dg=null;
+    out.push({c:"p",t:`${msg}${c.n}まで${safe?"戻った":"運ばれた"}。`});
+    if(!safe)deathPenalty(s,t,p,money0,items0);
+  };
+
+  // 出来事
+  {
+    const nEv=kind==="city"?1:kind==="dungeon"?5:3;
+    if(kind==="dungeon"){
+      if(s.depth[here.n]===undefined)s.depth[here.n]=initDepth(here);
+      if(!s.dg){s.dg={place:here.n,goal:5+Math.floor(rnd()*6),prog:0};out.push({c:"sumline",t:`〔${here.n}の探索を始めた。探索達成度 ${s.dg.goal}　探索進度 ${s.depth[here.n]}〕`})}
+      s.depth[here.n]-=2;
+    }
+    for(let i=0;i<nEv;i++){
+      if(kind!=="city"&&tooHurt(s,p)){
+        out.push({c:"p",t:kind==="dungeon"?`傷が深い。${p.name}は無理をせず、今日の探索を切り上げて安全な場所まで引き返した。（作戦：${tacticOf(p).n}）`:`傷が深い。${p.name}は無理をせず、今日はもう危ないところには近づかないことにした。（作戦：${tacticOf(p).n}）`});
+        t.hl.push("無理せず引き返した");break}
+      if(kind==="dungeon"&&s.depth[here.n]<=0){bossFight(s,t,here,toCity);break}
+      const ev=roll("ev_"+kind);
+      const r=runEvent(ev,s,t);
+      if(kind==="dungeon"){
+        s.dg.prog+=r.checked?(r.ok?(r.crit?3:2):0):1;
+        if(r.checked&&r.ok&&(r.kind==="int"||r.kind==="dex"))s.depth[here.n]-=1;
+        if(s.dg.prog>=s.dg.goal){dungeonClear(s,t,here);break}
+      }
+      if(r.stop||s.hp<=0||s.rest<=-15)break;
+    }
+    if(kind==="dungeon"&&s.dg&&!fell)out.push({c:"sumline",t:`〔探索度 ${s.dg.prog} / ${s.dg.goal}　探索進度 ${Math.max(0,s.depth[here.n])}${s.depth[here.n]<=0?"　……最奥で何かが目を覚ました気配がする":""}〕`});
+  }
+  // 都市での噂：ノワ・ブランの都市では鍵のダンジョンの噂が出やすい。斥候・フェリオス同行でさらに少し出やすい
+  if(!fell&&kind==="city"){
+    const unk=t.C.places.filter(x=>x.type==="dungeon"&&isLocked(s,x));
+    const ch=unk.length?(t.C.id==="nb"?.35:0)+(rumorBoost(s)?.15:0):0;
+    if(ch&&rnd()<ch){
+      const dn=rumorDungeon(t.C,s,rnd);
+      const via=t.C.id==="nb"&&rnd()<.6?`魔王軍と戦う傭兵たちが、酒場の隅で${dn.n}の話をしていた。「${dn.x}」`
+        :s.party.includes("ferios")?`フェリオスが「${dn.n}について、耳寄りな話があります」と教えてくれた。${dn.x}`
+        :pc.job==="scout"?`斥候の勘で、通りの立ち話から${dn.n}の噂を拾った。${dn.x}`
+        :`街の噂で、${dn.n}の名を耳にした。${dn.x}`;
+      out.push({c:"p",t:via});addRumor(s,dn.n,t);flush(t);
+    }
+  }
+  if(!fell&&t.mates.length&&kind!=="city"&&s.hp>0&&s.rest>-15&&rnd()<.35){
+    const b=pick(t.mates,rnd),mon=pick(kind==="dungeon"?t.C.dmons:t.C.mons,rnd);t.foe=mon;
+    out.push({c:"p",t:`${b.n}が${mon}に囲まれて追いつめられていた！`});
+    t.assistSkip=b.id;const r=check(s,t,{kind:"combat",dc:9,label:`${b.n}を助ける戦闘`});t.assistSkip=null;
+    s.rest-=r.ok?2:3;
+    if(r.ok){bondUp(s,b,2);s.fame++;t.hl.push(`${b.n}を救出`);out.push({c:"p",t:`間に合った。背中合わせで切り抜けると、${b.n}が${say(THANKS,b,"{name}")}と笑った。（絆＋2・名声＋1・休息度−2）`});mlog(t,b,`${mon}に囲まれて危なかったところに、{name}が${say(SHOUT,pc,b.n)}と飛び込んできた。あの背中は忘れない。`);const g=[];gainExp(s,r.k,g);g.forEach(x=>out.push(x))}
+    else{bondUp(s,b,1);out.push({c:"p",t:`どうにか二人で逃げ延びた。息を切らして、顔を見合わせて笑った。（絆＋1・休息度−3）`});mlog(t,b,`${mon}に囲まれたところに{name}が来てくれた。二人で命からがら逃げた。`)}
+  }
+  flush(t);
+  if(!fell&&s.hp<=0){s.hp=0;s.down=true;toCity("力尽きて倒れたところを、通りがかりの旅人に助けられ、")}
+  if(!fell&&s.rest<=-15){s.rest=0;toCity("極度の疲労でその場に倒れこみ、撤退することになった。荷車に揺られて、")}
+
+  if(!fell){
+    // 拾い物
+    const f=roll("find");
+    if(f.local){const it=placeFind(here);s.items.push(it);out.push({c:"p",t:`${here.type==="road"?"街道沿い":here.n}で、${it}を手に入れた。`})}
+    else{if(f.item)s.items.push(f.item);if(f.silver||f.gold)earn(s,f.silver||0,f.gold||0);out.push({c:"p",t:f.text})}
+    // 夜の焚き火：同行中のネームドと話す（2回に1回）
+    if(namedParty.length&&rnd()<.5){const id=pick(namedParty,rnd);if(s.aff[id]>=5){out.push({c:"p",t:`夜、${kind==="city"?"宿の食堂":"焚き火"}で${NAMED[id].n}と話した。`});talk(s,t,id)}}
+    // 鳩とのひととき
+    const pf=namedParty.filter(id=>PIGEON_FRIEND[id]);
+    if(t.mates.length&&rnd()<.4){const b=pick(t.mates,rnd),pl=matePigeon(b,rnd);out.push({c:"p",t:pl});mlog(t,b,pl.replace(`。${b.pigeon}は`,`。うちの${b.pigeon}は`))}
+    else if(pf.length&&rnd()<.35)out.push({c:"p",t:PIGEON_FRIEND[pick(pf,rnd)]});
+    else{const pm2=roll("pigeon_moment");out.push({c:"p",t:L(pm2.text,s,t)});if(pm2.effect)pm2.effect(s,t)}
+    // 一日の終わりの休息
+    let inn=false;
+    if(kind==="city"){
+      const c=innCost(s);
+      if(wealth(s)>=c){pay(s,c);s.rest+=10;heal(s,10);inn=true;out.push({c:"p",t:`宿に泊まった。（銀貨${c}枚・休息度＋10・HP＋10）`})}
+      else{
+        s.rest+=2;heal(s,3);out.push({c:"p",t:`宿代（銀貨${c}枚）が足りず、街はずれで野宿した。（休息度＋2・HP＋3）`});
+        if(s.rest<=5&&rnd()<.5){s.rest+=2;heal(s,1);out.push({c:"p",t:`見かねた冒険者が、食堂で${t.C.food}を奢ってくれた。ありがたい。（休息度＋2・HP＋1）`})}
+      }
+    } else {s.rest+=2;heal(s,3);out.push({c:"p",t:kind==="dungeon"?"安全そうな小部屋を見つけて、交代で休んだ。（休息度＋2・HP＋3）":"火を起こして野営した。（休息度＋2・HP＋3）"})}
+    if(t.mates.length){
+      const names=t.mates.map(b=>b.n).join("と");
+      t.mates.forEach(b=>bondUp(s,b,1));
+      if(kind==="city"){out.push({c:"p",t:`夜は${names}と同じ卓を囲んで、今日の冒険の話をした。（絆＋1）`});t.mates.forEach(b=>mlog(t,b,`夜、{name}と同じ卓で夕食をとった。`))}
+      else{
+        s.rest+=1;out.push({c:"p",t:`${names}と焚き火を囲んだ。ひとりより、ずっと温かい夜だ。（休息度＋1・絆＋1）`});
+        t.mates.forEach(b=>mlog(t,b,`{name}と焚き火を囲んだ。ひとりより、ずっと温かい夜だった。`));
+        const cooks=t.mates.filter(()=>rnd()<.65);
+        if(cooks.length){const b=cooks[0],dish=pick(MATE_DISH,rnd);s.rest+=1;heal(s,1);out.push({c:"p",t:`${b.n}が作った${dish}を分けてもらった。おいしい。（休息度＋1・HP＋1）`});mlog(t,b,`${dish}を作って、{name}にも分けた。おいしいと言ってもらえた。`)}
+      }
+    }
+    if(!inn)cook(s,t);
+  }
+  if(s.rest<=-5&&s.hp>0){s.hp=Math.max(1,s.hp-5);out.push({c:"p",t:"重い疲れが抜けず、体が言うことをきかない。（重度の疲労・HP−5）"})}
+  s.rest=Math.min(REST_MAX,s.rest);
+  s.town=townToday(s,rnd);
+  if(s.dead){
+    out.push({c:"p",t:`${p.pigeon}は長いあいだ、動かなくなった${p.name}のそばを離れなかった。やがて、最後の手紙を脚に結んで、いつもの空へ飛び立った。`});
+    out.push({c:"grow",t:`〔${p.name}の旅は、第${s.day}号で終わった。ハードコアの旅に、二度目はない。……キャラメイクから、新しい冒険者で旅を始められます〕`});
+    return {out,rolls,ps,p,mates:mateLetters(t),hl:[...t.hl,"旅の終わり"],where:s.loc};
+  }
+  out.push({c:"sumline",t:`〔今日の終わり　HP ${s.hp}/${hpMax(s)}　休息度 ${rest0} → ${s.rest}（${restState(s)}）〕`});
+  pigeon();
+  return {out,rolls,ps,p,mates:mateLetters(t),hl:t.hl,where:s.travel?`${PLACES[s.travel.to].country.n}へ向かう${s.travel.mtn?"山道":"街道"}`:s.loc};
+}
+const mateLetters=t=>Object.keys(t.mlog).map(id=>({n:t.s.buddies.find(b=>b.id===id).n,lines:t.mlog[id]}));
+// おいしいごはん：食材を1個使って調理（技巧か知恵の高いほう）
+function cook(s,t){
+  const i=s.items.findIndex(x=>FOODS.includes(x));if(i<0)return;
+  const food=s.items.splice(i,1)[0];
+  const dish=pick(["香草焼き","煮込み","スープ","包み焼き","甘煮"],t.rnd);
+  t.out.push({c:"p",t:`夜、手持ちの${food}で${dish}を作ってみた。`});
+  const r=check(s,t,{kind:"cook",dc:8,label:"料理判定"});
+  const g=r.crit?3:r.ok?2:1;s.rest+=g;heal(s,1);
+  t.out.push({c:"p",t:(r.crit?"ほっぺたが落ちるほどおいしくできた！":r.ok?"おいしくできた。":"少し焦げたが、温かいごはんはありがたい。")+`（休息度＋${g}・HP＋1）`});
+  const gg=[];if(r.ok)gainExp(s,r.k,gg);gg.forEach(x=>t.out.push(x));
+}
+function dungeonClear(s,t,here){
+  const sv=15+s.dg.goal*2,it=placeFind(here);
+  earn(s,sv);s.items.push(it);s.fame++;
+  t.out.push({c:"grow",t:`〔${here.n}の探索に成功！ 報酬として銀貨${sv}枚と${it}を手に入れた。名声＋1〕`});
+  s.dg=null;
+}
+// 大ボス戦：ボスの体力（3＋難易度）を削りきるか、PCのHPが0か休息度が−15になるまで1ラウンドずつ戦う
+// 各ラウンドは戦闘判定（基本30）。成功でボスに1撃（大成功2撃）、失敗で反撃を受ける。休息度は勝ち−2・負け−3
+const MIRROR_KEY="魔鏡の鍵";
+// 倒れたときの損（難易度しだい）
+function deathPenalty(s,t,p,money0,items0){
+  const d=p.diff||"nuru";if(d==="nuru")return;
+  const lost=[];
+  if(d==="futsu"||d==="kibishii"||d==="hard"){
+    const now=s.gold*10+s.silver,gain=now-money0;
+    if(gain>0){pay(s,gain);lost.push(`今日の稼ぎ（銀貨${gain}枚ぶん）`)}
+    const left=[...items0],got=[];
+    s.items.forEach(x=>{const i=left.indexOf(x);if(i>=0)left.splice(i,1);else got.push(x)});
+    if(got.length){got.forEach(x=>{const i=s.items.lastIndexOf(x);if(i>=0)s.items.splice(i,1)});lost.push(got.join("・"))}
+  }
+  if(d==="kibishii"||d==="hard"){
+    const START={weapon:"dagger",armor:"clothes",acc:"none"},gone=[];
+    GEAR_ORDER.forEach(sl=>{const id=s.gear[sl];if(id&&id!==START[sl]){gone.push(findGear(id).n);s.owned=s.owned.filter(x=>x!==id);s.gear[sl]=START[sl]}});
+    if(gone.length)lost.push("装備の"+gone.join("・"));
+  }
+  if(lost.length)t.out.push({c:"p",t:`気がつくと、${lost.join("と、")}がなくなっていた。（${diffName(d)}：倒れた日の損）`});
+  const fee=Math.max(5,Math.floor((s.gold*10+s.silver)/2)),paid=pay(s,fee);
+  t.out.push({c:"p",t:paid?`治療院代として銀貨${paid}枚を払った。${paid<fee?"（足りない分はツケにしてもらった）":""}`:"治療院代を払えず、しばらく雑用を手伝うことで許してもらった。"});
+}
+function bossFight(s,t,here,toCity){
+  const B=bossOf(here),last=here.type==="last";
+  let bhp=3+diffOf(here)+(last?2:0);const dmg=2+Math.floor(diffOf(here)/2)+(nbOf(here)?1:0);
+  t.out.push({c:"p",t:`${here.n}の最奥で、${B.n}が姿を現した！（${B.n}の体力 ${bhp}）`});
+  const HIT=["渾身の一撃が入った。","隙を突いて斬りこんだ。","仲間と息を合わせて押しこんだ。","相手の動きを読んで、確かな手応えを得た。"];
+  t.foe=B.n;
+  let round=0,win=false,fled=false;
+  while(round<40){
+    round++;
+    const r=check(s,t,{kind:"combat",dc:10,label:`大ボス戦 第${round}ラウンド`,quiet:round>1});
+    s.rest-=r.ok?2:3;
+    if(r.ok){
+      const hit=r.crit?2:1;bhp-=hit;
+      t.out.push({c:"p",t:`${pick(HIT,t.rnd)}${r.crit?"会心の二撃！":""}（${B.n}の残り体力 ${Math.max(0,bhp)}）`});
+      const g=[];gainExp(s,r.k,g);g.forEach(x=>t.out.push(x));
+      if(bhp<=0){win=true;break}
+    } else {
+      const before=s.hp;hurt(s,t,dmg);
+      t.out.push({c:"p",t:`${B.n}の反撃を受けた。（HP ${before} → ${Math.max(0,s.hp)}）`});
+    }
+    if(s.hp>0&&s.hp<hpMax(s)&&isActive(t,"iselia")&&t.rnd()<.5){heal(s,2);t.out.push({c:"p",t:"イセリアの祈りが光となって降りそそいだ。（巫女の祈り・HP＋2）"})}
+    if(s.hp<=0||s.rest<=-15)break;
+    if(tooHurt(s,pc)){fled=true;break}
+  }
+  if(win){
+    s.fame+=last?20:5;earn(s,0,3);
+    let prize=B.item;
+    if(B.gear){const g=findGear(B.gear);if(!s.owned.includes(B.gear))s.owned.push(B.gear);prize=g.n}else s.items.push(prize);
+    s.depth[here.n]=initDepth(here);s.dg=null;
+    t.out.push({c:"grow",t:`〔大ボス撃破！ ${round}ラウンドの死闘の末、${B.n}を打ち倒した。金貨3枚と「${prize}」を手に入れた。名声＋${last?20:5}〕`});
+    if((here.n==="死海の遺跡"||here.n==="マースの魔塔")&&!s.mirrorKey){
+      s.mirrorKey=true;s.items.push(MIRROR_KEY);
+      t.out.push({c:"grow",t:`〔${B.n}の亡骸のそばに、鏡のように冷たい鍵が落ちていた。「${MIRROR_KEY}」を手に入れた。……ペンタ・ノワの魔鏡の迷宮への道が開いた〕`});
+    }
+    if(last&&!s.demonSlain){s.demonSlain=true;t.out.push({c:"grow",t:"〔黒衣の魔王を討ち果たした！ 鏡の迷宮が音を立てて崩れ、大陸の空に、久しぶりの朝の光が差した〕"})}
+    if(isActive(t,"tiel")&&s.hp>0){heal(s,3);t.out.push({c:"p",t:"戦いが終わると、ティエルが白い光で傷を癒してくれた。（白き鳥の癒し・HP＋3）"})}
+  } else {
+    s.depth[here.n]=10;
+    if(fled){
+      t.out.push({c:"p",t:`これ以上は危ない。${round}ラウンド目、${pc.name}たちは隙を見て${B.n}の前から撤退した。（${B.n}の残り体力 ${Math.max(0,bhp)}・探索進度は10に戻った・作戦：${tacticOf(pc).n}）`});
+      t.hl.push(`大ボス・${B.n}から撤退`);toCity("傷を押さえて迷宮を抜け出し、自分の足で",true);return;
+    }
+    s.rest=0;
+    if(s.hp<=0){s.hp=0;s.down=true}
+    t.out.push({c:"p",t:`${round}ラウンド持ちこたえたが、${B.n}を倒しきれなかった。（${B.n}の残り体力 ${Math.max(0,bhp)}・探索進度は10に戻った）`});
+    toCity("気がつくと担架の上だった。仲間に助けられて");
+  }
+}
+
+// ================= 描画 =================
+const pigeonName=()=>pc.pigeon||"相棒の鳩";
+const fill=(x,p)=>x.replaceAll("{name}",p.name).replaceAll("{pigeon}",pigeonName());
+let lastRes=null,lastSeed=0;
+function fillLetter(body,res){
+  const {out,ps,p}=res;
+  out.forEach(o=>{const el=document.createElement("p");el.className=o.c==="p"?"":o.c;el.textContent=fill(o.t,p);body.appendChild(el)});
+  if(ps){const el=document.createElement("p");el.className="ps";el.textContent="追伸　昨日の件はすべて記録しておきます。――フェリオス";body.appendChild(el)}
+  (res.mates||[]).forEach(m=>{
+    const d=document.createElement("details");d.className="mateletter";
+    const sm=document.createElement("summary");sm.textContent=`同じ日の${m.n}の手紙より（あなたが出てくる場面）`;d.appendChild(sm);
+    m.lines.forEach(x=>{const el=document.createElement("p");el.textContent=fill(x,p);d.appendChild(el)});
+    body.appendChild(d);
+  });
+}
+// バックナンバー（このページを開いている間だけ残る）
+let archive=[];
+function renderArchive(){
+  const box=document.getElementById("archive");box.innerHTML="";
+  document.getElementById("bn-empty").hidden=archive.length>0;
+  archive.forEach(a=>{
+    const d=document.createElement("details");d.className="bn";
+    const sm=document.createElement("summary");
+    sm.innerHTML=`<span>旅鳩通信 第${a.day}号</span><small>${esc(a.where)}</small>`;
+    const body=document.createElement("div");body.className="lbody";
+    d.appendChild(sm);d.appendChild(body);
+    d.addEventListener("toggle",()=>{if(d.open&&!body.childElementCount)fillLetter(body,a.res)});
+    box.appendChild(d);
+  });
+}
+// 戦績シェア：【旅鳩通信】から始まる140字以内のまとめ
+const clen=x=>[...x].length;
+function shareText(res,day){
+  const out=res.out.map(o=>({c:o.c,t:fill(o.t,res.p)})),txt=out.map(o=>o.t).join("\n"),hl=[];
+  const m1=txt.match(/大ボス撃破！ \d+ラウンドの死闘の末、(.+?)を打ち倒した/);if(m1)hl.push(`大ボス・${m1[1]}を撃破！`);
+  if(/黒衣の魔王を討ち果たした/.test(txt))hl.unshift("黒衣の魔王を討ち果たした！！");
+  if(/「魔鏡の鍵」を手に入れた/.test(txt))hl.push("魔鏡の鍵を入手");
+  const m2=txt.match(/、(.+?)を倒しきれなかった/);if(m2)hl.push(`大ボス・${m2[1]}に惜敗`);
+  const m3=txt.match(/〔(.+?)の探索に成功！/);if(m3)hl.push(`${m3[1]}を踏破`);
+  (res.hl||[]).forEach(x=>hl.push(x));
+  out.filter(o=>o.c==="talk").forEach(o=>{const m=o.t.match(/^(.+?)の(世間話|噂話|身の上話)――/);if(m)hl.push(`${m[1]}の${m[2]}を聞く`)});
+  const m4=txt.match(/めったに見つからない(.+?)を手に入れた/);if(m4)hl.push(`${m4[1]}を発見`);
+  const grown=[...txt.matchAll(/〔(?:痛い目を見て、)?(.+?)が \d+ → (\d+) に上がった/g)].map(m=>`${m[1]}${m[2]}`);
+  if(grown.length)hl.push(`${grown.join("・")}に成長`);
+  [...txt.matchAll(/地図に「(.+?)」を書き込んだ/g)].forEach(m=>hl.push(`${m[1]}の噂を聞く`));
+  const m5=txt.match(/^(.+?)と焚き火を囲んだ。ひとりより/m);if(m5)hl.push(`${m5[1]}と野営`);
+  if(/まで運ばれた。/.test(txt)&&!m2)hl.push("力尽きて撤退…");
+  const wins=out.filter(o=>o.c==="roll ok"&&/〔戦闘判定〕/.test(o.t)).length;if(wins)hl.push(`魔物を${wins}回退けた`);
+  const dg=txt.match(/〔探索度 (\d+) \/ (\d+)/);if(dg)hl.push(`探索度${dg[1]}/${dg[2]}`);
+  if(!hl.length){const w=out.find(o=>o.c==="p");hl.push("穏やかな一日")}
+  const head=`【旅鳩通信】第${day}号 ${pc.name}${pc.diff&&pc.diff!=="futsu"?`［${diffName(pc.diff)}］`:""}＠${res.where||""}：`;
+  let body="";
+  for(const x of [...new Set(hl)]){const next=body?body+(/[！…]$/.test(body)?"":"、")+x:x;if(clen(head+next+"。")<=140)body=next}
+  let s=head+(body||"冒険の一日")+(/[！…]$/.test(body)?"":"。");
+  const tail=`相棒の${pc.pigeon}も元気です。`;
+  if(clen(s+tail)<=140)s+=tail;
+  return s;
+}
+function renderLetter(res,seed){
+  lastRes=res;lastSeed=seed;
+  document.getElementById("sharebox").hidden=true;
+  const {out,rolls,ps,p}=res;
+  document.getElementById("ltitle").textContent=`旅鳩通信 第${state.day}号`;
+  document.getElementById("lmeta").textContent=`宛先：${p.name}どの`;
+  const body=document.getElementById("lbody");body.innerHTML="";
+  fillLetter(body,res);
+  let h=`<li><b>シード</b><span>${seed}</span></li>`;
+  TABLE_ORDER.forEach(k=>{if(rolls[k])h+=`<li><b>${TABLES[k].label.replace(/（.*）/,"")} ${TABLES[k].die}</b><span>${rolls[k].map(i=>i+1).join("・")}</span></li>`});
+  document.getElementById("lrolls").innerHTML=h;
+  lastRolls=rolls;renderTables();renderSheet();
+  const Lt=document.getElementById("lettercard");Lt.classList.remove("fresh");void Lt.offsetWidth;Lt.classList.add("fresh");
+}
+function renderSheet(){
+  const s=state,max=hpMax(s);if(s.hp>max)s.hp=max;
+  document.getElementById("purse").innerHTML=`<span class="coin g"><i aria-hidden="true"></i>金貨 ${s.gold}<small>枚</small></span><span class="coin s"><i aria-hidden="true"></i>銀貨 ${s.silver}<small>枚</small></span><span class="purse-note">1金貨＝10銀貨。足りないときは金貨を崩して払います。</span>`;
+  document.getElementById("hptext").textContent=`HP ${s.hp} / ${max}${s.down?"（明日は休養）":""}`;
+  const bar=document.getElementById("hpbar");bar.style.width=(s.hp/max*100)+"%";bar.classList.toggle("low",s.hp/max<.35);
+  const st=restState(s);
+  document.getElementById("resttext").textContent=`休息度 ${s.rest} / ${REST_MAX}（${st}）`;
+  const rb=document.getElementById("restbar");rb.style.width=Math.max(0,Math.min(100,(s.rest+15)/45*100))+"%";
+  rb.className=s.rest<=-5?"bad":s.rest<=0?"low":"";
+  const foods=s.items.filter(x=>FOODS.includes(x)).length;
+  const chips=[`名声 ${s.fame}`,`徳 ${s.virtue}`,`犬 ${s.dogs}匹`,`食材 ${foods}個`,`所持品 ${s.items.length}点`];
+  if(s.items.length)chips.push("最新："+s.items[s.items.length-1]);
+  if(s.rumors.length)chips.push(`噂 ${s.rumors.length}件・最新：`+s.rumors[s.rumors.length-1]);
+  document.getElementById("kv").innerHTML=chips.map(c=>`<span class="chip">${esc(c)}</span>`).join("");
+  const p=player();
+  document.getElementById("profile").innerHTML=`<b>${esc(pc.name)}</b>　${esc(pc.race)}の${esc(jobName(pc.job))}（${{f:"女性",m:"男性",x:"そのほか"}[pc.gender]}）　難易度：${esc(diffName(pc.diff))}<br><small>性格：${esc(pc.persona)}　口調：${esc(pc.speech)}　一人称：「${esc(pc.fp)}」<br>相棒の鳩：${esc(pc.pigeon)}（${esc(pc.pigeonSex)}・${esc(pc.pigeonPersona)}）</small>`;
+  STATS.forEach(sx=>{
+    const v=s.stats[sx.k],cb=compMods(s,p,sx.k).reduce((a,b)=>a+b.v,0);
+    document.getElementById("sv-"+sx.k).textContent=v;
+    const cbe=document.getElementById("cb-"+sx.k);cbe.textContent=cb?(cb>0?"+"+cb:"−"+(-cb)):"";cbe.className="cb"+(cb<0?" neg":"");
+    document.getElementById("sb-"+sx.k).style.width=Math.min(100,v)+"%";
+    document.getElementById("sbm-"+sx.k).style.width=Math.max(0,Math.min(100-v,cb))+"%";
+  });
+  document.getElementById("hudhp").textContent=`${s.hp}/${max}`;
+  const hb=document.getElementById("hudhpbar");hb.style.width=(s.hp/max*100)+"%";hb.className=s.hp/max<.35?"low":"";
+  document.getElementById("hudrest").textContent=s.rest;document.getElementById("hudrest").title=restState(s);
+  const hr=document.getElementById("hudrestbar");hr.style.width=Math.max(0,Math.min(100,(s.rest+15)/45*100))+"%";hr.className=s.rest<=-5?"bad":s.rest<=0?"low":"";
+  document.getElementById("hudgold").textContent=s.gold;document.getElementById("hudsilver").textContent=s.silver;
+  renderGear();renderParty();renderLoc();renderTactic();renderTown();renderAff();
+  const rr=document.getElementById("reroll");rr.disabled=acted||pc.diff==="hard";rr.title=pc.diff==="hard"?"ハードコアでは振り直せません":acted?"今日はもう買い物や雇用をしたので、振り直せません":"";
+  ["next","next2","next3"].forEach(id=>{const b=document.getElementById(id);if(b){b.disabled=!!s.dead;b.title=s.dead?"この冒険者の旅は終わりました":""}});
+  saveGame();
+}
+function buildSheet(){
+  document.getElementById("stats").innerHTML=STATS.map(st=>`<div class="stat"><span class="sl">${st.l}<small>${st.d}</small></span><span class="sv" id="sv-${st.k}"></span><span class="cb" id="cb-${st.k}" title="装備と同行冒険者の補正"></span><span class="sbar" aria-hidden="true"><i id="sb-${st.k}"></i><i class="m" id="sbm-${st.k}"></i></span></div>`).join("");
+  const opt=(id,list,val)=>{document.getElementById(id).innerHTML=list.map(x=>`<option${x===val?" selected":""}>${esc(x)}</option>`).join("")};
+  document.getElementById("prace").innerHTML=RACES.map(r=>`<option${r.n===draft.race?" selected":""}>${r.n}</option>`).join("");
+  document.getElementById("pdiff").innerHTML=DIFFS.map(d=>`<option value="${d.id}"${d.id===draft.diff?" selected":""}>${d.n}</option>`).join("");
+  document.getElementById("pdiff").addEventListener("change",e=>{draft.diff=e.target.value;renderDraft()});
+  document.getElementById("pjob").innerHTML=CLASSES.map(c=>`<option value="${c.id}"${c.id===draft.job?" selected":""}>${c.n}</option>`).join("");
+  opt("pspeech",SPEECHES,pc.speech);opt("pfp",FPS,pc.fp);opt("ppersona",PERSONAS,pc.persona);opt("ppsex",PIGEON_SEXES,pc.pigeonSex);opt("pppersona",PIGEON_PERSONAS,pc.pigeonPersona);
+  document.getElementById("pgender").value=pc.gender;
+  const note=(m,err)=>{const el=document.getElementById("cmnote");el.textContent=m;el.classList.toggle("err",!!err)};
+  const nameField=(id,key,label)=>document.getElementById(id).addEventListener("change",e=>{
+    const v=e.target.value.trim();
+    if(!v){e.target.value=pc[key];note(`${label}が空です。`,true);return}
+    if(ngWord(v)){e.target.value=pc[key];note(`その${label}は使えません。別の${label}にしてください。`,true);return}
+    pc[key]=v;note("");refreshText();
+  });
+  nameField("pname","name","名前");nameField("pigeonname","pigeon","鳩の名前");
+  [["pgender","gender"],["pspeech","speech"],["pfp","fp"],["ppersona","persona"],["ppsex","pigeonSex"],["pppersona","pigeonPersona"]].forEach(([id,key])=>
+    document.getElementById(id).addEventListener("change",e=>{pc[key]=e.target.value;refreshText()}));
+  document.getElementById("prace").addEventListener("change",e=>{draft.race=e.target.value;renderDraft()});
+  document.getElementById("pjob").addEventListener("change",e=>{draft.job=e.target.value;renderDraft()});
+  document.getElementById("rolldice").addEventListener("click",()=>{draft.dice=rollDice();renderDraft();note("ダイスを振り直した。")});
+  document.getElementById("startgame").addEventListener("click",()=>{
+    const nm=document.getElementById("pname").value.trim(),pg=document.getElementById("pigeonname").value.trim();
+    if(!nm||ngWord(nm)){note("名前を確かめてください（空か、使えない言葉が入っています）。",true);return}
+    if(!pg||ngWord(pg)){note("鳩の名前を確かめてください（空か、使えない言葉が入っています）。",true);return}
+    pc.name=nm;pc.pigeon=pg;pc.race=draft.race;pc.job=draft.job;pc.diff=draft.diff;base=calcStats(draft.race,draft.job,draft.dice);
+    restart();note(`${pc.race}の${jobName(pc.job)}、${pc.name}の冒険が第1号から始まった。（難易度：${diffName(pc.diff)}）`);
+  });
+  renderDraft();
+}
+// 作成中の初期パラメータの表（種族＋職業＋ダイス）
+function renderDraft(){
+  const j=CLASSES.find(c=>c.id===draft.job),r=RACES.find(x=>x.n===draft.race),tot=calcStats(draft.race,draft.job,draft.dice);
+  const sg=n=>n>0?"+"+n:n<0?"−"+(-n):"±0";
+  document.getElementById("cmdesc").textContent=`${r.n}：${r.d}　${j.n}：${j.d}　難易度「${diffName(draft.diff)}」：${DIFFS.find(x=>x.id===draft.diff).d}${draft.diff!==pc.diff?"（第1号から始めると反映。あとから変えられません）":""}`;
+  document.getElementById("dicetbl").innerHTML=`<tr><th></th>${STATS.map(x=>`<th>${x.l}</th>`).join("")}<th>合計</th></tr>
+    <tr><th>職業</th>${STATS.map(x=>`<td>${j.s[x.k]}</td>`).join("")}<td></td></tr>
+    <tr><th>種族</th>${STATS.map(x=>`<td>${sg(r.s[x.k])}</td>`).join("")}<td></td></tr>
+    <tr><th>ダイス</th>${STATS.map(x=>`<td class="${draft.dice[x.k]>0?"up":draft.dice[x.k]<0?"down":""}">${sg(draft.dice[x.k])}</td>`).join("")}<td></td></tr>
+    <tr class="tot"><th>初期値</th>${STATS.map(x=>`<td>${tot[x.k]}</td>`).join("")}<td>${Object.values(tot).reduce((a,b)=>a+b,0)}</td></tr>`;
+}
+// 名前や口調を変えたとき：手紙と画面を書き直す（冒険は進めない）
+function refreshText(){if(lastRes)renderLetter(lastRes,lastSeed);else renderSheet()}
+const modChips=m=>STATS.filter(x=>m[x.k]).map(x=>`<span class="mod${m[x.k]<0?" neg":""}">${x.l}${m[x.k]>0?"+":"−"}${Math.abs(m[x.k])}</span>`).join("");
+// 一日の手紙のあとに行う操作（買い物・雇用・装備・贈り物）。翌日から反映
+function act(fn,msg){fn(state);acted=true;if(msg)document.getElementById("townnote").textContent=msg;renderSheet()}
+function renderGear(){
+  const s=state,box=document.getElementById("gear");
+  box.innerHTML=GEAR_ORDER.map(sl=>{
+    const it=gearItem(s,sl),E=EQUIP[sl];
+    const opts=E.items.filter(x=>s.owned.includes(x.id)).map(x=>`<option value="${x.id}"${x.id===it.id?" selected":""}>${x.n}</option>`).join("");
+    return `<div class="gslot"><span class="lbl">${E.label}</span><select id="gear-${sl}" aria-label="${E.label}を選ぶ">${opts}</select>${it.d?`<p class="gdesc">${esc(it.d)}</p>`:""}<div class="mods">${modChips(it.m)||`<span class="mod sp">補正なし</span>`}</div></div>`;
+  }).join("");
+  GEAR_ORDER.forEach(sl=>document.getElementById("gear-"+sl).addEventListener("change",e=>act(s=>{s.gear[sl]=e.target.value})));
+}
+function renderParty(){
+  const s=state;
+  [0,1].forEach(i=>{
+    const el=document.getElementById("slot"+i),c=COMP(s.party[i]);
+    let inner=`<span class="lbl">同行冒険者 ${i+1}</span>`;
+    if(c&&c.named){
+      const N=NAMED[c.id];
+      inner+=`<span class="cname">${esc(N.n)}</span><p class="cdesc">${N.race}／${N.job}／${N.sex}／${N.age}才・${N.origin}出身</p><div class="mods">${modChips(c.mods)}<span class="mod sp">${esc(N.ability.n)}：${esc(N.ability.d)}</span></div>`;
+    } else if(c){
+      inner+=`<span class="cname">${esc(c.n)}</span><p class="cdesc">${esc(c.d)}</p><div class="mods">${modChips(c.mods)}</div>`;
+    } else inner+=`<p class="cdesc">空き。都市の酒場で、顔見知り以上のネームド冒険者や見習い冒険者を雇えます。</p>`;
+    if(c)inner+=`<div><button class="ghost small" data-dismiss="${i}">別れる</button></div>`;
+    el.innerHTML=inner;
+  });
+  document.querySelectorAll("[data-dismiss]").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.dismiss,c=COMP(state.party[i]);
+    act(s=>{s.party.splice(i,1)},`${c.n}と別れた。また会う日まで。`);
+  }));
+}
+function renderLoc(){
+  const s=state,here=PLACES[s.loc],C=here.country;
+  let h;
+  if(s.travel){
+    const to=PLACES[s.travel.to];
+    const way=s.travel.mtn?"山道":"街道";
+    h=`<span class="lbl">現在地</span><span class="cn"><i class="dot" style="background:${to.country.c}"></i>${esc(to.country.n)}</span><h3>${esc(to.country.n)}へ向かう${way}<span class="ptype road">${way}</span></h3><p>${esc(to.n)}へ向かって移動中。${s.travel.left>0?"あさって":"明日"}到着します。</p>`;
+  } else {
+    h=`<span class="lbl">現在地</span><span class="cn"><i class="dot" style="background:${C.c}"></i>${esc(C.n)}</span><h3>${esc(here.n)}<span class="ptype ${here.type==="last"?"dungeon":here.type}">${TYPE_LABEL[here.type]}</span></h3><span class="diffchip d${Math.min(5,Math.max(-1,diffOf(here)+nbOf(here)))}">${esc(diffText(here))}</span><p>${esc(here.d)}</p><p class="hx">${esc(here.x)}</p>`;
+    if(here.type==="dungeon"){
+      const dp=s.depth[here.n]??initDepth(here);
+      h+=`<div class="dg"><span>探索度 <b>${s.dg&&s.dg.place===here.n?`${s.dg.prog} / ${s.dg.goal}`:"未着手"}</b></span><span>探索進度 <b>${Math.max(0,dp)}</b>${dp<=0?"（大ボス出現）":""}</span><span>大ボス：${esc(bossOf(here).n)}</span></div>`;
+    }
+  }
+  document.getElementById("here").innerHTML=h;
+  renderUse();renderMates();renderMap();
+  {const pic=locPic(s),st=document.querySelector(".strip");st.classList.toggle("haspic",!!pic);if(pic)st.style.setProperty("--locpic",`url("${pic}")`)}
+  document.getElementById("hdrloc").textContent=s.travel?`${PLACES[s.travel.to].country.n}へ向かう${s.travel.mtn?"山道":"街道"}`:s.loc;
+  const sel=document.getElementById("dest"),prev=sel.value;
+  const order=[C,...COUNTRIES.filter(x=>x!==C&&roadDays(C.id,x.id)),...COUNTRIES.filter(x=>x!==C&&!roadDays(C.id,x.id))];
+  const mateOpts=s.buddies.filter(b=>!b.travel&&b.loc!==s.loc).map(b=>{const pl=PLACES[b.loc],d=roadDays(C.id,pl.country.id);return d===null||isLocked(s,pl)?"":`<option value="${esc(pl.n)}">${esc(b.n)}のいる${esc(pl.n)}${d===0?"":d>1?"（山道2日）":"（街道1日）"}</option>`}).join("");
+  sel.innerHTML=`<option value="">その場にとどまる（周辺で冒険）</option>`+(mateOpts?`<optgroup label="冒険者仲間のいるところ">${mateOpts}</optgroup>`:"")+order.map(Cc=>{
+    const days=roadDays(C.id,Cc.id),far=days===null;
+    const lab=Cc===C?`${Cc.n}（今いる国）`:far?`${Cc.n}（ここからは行けない）`:`${Cc.n}（${days>1?"山道2日":"街道1日"}）`;
+    return `<optgroup label="${lab}">`+Cc.places.map(pl=>{
+      const cur=pl.n===s.loc,last=pl.type==="last"&&!s.mirrorKey,hid=pl.type!=="last"&&isLocked(s,pl);
+      if(hid)return `<option disabled>${TYPE_LABEL[pl.type]}｜？？？（噂を聞くと出現）</option>`;
+      return `<option value="${esc(pl.n)}"${cur||last||far?" disabled":""}>${TYPE_LABEL[pl.type]}｜${esc(pl.n)}${pl.type==="city"?"":`（${sgn(diffOf(pl)+nbOf(pl))}）`}${cur?"（現在地）":last?"（「魔鏡の鍵」が必要）":""}</option>`}).join("")+`</optgroup>`}).join("");
+  sel.disabled=!!s.travel;
+  if(!s.travel&&prev&&PLACES[prev]&&prev!==s.loc)sel.value=prev;
+  updateEta();
+}
+function updateEta(){
+  const s=state,sel=document.getElementById("dest"),eta=document.getElementById("eta");
+  const nd=document.getElementById("nextdest"),v0=sel.value;
+  nd.innerHTML=(s.travel?(s.travel.left>0?`移動中：あさって${esc(s.travel.to)}に到着`:`明日：${esc(s.travel.to)}に到着`):s.down?"明日：治療院で休養":v0?`明日の移動先：<b>${esc(v0)}</b>`:"明日：その場で冒険")+`　<button class="linkbtn" data-goto="move">移動先を変える</button>`;
+  nd.querySelector("[data-goto]").addEventListener("click",()=>showTab("move"));
+  const nd2=document.getElementById("nextdest2");nd2.innerHTML=nd.innerHTML;
+  nd2.querySelector("[data-goto]").addEventListener("click",()=>showTab("move"));
+  if(s.travel){eta.innerHTML=`移動中です。${s.travel.left>0?"明日も山道を進み、あさって":"明日"} <b>${esc(s.travel.to)}</b> に到着します。`;return}
+  if(s.down){eta.textContent="明日は治療院で休養するので、出発できません。";return}
+  const v=sel.value;
+  if(!v){eta.textContent=`明日も${s.loc}の周辺で冒険します。`;return}
+  const to=PLACES[v],same=to.country===PLACES[s.loc].country;
+  const days=roadDays(PLACES[s.loc].country.id,to.country.id);
+  let txt=(same?`同じ国の中なので、明日のうちに <b>${esc(v)}</b> に着きます。`:days>1?`山道を越えるので、2日かけて山道を進み、3日目に <b>${esc(v)}</b> に着きます。`:`国境を越えるので、明日は街道を進み、あさって <b>${esc(v)}</b> に着きます。`)+`<br>行き先は${esc(diffText(to))}。`;
+  if(s.dg)txt+=`<br>${esc(s.dg.place)}の探索度（${s.dg.prog}）は0に戻ります。探索進度は持ち越されます。`;
+  eta.innerHTML=txt;
+}
+function renderMap(){
+  const s=state,box=document.getElementById("hotspots");
+  const cur=s.travel?null:PLACES[s.loc].country,sel=document.getElementById("dest").value,selC=sel&&PLACES[sel]?PLACES[sel].country:null;
+  box.innerHTML=COUNTRIES.map(C=>{
+    const [x,y]=MAP_SPOT[C.id],d=cur?roadDays(cur.id,C.id):null,isCur=cur===C,adj=!isCur&&d;
+    const cap=capitalOf(C),picked=selC===C&&sel===cap.n;
+    const tag=isCur?"現在地":adj?(d>1?"山道2日":"街道1日"):"";
+    const label=isCur?`${C.n}（今いる国）`:adj?`${C.n}へ（${tag}・${cap.n}）`:`${C.n}（ここからは行けない）`;
+    return `<button class="hot${isCur?" cur":""}${adj?" adj":""}${picked?" picked":""}" style="left:${x}%;top:${y}%" data-country="${C.id}" aria-label="${esc(label)}"${adj?"":" disabled"}>${tag?`<span>${tag}</span>`:""}</button>`;
+  }).join("");
+  box.querySelectorAll(".hot.adj").forEach(b=>b.addEventListener("click",()=>{
+    const C=COUNTRIES.find(c=>c.id===b.dataset.country),cap=capitalOf(C);
+    document.getElementById("dest").value=cap.n;updateEta();renderMap();
+  }));
+}
+function renderMates(){
+  const s=state,myWhere=s.travel?`${PLACES[s.travel.to].country.n}へ向かう${s.travel.mtn?"山道":"街道"}`:s.loc,myC=s.travel?PLACES[s.travel.to].country:PLACES[s.loc].country;
+  document.getElementById("mates").innerHTML=s.buddies.map(b=>{
+    const w=whereOf(b),bc=b.travel?PLACES[b.travel.to].country:PLACES[b.loc].country;
+    const rel=w===myWhere?"同じ場所":bc===myC?"同じ国":"遠く";
+    const bond=s.bond[b.id];
+    const canCall=!s.travel&&PLACES[s.loc].type!=="last"&&w!==myWhere;
+    return `<div class="materow"><span class="mn"><b>${esc(b.n)}</b><small>${esc(b.sex)}・${esc(buddyClass(b))}・鳩の${esc(b.pigeon)}</small></span>
+      <span class="mw"><span class="rel r${rel==="同じ場所"?1:rel==="同じ国"?2:3}">${rel}</span>${esc(w)}</span>
+      <span class="mb">${bond===undefined?"まだ知り合っていない":`絆 ${bond}`}</span>
+      <button class="small ghost" data-call="${b.id}"${canCall?"":" disabled"}>テスト：ここに呼ぶ</button></div>`}).join("");
+  document.querySelectorAll("[data-call]").forEach(btn=>btn.addEventListener("click",()=>{
+    const b=state.buddies.find(x=>x.id===btn.dataset.call);
+    act(s=>{const x=s.buddies.find(y=>y.id===b.id);x.loc=s.loc;x.travel=null;x.stay=3});
+    document.getElementById("matenote").textContent=`${b.n}を${state.loc}に呼んだ。3日ほどここにとどまってくれる。`;
+  }));
+}
+function renderUse(){
+  const s=state,n=s.items.filter(x=>x==="傷薬").length,max=hpMax(s),full=s.hp>=max;
+  document.getElementById("useitems").innerHTML=`<div class="userow"><span><b>傷薬</b> × ${n}<small>HP ${s.hp} / ${max}　使うとHP＋3</small></span><button class="small" id="usepotion"${!n||full?" disabled":""}>${!n?"持っていない":full?"HPは満タン":"傷薬を使う"}</button></div>`;
+  const b=document.getElementById("usepotion");
+  if(n&&!full)b.addEventListener("click",()=>{
+    const before=state.hp;
+    act(s=>{s.items.splice(s.items.indexOf("傷薬"),1);heal(s,3)});
+    document.getElementById("usenote").textContent=`傷薬を使った。HP ${before} → ${state.hp}`;
+  });
+}
+function renderTown(){
+  const s=state,box=document.getElementById("towninner"),here=PLACES[s.loc];
+  if(s.travel||here.type!=="city"){box.innerHTML=`<p class="cdesc">今は都市にいないので、店や酒場は使えません。都市に着くと、ここで買い物や雇用ができます。</p>`;return}
+  const w=wealth(s),full=s.party.length>=2;
+  const row=(name,desc,price,attr,dis)=>`<li><span><b>${esc(name)}</b>${desc?`<small>${esc(desc)}</small>`:""}</span><span class="price">${price}</span><button class="small ghost" ${attr}${dis?" disabled":""}>${dis&&dis!==true?dis:"買う"}</button></li>`;
+  const goods=["傷薬","携帯食材",...placeGoods(here)];
+  const items=goods.map(g=>{const pr=g==="携帯食材"?2:(GIFT_PRICE[g]||5);return row(g,g==="傷薬"?"使うとHP＋3。移動タブからいつでも使える":g==="携帯食材"?"一日の終わりに料理できる食材":FOODS.includes(g)?"贈り物・食材":"贈り物向きの名産",`銀貨${pr}`,`data-buy="${esc(g)}" data-price="${pr}"`,w<pr)}).join("");
+  const gearRows=GEAR_ORDER.flatMap(sl=>EQUIP[sl].items.filter(x=>!x.legend&&!s.owned.includes(x.id)&&priceSilver(x)).map(x=>row(x.n,`${EQUIP[sl].label}　${STATS.filter(k=>x.m[k.k]).map(k=>k.l+(x.m[k.k]>0?"+":"−")+Math.abs(x.m[k.k])).join(" ")}`,x.price,`data-gear="${x.id}" data-slot="${sl}"`,w<priceSilver(x)))).join("");
+  const hireBtn=(id,pr)=>full?"満員":w<pr?"お金不足":"";
+  const namedHere=(s.town&&s.town.place===s.loc?s.town.named:[]).filter(id=>!s.party.includes(id));
+  const hires=[...namedHere.map(id=>{const N=NAMED[id];return `<li><span><b>${esc(N.n)}</b><small>${N.job}・好感度${s.aff[id]}・${esc(N.ability.n)}</small></span><span class="price">銀貨${HIRE_NAMED}</span><button class="small" data-hire="${id}" data-price="${HIRE_NAMED}"${hireBtn(id,HIRE_NAMED)?" disabled":""}>${hireBtn(id,HIRE_NAMED)||"雇う"}</button></li>`}),
+    ...HIRES.filter(h=>!s.party.includes(h.id)).map(h=>`<li><span><b>${esc(h.n)}</b><small>${esc(h.d)}</small></span><span class="price">銀貨${HIRE_APPRENTICE}</span><button class="small" data-hire="${h.id}" data-price="${HIRE_APPRENTICE}"${hireBtn(h.id,HIRE_APPRENTICE)?" disabled":""}>${hireBtn(h.id,HIRE_APPRENTICE)||"雇う"}</button></li>`)].join("");
+  box.innerHTML=`
+    <div class="tcol"><span class="lbl">宿</span><p class="cdesc">今夜の宿代は銀貨${innCost(s)}枚（PC＋同行者${s.party.length}人）。都市にいる夜は自動で泊まり、休息度＋10・HP＋10。足りなければ野宿で休息度＋2・HP＋3。</p></div>
+    <div class="tcol"><span class="lbl">道具屋（傷薬・食材・名産）</span><ul class="shop">${items}</ul></div>
+    <div class="tcol"><span class="lbl">武具店</span><ul class="shop">${gearRows||"<li>買える武具はもうない。</li>"}</ul></div>
+    <div class="tcol"><span class="lbl">酒場（今日いる冒険者）</span><ul class="shop">${hires}</ul>${namedHere.length?"":`<p class="cdesc">今日は顔見知りのネームド冒険者はいないようだ。</p>`}
+      <span class="lbl" style="margin-top:10px">パーティの仲間</span>
+      <ul class="shop">${s.party.length?s.party.map((id,i)=>{const c=COMP(id);return `<li><span><b>${esc(c.n)}</b><small>${c.named?`好感度${s.aff[id]}・`:""}外しても好感度はそのまま。また雇うには銀貨${c.named?HIRE_NAMED:HIRE_APPRENTICE}枚</small></span><span></span><button class="small ghost" data-unhire="${i}">外す</button></li>`}).join(""):"<li>今は誰も連れていない。</li>"}</ul></div>`;
+  box.querySelectorAll("[data-buy]").forEach(b=>b.addEventListener("click",()=>{const it=b.dataset.buy,pr=+b.dataset.price;act(s=>{pay(s,pr);s.items.push(it)},`${it}を銀貨${pr}枚で買った。`)}));
+  box.querySelectorAll("[data-gear]").forEach(b=>b.addEventListener("click",()=>{const id=b.dataset.gear,sl=b.dataset.slot,g=findGear(id);act(s=>{pay(s,priceSilver(g));s.owned.push(id);s.gear[sl]=id},`${g.n}を買って装備した。`)}));
+  box.querySelectorAll("[data-unhire]").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.unhire,id=state.party[i],c=COMP(id);act(s=>{s.party.splice(i,1);if(c.named&&s.town&&s.town.place===s.loc&&!s.town.named.includes(id))s.town.named.push(id)},`${c.n}をパーティから外した。今日はまだこの酒場にいる。`)}));
+  box.querySelectorAll("[data-hire]").forEach(b=>b.addEventListener("click",()=>{const id=b.dataset.hire,pr=+b.dataset.price,c=COMP(id);act(s=>{pay(s,pr);s.party.push(id)},`${c.n}を銀貨${pr}枚で雇った。明日から一緒に冒険する。`)}));
+}
+function renderAff(){
+  const s=state;
+  document.getElementById("affrows").innerHTML=NAMED_IDS.map(id=>{
+    const N=NAMED[id],a=s.aff[id],tr=tierOf(s,id),met=!!s.met[id];
+    const pct=Math.min(100,a/N.marry*100);
+    const pend=s.gifts.filter(g=>g.npc===id).map(g=>g.item);
+    const lk=lookTier(a);
+    const lock=x=>`<span class="locked">？？？（${x}）</span>`;
+    const prof=met?`<details class="prof"><summary>わかったこと</summary><dl>
+      <dt>素性</dt><dd>${N.race}／${N.job}／${N.sex}／${N.age}才・${esc(N.origin)}出身</dd>
+      <dt>外見</dt><dd>${esc(N.looks[0])}</dd>
+      <dt>外見2</dt><dd>${lk>=2?esc(N.looks[1]):lock("好感度5で解放")}</dd>
+      <dt>外見3</dt><dd>${lk>=3?esc(N.looks[2]):lock("好感度20で解放")}</dd>
+      <dt>口調</dt><dd>${SPEECH_LABEL[speechTier(s,id)]}</dd>
+      <dt>話題</dt><dd>${a>=5?esc(N.topics):lock("好感度5で解放")}</dd>
+      <dt>好きな贈り物</dt><dd>${a>=5?esc(N.likes.join("、")):lock("好感度5で解放")}</dd>
+      <dt>生い立ち</dt><dd>${a>=20?esc(N.bio):lock("好感度20で解放")}</dd>
+      <dt>特殊能力</dt><dd>${esc(N.ability.n)}：${esc(N.ability.d)}</dd>
+      ${s.spouse===id?`<dt>贈られた物</dt><dd>${esc(N.ring)}</dd>`:""}</dl></details>`:"";
+    const marry=a>=N.marry&&!s.spouse?`<div class="marry">${esc(N.n)}と結婚できます。<button class="small" data-marry="${id}">結婚を申し込む</button></div>`:"";
+    return `<div class="affrow"><span class="an">${met?esc(N.n):"？？？"}</span><span class="tier ${tr.c}">${tr.t}</span>
+      <div class="abar"><div class="track"><i style="width:${pct}%"></i></div>
+      <small>好感度 ${a} ／ 結婚可能 ${N.marry}〜${pend.length?`　渡す予定：${esc(pend.join("、"))}`:""}</small></div>${prof}${marry}</div>`;
+  }).join("");
+  document.querySelectorAll("[data-marry]").forEach(b=>b.addEventListener("click",()=>{
+    const id=b.dataset.marry,N=NAMED[id];
+    act(s=>{s.spouse=id;s.items.push(N.ring)});
+    document.getElementById("giftnote").textContent=`${N.n}と結婚しました！ ${N.ring}を贈られました。口調4が解放されます。`;
+  }));
+  const npcSel=document.getElementById("giftnpc"),itemSel=document.getElementById("giftitem");
+  const metIds=NAMED_IDS.filter(id=>s.met[id]),prevN=npcSel.value,prevI=itemSel.value;
+  npcSel.innerHTML=metIds.length?metIds.map(id=>`<option value="${id}">${NAMED[id].n}</option>`).join(""):`<option value="">（まだ誰にも会っていない）</option>`;
+  if(metIds.includes(prevN))npcSel.value=prevN;
+  const pool=[...s.items];s.gifts.forEach(g=>{const i=pool.indexOf(g.item);if(i>=0)pool.splice(i,1)});
+  const uniq=[...new Set(pool)];
+  itemSel.innerHTML=uniq.length?uniq.map(x=>`<option>${esc(x)}</option>`).join(""):`<option value="">（渡せる品物がない）</option>`;
+  if(uniq.includes(prevI))itemSel.value=prevI;
+  document.getElementById("giftbtn").disabled=!metIds.length||!uniq.length;
+}
+function renderOdds(){
+  const vals=[10,30,50,70,90],rows=[["やさしい",60],["ふつう",40],["むずかしい",20]];
+  let x=`<tr><th>能力値</th>${vals.map(v=>`<th>${v}</th>`).join("")}</tr>`;
+  rows.forEach(([n,b])=>{x+=`<tr><th>${n}</th>${vals.map(v=>`<td>${Math.max(5,Math.min(95,b+v))}%</td>`).join("")}</tr>`});
+  document.getElementById("odds").innerHTML=x;
+}
+function renderTables(){
+  const g=document.getElementById("tables");g.innerHTML="";
+  TABLE_ORDER.forEach(key=>{
+    const T=TABLES[key],box=document.createElement("section");box.className="tbl";
+    box.innerHTML=`<h3>${T.label}<span class="die">${T.die}</span></h3>${T.note?`<p class="note">${T.note}</p>`:""}`;
+    const ol=document.createElement("ol");
+    T.rows.forEach((r,i)=>{
+      const li=document.createElement("li");if(lastRolls[key]&&lastRolls[key].includes(i))li.className="hit";
+      const txt=r.label||(typeof r.text==="string"?r.text:"");
+      const ck=r.check?`<span class="ck">${KIND_LABEL[r.check.kind]} 目標${r.check.dc}</span>`:"";
+      li.innerHTML=`<span class="n">${i+1}</span><span>${ck}${esc(txt)}${r.fx?`<span class="fx">効果：${esc(r.fx)}</span>`:""}</span>`;
+      ol.appendChild(li);
+    });
+    box.appendChild(ol);g.appendChild(box);
+  });
+}
+
+// ================= 進行 =================
+function startDay(){acted=false;document.getElementById("townnote").textContent="";snapshot=clone(state);currentSeed=baseSeed+state.day*7919;renderLetter(playDay(state,currentSeed),currentSeed)}
+function replay(){if(acted||pc.diff==="hard"){renderSheet();return}state=clone(snapshot);renderLetter(playDay(state,currentSeed),currentSeed)}
+function restart(){archive=[];newGame();startDay();renderArchive()}
+function renderTactic(){
+  const sel=document.getElementById("tactic");
+  if(!sel.options.length)sel.innerHTML=TACTICS.map(x=>`<option value="${x.id}">${x.n}</option>`).join("");
+  sel.value=tacticOf(pc).id;document.getElementById("tacticd").textContent=tacticOf(pc).d;
+}
+document.getElementById("tactic").addEventListener("change",e=>{pc.tactic=e.target.value;renderTactic();saveGame()});
+function goNext(fromBottom){
+  if(state.dead){showTab("letter");return}
+  if(lastRes)archive.unshift({day:state.day,where:document.getElementById("hdrloc").textContent,res:lastRes});
+  state.dest=document.getElementById("dest").value||null;
+  document.getElementById("dest").value="";
+  state.day++;startDay();renderArchive();
+  if(fromBottom){try{document.getElementById("lettercard").scrollIntoView({behavior:"smooth",block:"start"})}catch(e){}}
+}
+document.getElementById("sharebtn").addEventListener("click",()=>{
+  if(!lastRes)return;
+  const text=shareText(lastRes,state.day),box=document.getElementById("sharebox"),el=document.getElementById("sharetext"),msg=document.getElementById("sharemsg");
+  el.textContent=text;box.hidden=false;
+  const selectIt=()=>{try{const r=document.createRange();r.selectNodeContents(el);const sel=getSelection();sel.removeAllRanges();sel.addRange(r)}catch(e){}};
+  const fail=()=>{selectIt();msg.textContent=`${clen(text)}字。自動でコピーできなかったので、文章を選択しました。長押しかCtrl+Cでコピーしてください。`};
+  try{navigator.clipboard.writeText(text).then(()=>{msg.textContent=`${clen(text)}字。コピーしました！`},fail)}catch(e){fail()}
+});
+// はじめに（入口）：初めて来た人に注意事項を見せる。同意はこのブラウザにだけ覚えておく
+{
+  const gate=document.getElementById("gate");let seen=false;
+  try{seen=localStorage.getItem("tabihato-gate")==="ok"}catch(e){}
+  const open=()=>{document.getElementById("gatebye").textContent="";gate.hidden=false;document.body.style.overflow="hidden";gate.scrollTop=0;try{document.getElementById("gatetitle").setAttribute("tabindex","-1");document.getElementById("gatetitle").focus({preventScroll:true})}catch(e){}};
+  const close=()=>{gate.hidden=true;document.body.style.overflow=""};
+  document.getElementById("gateok").addEventListener("click",()=>{try{localStorage.setItem("tabihato-gate","ok")}catch(e){}close()});
+  document.getElementById("gateno").addEventListener("click",()=>{document.getElementById("gatebye").textContent="わかりました。来てくれてありがとう。このページは閉じて大丈夫です。……鳩が小さく手を振った（羽で）。"});
+  document.getElementById("opengate").addEventListener("click",open);
+  if(!seen)open();
+}
+document.getElementById("next").addEventListener("click",()=>goNext(false));
+document.getElementById("next2").addEventListener("click",()=>goNext(true));
+document.getElementById("next3").addEventListener("click",()=>{goNext(false);showTab("letter");try{window.scrollTo({top:0,behavior:"smooth"})}catch(e){}});
+document.getElementById("reroll").addEventListener("click",()=>{if(acted)return;state=clone(snapshot);currentSeed=Math.floor(Math.random()*1e9);renderLetter(playDay(state,currentSeed),currentSeed)});
+document.getElementById("dest").addEventListener("change",()=>{updateEta();renderMap()});
+document.getElementById("giftbtn").addEventListener("click",()=>{
+  const npc=document.getElementById("giftnpc").value,item=document.getElementById("giftitem").value;
+  if(!npc||!item)return;
+  act(s=>{s.gifts.push({npc,item})});
+  document.getElementById("giftnote").textContent=`${NAMED[npc].n}に${item}を渡す予定です。次に会ったとき（同行中なら翌日）に渡します。`;
+});
+// ================= タブ =================
+const TABS=["letter","status","move","shop","system"];
+function showTab(name,focus){
+  if(!TABS.includes(name))name="letter";
+  TABS.forEach(n=>{const on=n===name;document.getElementById("tab-"+n).hidden=!on;const b=document.getElementById("t-"+n);if(on)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  if(focus)document.getElementById("t-"+name).focus();
+  try{if(location.hash!=="#"+name)history.replaceState(null,"","#"+name)}catch(e){}
+}
+document.querySelectorAll(".tab").forEach(b=>{
+  b.addEventListener("click",()=>showTab(b.dataset.tab));
+});
+document.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>document.getElementById(b.dataset.jump).scrollIntoView({behavior:"smooth",block:"start"})));
+window.addEventListener("hashchange",()=>showTab(location.hash.slice(1)));
+// ================= セーブ（このブラウザに自動保存） =================
+const SAVE_KEY="tabihato-save-v1",ARCHIVE_MAX=100;
+let loading=true;
+function saveGame(){
+  if(loading||!state)return;
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,savedAt:Date.now(),pc,base,state,snapshot,currentSeed,acted,lastRes,lastSeed,archive:archive.slice(0,ARCHIVE_MAX)}))}catch(e){}
+}
+function loadGame(){
+  let d=null;
+  try{const raw=localStorage.getItem(SAVE_KEY);if(raw)d=JSON.parse(raw)}catch(e){d=null}
+  if(!d||d.v!==1||!d.state||!d.lastRes)return false;
+  try{
+    Object.assign(pc,d.pc);base=d.base;state=d.state;snapshot=d.snapshot||clone(d.state);currentSeed=d.currentSeed;acted=!!d.acted;archive=d.archive||[];
+    draft.race=pc.race;draft.job=pc.job;draft.diff=pc.diff||"futsu";
+    const setv=(id,v)=>{const el=document.getElementById(id);if(el&&v!==undefined)el.value=v};
+    setv("pname",pc.name);setv("pigeonname",pc.pigeon);setv("pgender",pc.gender);setv("prace",pc.race);setv("pjob",pc.job);setv("pdiff",draft.diff);
+    setv("pspeech",pc.speech);setv("pfp",pc.fp);setv("ppersona",pc.persona);setv("ppsex",pc.pigeonSex);setv("pppersona",pc.pigeonPersona);
+    renderDraft();renderLetter(d.lastRes,d.lastSeed);renderArchive();
+    return true;
+  }catch(e){return false}
+}
+buildSheet();renderOdds();
+if(!loadGame())restart();
+loading=false;saveGame();
+showTab((location.hash||"").slice(1)||"letter");
+
+</script>
+
+</body>
+</html>
