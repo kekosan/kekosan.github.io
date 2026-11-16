@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>旅鳩通信 開発手帳</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yusei+Magic&family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+:root{
+  --sky:#e8f0f5;--paper:#f7fafc;--ink:#1d2a4a;--ink-soft:#4d5a78;--line:#c9d6e2;
+  --cerulean:#2f7fb5;--gold:#a8822a;--gold-soft:#efe2bd;--band:#a6dcef;--glow:transparent;
+  --display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+  --hand:"Yusei Magic","Hiragino Maru Gothic ProN",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{--sky:#121a2b;--paper:#1a2438;--ink:#e3eaf4;--ink-soft:#a5b2c8;--line:#2e3b55;--cerulean:#6fb3e3;--gold:#d9b45a;--gold-soft:#3a3322;--band:#24425e;--glow:rgba(255,255,255,.45);color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--sky);color:var(--ink);font:16px/1.9 var(--body)}
+a{color:var(--cerulean)}
+.wrap{max-width:720px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{display:flex;align-items:center;gap:16px;padding-bottom:20px;border-bottom:2px dashed var(--line);margin-bottom:28px}
+header.top img{width:72px;height:72px;flex:0 0 auto;filter:drop-shadow(0 0 3px var(--glow))}
+header.top h1{font-family:var(--display);font-size:clamp(24px,6vw,32px);line-height:1.3;margin:0;text-wrap:balance}
+header.top p{margin:4px 0 0;color:var(--ink-soft);font-size:14px}
+nav.links{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+nav.links a{font-family:var(--hand);text-decoration:none;color:var(--ink);background:var(--paper);border:2px solid var(--ink);border-radius:999px;padding:2px 14px}
+h2.sec{font-family:var(--hand);font-weight:400;font-size:20px;margin:40px 0 12px;display:flex;align-items:center;gap:8px}
+h2.sec::after{content:"";flex:1;border-top:1px solid var(--line)}
+article{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:20px;box-shadow:0 2px 0 var(--line)}
+article .date{font-family:var(--hand);color:var(--gold);font-size:14px;letter-spacing:.05em}
+article h3{font-family:var(--display);font-size:22px;line-height:1.4;margin:4px 0 12px;text-wrap:balance}
+article p{margin:0 0 1em}
+article p:last-child{margin-bottom:0}
+.log{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.log li{display:grid;grid-template-columns:7.5em 1fr;gap:12px;background:var(--paper);border-left:4px solid var(--band);border-radius:8px;padding:8px 14px}
+.log time{font-family:var(--hand);color:var(--ink-soft);font-size:14px}
+@media (max-width:480px){.log li{grid-template-columns:1fr;gap:0}}
+footer{margin-top:48px;color:var(--ink-soft);font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <img src="../tabihato/hato.png" alt="">
+    <div>
+      <h1>旅鳩通信 開発手帳</h1>
+      <p>「セルレア大陸・旅鳩通信」を作りながら書く、ゆるゆる開発日記です。</p>
+    </div>
+  </header>
+
+  <nav class="links">
+    <a href="../tabihato/">ゲームで遊ぶ</a>
+    <a href="#posts">日記</a>
+    <a href="#log">更新履歴</a>
+  </nav>
+
+  <h2 class="sec" id="posts">日記</h2>
+
+  <!--
+    ▼新しい記事の書き方▼
+    下の「<article> 〜 </article>」をまるごとコピーして、いちばん上（このコメントのすぐ下）に貼り、
+    日付・タイトル・本文を書きかえてください。段落は <p> 〜 </p> で囲みます。新しい記事ほど上に置きます。
+  -->
+
+  <article>
+    <div class="date">2026.11.16</div>
+    <h3>開発手帳、はじめました</h3>
+    <p>こ、こんにちは！ ゆるゆる定期更新ライクなゲームを、Claudeさんと作っています。</p>
+    <p>一日一回更新と書いてありますが、それは全部うまく行った際の正式版のことです！ 今は自動更新でもなんでもなく、「次の日へ」をポチポチするゲームです。メール登録とかぜんぜんいらん版なので、試作品でよければ遊んでいってね！</p>
+    <p>ネームド冒険者作りたいぞ！ アイテム作りたいぞ！ 敵キャラ作りたいぞ！ そんな方はぜひお声がけください。</p>
+  </article>
+
+  <h2 class="sec" id="log">更新履歴</h2>
+  <ul class="log">
+    <li><time>2026.11.16</time><span>鳩とのひととき、伴侶とのひととき、犬が増えたときのリベルタとヴルカヌの台詞、夜の癒し（神官・イセリア・サーマス）、開発手帳</span></li>
+    <li><time>2026.11.13</time><span>夜の歌（吟遊詩人・リベルタ）、リベルタの街角の歌（全92曲）</span></li>
+    <li><time>2026.11.12</time><span>大ボスの大技、ラストダンジョンの演出、あいことば、ラスボス調整、鳩のおやつ、図鑑とトロフィー</span></li>
+    <li><time>2026.11.11</time><span>試作版を公開</span></li>
+  </ul>
+
+  <footer>セルレア大陸・旅鳩通信</footer>
+</div>
+</body>
+</html>
